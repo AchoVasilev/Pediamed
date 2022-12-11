@@ -1,5 +1,6 @@
 package DAL.models;
 
+import DAL.models.interfaces.DeletableEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,17 +12,15 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "application_user")
-public class ApplicationUser {
-
+public class ApplicationUser extends AuditInfo implements DeletableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID Id;
-    private String userName;
     private String email;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private String phoneNumber;
-    @ManyToOne
+    @OneToOne(mappedBy = "applicationUser")
+    private Patient patient;
+    @OneToOne(mappedBy = "applicationUser")
+    private Doctor doctor;
+    @OneToOne(mappedBy = "applicationUser")
     private Role role;
 }

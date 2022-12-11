@@ -5,27 +5,25 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Entity
+@Table(name = "specialization")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "role")
-public class Role extends AuditInfo implements DeletableEntity {
+public class Specialization extends AuditInfo implements DeletableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID Id;
+    private int id;
     private String name;
-
-    @OneToOne(mappedBy = "role")
-    private ApplicationUser applicationUser;
+    private String description;
+    @ManyToOne
+    private Doctor doctor;
 }
