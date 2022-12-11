@@ -1,6 +1,7 @@
-package DAL.models;
+package server.DAL.models;
 
-import DAL.models.interfaces.DeletableEntity;
+import org.hibernate.annotations.UuidGenerator;
+import server.DAL.models.interfaces.DeletableEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,13 +15,14 @@ import java.util.UUID;
 @Table(name = "application_user")
 public class ApplicationUser extends AuditInfo implements DeletableEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @UuidGenerator
     private UUID Id;
     private String email;
     @OneToOne(mappedBy = "applicationUser")
     private Patient patient;
     @OneToOne(mappedBy = "applicationUser")
     private Doctor doctor;
-    @OneToOne(mappedBy = "applicationUser")
+    @ManyToOne
     private Role role;
 }

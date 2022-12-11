@@ -1,6 +1,7 @@
-package DAL.models;
+package server.DAL.models;
 
-import DAL.models.interfaces.DeletableEntity;
+import org.hibernate.annotations.UuidGenerator;
+import server.DAL.models.interfaces.DeletableEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "appointment")
 @AllArgsConstructor
@@ -20,8 +23,9 @@ import lombok.Setter;
 @Setter
 public class Appointment extends AuditInfo implements DeletableEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @GeneratedValue
+    @UuidGenerator
+    private UUID id;
     @ManyToOne
     private AppointmentCause appointmentCause;
     @ManyToOne

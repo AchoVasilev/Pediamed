@@ -1,4 +1,4 @@
-package DAL.models;
+package server.DAL.models;
 
 import jakarta.persistence.*;
 import lombok.Data;

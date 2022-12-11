@@ -1,11 +1,14 @@
-package DAL.repositories;
+package server.DAL.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@NoRepositoryBean
 public interface BaseRepository<TEntity, TKey> extends JpaRepository<TEntity, TKey> {
 
     @Override
