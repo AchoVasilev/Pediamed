@@ -1,36 +1,30 @@
 package DAL.models;
 
+import DAL.models.interfaces.DeletableEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
-import java.util.UUID;
 
 @Entity
+@Table(name = "appointment_cause")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "patient")
-public class Patient {
+public class AppointmentCause extends AuditInfo implements DeletableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID Id;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private String phoneNumber;
-    @OneToOne(mappedBy = "patient")
-    private ApplicationUser applicationUser;
-    @OneToMany(mappedBy = "patient")
-    private HashSet<Appointment> appointments = new HashSet<>();
+    private int id;
+    private String name;
+    @OneToMany(mappedBy = "appointmentCause")
+    private HashSet<Appointment> appointment = new HashSet<>();
 }

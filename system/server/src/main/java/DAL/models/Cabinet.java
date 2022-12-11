@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,4 +24,6 @@ public class Cabinet extends AuditInfo implements DeletableEntity {
     private String address;
     private String postCode;
     private String phoneNumber;
+    @OneToMany(mappedBy = "cabinet")
+    private HashSet<Appointment> appointments = new HashSet<>();
 }
