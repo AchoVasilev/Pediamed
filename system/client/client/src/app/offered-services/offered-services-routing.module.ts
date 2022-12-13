@@ -4,7 +4,7 @@ import { OfferedServicesComponent } from './offered-services.component';
 
 const routes: Routes = [
   {
-    path: '/services',
+    path: '',
     component: OfferedServicesComponent,
     pathMatch: 'full'
   }
