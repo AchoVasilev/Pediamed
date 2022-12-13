@@ -2,6 +2,7 @@ package server.features.offeredService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import server.features.offeredService.models.OfferedServiceView;
@@ -9,6 +10,7 @@ import server.features.offeredService.models.OfferedServiceView;
 import java.util.Set;
 
 @RestController
+@RequestMapping("/offered-service")
 public class OfferedServiceController {
     private final OfferedServiceService offeredServiceService;
 
