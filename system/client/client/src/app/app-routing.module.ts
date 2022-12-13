@@ -7,6 +7,9 @@ const routes: Routes = [
     path: '',
     component: HomeComponent,
     pathMatch: 'full'
+  },
+  {
+    path: 'offered-services', loadChildren: () => import('./offered-services/offered-services.module').then(m => m.OfferedServicesModule)
   }
 ];
 

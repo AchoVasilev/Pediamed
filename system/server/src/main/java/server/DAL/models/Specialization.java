@@ -1,6 +1,5 @@
 package server.DAL.models;
 
-import server.DAL.models.interfaces.DeletableEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Specialization extends AuditInfo implements DeletableEntity {
+public class Specialization extends AuditInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -26,4 +25,5 @@ public class Specialization extends AuditInfo implements DeletableEntity {
     private String description;
     @ManyToOne
     private Doctor doctor;
+    private boolean deleted = false;
 }

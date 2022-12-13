@@ -1,6 +1,5 @@
 package server.DAL.models;
 
-import server.DAL.models.interfaces.DeletableEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Entity
 @Table(name = "offered_service")
@@ -20,10 +18,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class OfferedService extends AuditInfo implements DeletableEntity {
+public class OfferedService extends AuditInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private BigDecimal price;
+    private boolean deleted = false;
 }

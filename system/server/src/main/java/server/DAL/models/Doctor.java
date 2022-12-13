@@ -39,4 +39,5 @@ public class Doctor {
     private ApplicationUser applicationUser;
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Specialization> specializations = new ArrayList<>();
+    private boolean deleted = false;
 }

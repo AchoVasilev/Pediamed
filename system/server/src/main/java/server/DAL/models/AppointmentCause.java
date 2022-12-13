@@ -1,6 +1,5 @@
 package server.DAL.models;
 
-import server.DAL.models.interfaces.DeletableEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,11 +19,12 @@ import java.util.HashSet;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AppointmentCause extends AuditInfo implements DeletableEntity {
+public class AppointmentCause extends AuditInfo  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     @OneToMany(mappedBy = "appointmentCause")
     private HashSet<Appointment> appointment = new HashSet<>();
+    private boolean deleted = false;
 }

@@ -1,10 +1,8 @@
 package server.DAL.models;
 
 import org.hibernate.annotations.UuidGenerator;
-import server.DAL.models.interfaces.DeletableEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Appointment extends AuditInfo implements DeletableEntity {
+public class Appointment extends AuditInfo {
     @Id
     @GeneratedValue
     @UuidGenerator
@@ -32,4 +30,5 @@ public class Appointment extends AuditInfo implements DeletableEntity {
     private Cabinet cabinet;
     @ManyToOne
     private Patient patient;
+    private boolean deleted = false;
 }
