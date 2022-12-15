@@ -15,4 +15,5 @@ export class OfferedServiceService {
   getOfferedServices(): Observable<OfferedServiceView[]> {
     return this.httpClient.get<OfferedServiceView[]>(`${this.apiUrl}/offered-service`);
   }
+
 }
