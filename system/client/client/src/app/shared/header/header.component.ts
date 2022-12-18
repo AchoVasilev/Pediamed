@@ -6,6 +6,21 @@ import { faClinicMedical } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
+
 export class HeaderComponent {
-  faClinic = faClinicMedical
+  menu: HTMLElement | undefined;
+  faClinic = faClinicMedical;
+
+  onHover() {
+    this.menu = document.getElementById('menu')!;
+
+    this.menu.style.display = 'block';
+  }
+
+  onMouseLeave() {
+    this.menu = document.getElementById('menu')!;
+    if (this.menu.style.display === 'block') {
+      this.menu.style.display = 'none';
+    }
+  }
 }
