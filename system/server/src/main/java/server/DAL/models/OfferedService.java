@@ -1,29 +1,28 @@
-package DAL.models;
+package server.DAL.models;
 
-import DAL.models.interfaces.DeletableEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
-@Table(name = "specialization")
+@Table(name = "offered_service")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Specialization extends AuditInfo implements DeletableEntity {
+public class OfferedService extends AuditInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String name;
-    private String description;
-    @ManyToOne
-    private Doctor doctor;
+    private BigDecimal price;
+    private boolean deleted = false;
 }

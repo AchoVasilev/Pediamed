@@ -1,6 +1,5 @@
-package DAL.models;
+package server.DAL.models;
 
-import DAL.models.interfaces.DeletableEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,15 +14,16 @@ import java.util.HashSet;
 @Getter
 @Setter
 @Table(name = "cabinet")
-public class Cabinet extends AuditInfo implements DeletableEntity {
+public class Cabinet extends AuditInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String name;
     private String city;
     private String address;
     private String postCode;
     private String phoneNumber;
-    @OneToMany(mappedBy = "cabinet")
+    @OneToMany(mappedBy = "cabinet", cascade = CascadeType.ALL)
     private HashSet<Appointment> appointments = new HashSet<>();
+    private boolean deleted = false;
 }

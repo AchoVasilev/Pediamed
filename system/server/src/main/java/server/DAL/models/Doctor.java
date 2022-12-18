@@ -1,18 +1,22 @@
-package DAL.models;
+package server.DAL.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -20,17 +24,20 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "patient")
-public class Patient {
+@Table(name = "doctor")
+public class Doctor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @UuidGenerator
     private UUID Id;
     private String firstName;
     private String middleName;
     private String lastName;
     private String phoneNumber;
-    @OneToOne(mappedBy = "patient")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "application_user_id", referencedColumnName = "id")
     private ApplicationUser applicationUser;
-    @OneToMany(mappedBy = "patient")
-    private HashSet<Appointment> appointments = new HashSet<>();
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    private List<Specialization> specializations = new ArrayList<>();
+    private boolean deleted = false;
 }
