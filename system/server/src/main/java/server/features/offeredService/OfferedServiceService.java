@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import server.DAL.repositories.OfferedServiceRepository;
 import server.features.offeredService.models.OfferedServiceView;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
