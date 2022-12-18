@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { OfferedServicesRoutingModule } from './offered-services-routing.module';
 import { OfferedServicesComponent } from './offered-services.component';
+import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { OfferedServicesComponent } from './offered-services.component';
   ],
   imports: [
     CommonModule,
-    OfferedServicesRoutingModule
+    OfferedServicesRoutingModule,
+    NgbCarouselModule
   ]
 })
 export class OfferedServicesModule { }
