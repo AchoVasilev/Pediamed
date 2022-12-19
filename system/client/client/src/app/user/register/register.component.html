@@ -9,7 +9,6 @@
 
     <div class="card mx-4 mx-md-5 shadow-5-strong" style="
         margin-top: -100px;
-        background: hsla(0, 0%, 100%, 0.8);
         backdrop-filter: blur(30px);
         ">
         <div class="card-body py-5 px-md-5">
@@ -21,10 +20,12 @@
                         <!-- 2 column grid layout with text inputs for the first and last names -->
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <div class="form-outline">
-                                    <input type="text" id="form3Example1" class="form-control" />
-                                    <label class="form-label" for="form3Example1">First name</label>
-                                </div>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Outline form field</mat-label>
+                                    <input matInput placeholder="Placeholder">
+                                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                                    <mat-hint>Hint</mat-hint>
+                                </mat-form-field>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="form-outline">
