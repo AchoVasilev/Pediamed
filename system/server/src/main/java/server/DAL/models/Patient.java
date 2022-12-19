@@ -38,5 +38,7 @@ public class Patient {
     private ApplicationUser applicationUser;
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private HashSet<Appointment> appointments = new HashSet<>();
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
+    private HashSet<Child> children = new HashSet<>();
     private boolean deleted = false;
 }
