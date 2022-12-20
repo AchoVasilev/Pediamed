@@ -8,7 +8,9 @@ import { Component } from '@angular/core';
 export class LoginComponent {
   hide = true;
 
-  toggleHide() {
-    return !this.hide;
+  toggleHide(event: Event) {
+    event.preventDefault();
+    this.hide = !this.hide;
+    return this.hide;
   }
 }
