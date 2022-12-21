@@ -1,68 +1,87 @@
-<!-- Section: Design Block -->
-<section class="text-center">
-    <!-- Background image -->
-    <div class="p-5 bg-image" style="
-        background-image: url('https://mdbootstrap.com/img/new/textures/full/171.jpg');
-        height: 300px;
-        "></div>
-    <!-- Background image -->
+<section class="vh-100 bg-image"
+    style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+    <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+                            <h2 class="text-uppercase text-center mb-3">Регистрация</h2>
 
-    <div class="card mx-4 mx-md-5 shadow-5-strong" style="
-        margin-top: -100px;
-        backdrop-filter: blur(30px);
-        ">
-        <div class="card-body py-5 px-md-5">
-
-            <div class="row d-flex justify-content-center">
-                <div class="col-lg-8">
-                    <h2 class="fw-bold mb-5">Sign up now</h2>
-                    <form>
-                        <!-- 2 column grid layout with text inputs for the first and last names -->
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Outline form field</mat-label>
-                                    <input matInput placeholder="Placeholder">
-                                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-                                    <mat-hint>Hint</mat-hint>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="form-outline">
-                                    <input type="text" id="form3Example2" class="form-control" />
-                                    <label class="form-label" for="form3Example2">Last name</label>
+                            <form>
+                                <div class="form-outline mb-2">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>И-мейл</mat-label>
+                                        <input matInput placeholder="Въведете своя и-мейл" />
+                                        <mat-icon matSuffix>email</mat-icon>
+                                    </mat-form-field>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Email input -->
-                        <div class="form-outline mb-4">
-                            <input type="email" id="form3Example3" class="form-control" />
-                            <label class="form-label" for="form3Example3">Email address</label>
-                        </div>
+                                <div class="form-outline mb-2">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Име</mat-label>
+                                        <input matInput placeholder="Въведете своето име" />
+                                        <mat-icon matSuffix>account_circle</mat-icon>
+                                    </mat-form-field>
+                                </div>
 
-                        <!-- Password input -->
-                        <div class="form-outline mb-4">
-                            <input type="password" id="form3Example4" class="form-control" />
-                            <label class="form-label" for="form3Example4">Password</label>
-                        </div>
+                                <div class="form-outline mb-2">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Презиме</mat-label>
+                                        <input matInput placeholder="Въведете своето презиме" />
+                                        <mat-icon matSuffix>account_circle</mat-icon>
+                                    </mat-form-field>
+                                </div>
 
-                        <!-- Checkbox -->
-                        <div class="form-check d-flex justify-content-center mb-4">
-                            <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
-                            <label class="form-check-label" for="form2Example33">
-                                Subscribe to our newsletter
-                            </label>
-                        </div>
+                                <div class="form-outline mb-2">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Фамилия</mat-label>
+                                        <input matInput placeholder="Въведете своята фамилия" />
+                                        <mat-icon matSuffix>account_circle</mat-icon>
+                                    </mat-form-field>
+                                </div>
 
-                        <!-- Submit button -->
-                        <button type="submit" class="btn btn-primary btn-block mb-4">
-                            Sign up
-                        </button>
-                    </form>
+                                <div class="form-outline mb-2">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Въведете своята парола</mat-label>
+                                        <input matInput [type]="hide ? 'password' : 'text'" />
+                                        <button mat-icon-button matSuffix (click)="toggleHide($event)"
+                                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Повторете своята парола</mat-label>
+                                        <input matInput [type]="hide ? 'password' : 'text'" />
+                                        <button mat-icon-button matSuffix (click)="toggleHide($event)"
+                                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-check d-flex justify-content-center mb-5">
+
+                                    <mat-checkbox color="primary">Съгласявам се с всички <a href="#!"
+                                            class="text-body"><u>условия за ползване</u></a></mat-checkbox>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <button class="px-5" mat-flat-button color="primary">Регистрация</button>
+                                </div>
+
+                                <p class="text-center text-muted mt-5 mb-0">Вече имате акаунт? <a href="#!"
+                                        class="fw-bold text-body"><u>Влезте тук</u></a></p>
+
+                            </form>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Section: Design Block -->
