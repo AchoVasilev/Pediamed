@@ -1,5 +1,7 @@
 package server.DAL.models;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import org.hibernate.annotations.UuidGenerator;
 import jakarta.persistence.Entity;
@@ -10,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import server.DAL.models.enums.RoleEnum;
 
 import java.util.HashSet;
 import java.util.UUID;
@@ -25,7 +28,8 @@ public class Role extends AuditInfo {
     @GeneratedValue
     @UuidGenerator
     private UUID Id;
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private RoleEnum name;
 
     @OneToMany(mappedBy = "role")
     private HashSet<ApplicationUser> applicationUsers = new HashSet<>();
