@@ -18,6 +18,7 @@ public class ApplicationUser extends AuditInfo {
     @UuidGenerator
     private UUID Id;
     private String email;
+    private String password;
     @OneToOne(mappedBy = "applicationUser")
     private Patient patient;
     @OneToOne(mappedBy = "applicationUser")
