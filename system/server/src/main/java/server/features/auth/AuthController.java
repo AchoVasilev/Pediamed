@@ -1,11 +1,13 @@
 package server.features.auth;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import server.features.auth.model.LoginRequest;
 import server.features.auth.model.RegistrationRequest;
@@ -16,10 +18,12 @@ import server.utils.TokenService;
 public class AuthController {
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
-    public AuthController(TokenService tokenService, AuthenticationManager authenticationManager) {
+    public AuthController(TokenService tokenService, AuthenticationManager authenticationManager, AuthService authService) {
         this.tokenService = tokenService;
         this.authenticationManager = authenticationManager;
+        this.authService = authService;
     }
 
     @PostMapping("/login")
@@ -30,7 +34,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegistrationRequest registrationRequest) {
-
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> register(@RequestBody RegistrationRequest registrationRequest) {
+        var userId = this.authService.register(registrationRequest);
+        return new ResponseEntity<>(userId,HttpStatus.CREATED);
     }
 }

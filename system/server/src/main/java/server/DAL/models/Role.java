@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import server.DAL.models.enums.RoleEnum;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -32,6 +34,6 @@ public class Role extends AuditInfo {
     private RoleEnum name;
 
     @OneToMany(mappedBy = "role")
-    private HashSet<ApplicationUser> applicationUsers = new HashSet<>();
+    private List<ApplicationUser> applicationUsers = new ArrayList<>();
     private boolean deleted = false;
 }

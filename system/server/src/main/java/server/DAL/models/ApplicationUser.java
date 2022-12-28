@@ -19,9 +19,11 @@ public class ApplicationUser extends AuditInfo {
     private UUID Id;
     private String email;
     private String password;
-    @OneToOne(mappedBy = "applicationUser")
+    @OneToOne(mappedBy = "applicationUser",
+     cascade = CascadeType.ALL)
     private Patient patient;
-    @OneToOne(mappedBy = "applicationUser")
+    @OneToOne(mappedBy = "applicationUser",
+    cascade = CascadeType.ALL)
     private Doctor doctor;
     @ManyToOne
     private Role role;

@@ -15,7 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -37,8 +39,8 @@ public class Patient {
     @JoinColumn(name = "application_user_id", referencedColumnName = "id")
     private ApplicationUser applicationUser;
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
-    private HashSet<Appointment> appointments = new HashSet<>();
+    private List<Appointment> appointments = new ArrayList<>();
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
-    private HashSet<Child> children = new HashSet<>();
+    private List<Child> children = new ArrayList<>();
     private boolean deleted = false;
 }
