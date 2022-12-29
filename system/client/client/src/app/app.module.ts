@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox'
+import { httpInterceptorProviders } from './helpers/http-request.interceptor';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox'
     MatButtonModule,
     MatCheckboxModule
   ],
-  providers: [],
+  providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

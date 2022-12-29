@@ -22,6 +22,7 @@ public class RegistrationRequest {
     @NotBlank(message = REQUIRED_FIELD)
     @Email(message = INVALID_EMAIL)
     private String email;
+    @NotBlank(message = REQUIRED_FIELD)
     @Min(value = FIELD_MIN_LENGTH)
     private String password;
     @NotBlank(message = REQUIRED_FIELD)
