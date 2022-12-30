@@ -3,21 +3,17 @@ package server.DAL.models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,22 +21,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "patient")
-public class Patient {
+@Table(name = "child")
+public class Child {
     @Id
     @GeneratedValue
     @UuidGenerator
-    private UUID Id;
+    private UUID id;
     private String firstName;
-    private String middleName;
     private String lastName;
-    private String phoneNumber;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "application_user_id", referencedColumnName = "id")
-    private ApplicationUser applicationUser;
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
-    private List<Appointment> appointments = new ArrayList<>();
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
-    private List<Child> children = new ArrayList<>();
-    private boolean deleted = false;
+    private Integer age;
+    boolean isDeleted = false;
+    @ManyToOne
+    private Patient patient;
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+    private HashSet<Appointment> appointments = new HashSet<>();
 }
