@@ -20,13 +20,15 @@ import { httpInterceptorProviders } from './helpers/http-request.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UserModule } from './user/user.module';
 import { OfferedServicesModule } from './offered-services/offered-services.module';
+import { PrivacyComponent } from './shared/privacy/privacy.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    HomeComponent
+    HomeComponent,
+    PrivacyComponent
   ],
   imports: [
     BrowserModule,

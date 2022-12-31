@@ -47,7 +47,6 @@ export class RegisterComponent {
   }
 
   getErrorMessage(control: string, numberOfSymbols?: number) {
-
     return parseErrorMessage(control, numberOfSymbols);
   }
 
