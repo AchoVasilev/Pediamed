@@ -3,7 +3,6 @@ package server.DAL.models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -16,7 +15,6 @@ import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +24,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "patient")
-public class Patient {
+public class Parent {
     @Id
     @GeneratedValue
     @UuidGenerator
@@ -38,9 +36,9 @@ public class Patient {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_user_id", referencedColumnName = "id")
     private ApplicationUser applicationUser;
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Appointment> appointments = new ArrayList<>();
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
-    private List<Child> children = new ArrayList<>();
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private List<Patient> patients = new ArrayList<>();
     private boolean deleted = false;
 }

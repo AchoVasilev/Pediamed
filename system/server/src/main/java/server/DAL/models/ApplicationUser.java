@@ -21,7 +21,7 @@ public class ApplicationUser extends AuditInfo {
     private String password;
     @OneToOne(mappedBy = "applicationUser",
      cascade = CascadeType.ALL)
-    private Patient patient;
+    private Parent parent;
     @OneToOne(mappedBy = "applicationUser",
     cascade = CascadeType.ALL)
     private Doctor doctor;

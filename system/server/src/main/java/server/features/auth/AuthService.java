@@ -3,7 +3,7 @@ package server.features.auth;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import server.DAL.models.ApplicationUser;
-import server.DAL.models.Patient;
+import server.DAL.models.Parent;
 import server.DAL.models.enums.RoleEnum;
 import server.DAL.repositories.RoleRepository;
 import server.DAL.repositories.UserRepository;
@@ -38,16 +38,16 @@ public class AuthService {
         newUser.setEmail(registrationRequest.getEmail());
         newUser.setPassword(this.passwordEncoder.encode(registrationRequest.getPassword()));
 
-        var patient = new Patient();
+        var patient = new Parent();
         patient.setFirstName(registrationRequest.getFirstName());
         patient.setMiddleName(registrationRequest.getMiddleName());
         patient.setLastName(registrationRequest.getLastName());
         patient.setPhoneNumber(registrationRequest.getPhoneNumber());
 
-        var role = this.roleRepository.findByName(RoleEnum.ROLE_PATIENT)
+        var role = this.roleRepository.findByName(RoleEnum.ROLE_PARENT)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
         newUser.setRole(role);
-        newUser.setPatient(patient);
+        newUser.setParent(patient);
 
         return this.userRepository.save(newUser).getId();
     }

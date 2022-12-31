@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { httpInterceptorProviders } from './helpers/http-request.interceptor';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { httpInterceptorProviders } from './helpers/http-request.interceptor';
     FontAwesomeModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     RouterModule,
     MatIconModule,
     MatFormFieldModule,

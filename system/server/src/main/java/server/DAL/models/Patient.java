@@ -22,7 +22,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "child")
-public class Child {
+public class Patient extends AuditInfo {
     @Id
     @GeneratedValue
     @UuidGenerator
@@ -32,7 +32,7 @@ public class Child {
     private Integer age;
     boolean isDeleted = false;
     @ManyToOne
-    private Patient patient;
-    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+    private Parent parent;
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private HashSet<Appointment> appointments = new HashSet<>();
 }

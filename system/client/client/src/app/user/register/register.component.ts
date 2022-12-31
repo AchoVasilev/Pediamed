@@ -27,6 +27,10 @@ export class RegisterComponent {
     });
   }
 
+  validateForm(control: string, error: string) {
+    let err = this.form?.controls[control]?.errors?.[error];
+  }
+
   toggleHide(event: Event) {
     event.preventDefault();
     this.hide = !this.hide;
