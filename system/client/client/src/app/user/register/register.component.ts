@@ -9,7 +9,9 @@ import { passwordMatch } from 'src/app/shared/utils/passwordValidator';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  private fieldMinLength: number = 4;
+  fieldMinLength: number = 4;
+  phoneMinLength: number = 10;
+  phoneMaxLength: number = 13;
   private passwordControl = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
   hide: boolean = true;
   form: FormGroup;
@@ -24,12 +26,16 @@ export class RegisterComponent {
       firstName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
       middleName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
       lastName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      phoneNumber: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(13)])
+      phoneNumber: new FormControl('', [Validators.required, Validators.minLength(this.phoneMinLength), Validators.maxLength(this.phoneMaxLength)])
     });
   }
 
-  validateForm(control: string) {
-    return shouldShowErrorForControl(control, this.form);
+  get passwordsGroup(): FormGroup {
+    return this.form.controls['passwords'] as FormGroup;
+  }
+
+  validateForm(control: string, form: FormGroup = this.form) {
+    return shouldShowErrorForControl(control, form);
   }
 
   checkForMinLength(control: string, formGroup: FormGroup = this.form) {
@@ -41,7 +47,6 @@ export class RegisterComponent {
   }
 
   getErrorMessage(control: string, numberOfSymbols?: number) {
-    console.log('here');
 
     return parseErrorMessage(control, numberOfSymbols);
   }

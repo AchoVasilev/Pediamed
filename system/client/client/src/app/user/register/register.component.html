@@ -28,71 +28,84 @@
                                                 formControlName="phoneNumber" />
                                             <mat-icon matSuffix>phone</mat-icon>
                                             <mat-error
-                                                *ngIf="validateForm('phoneNumber') && checkForMinLength('phoneNumber')">{{getErrorMessage('minLength', 10)}}
+                                                *ngIf="validateForm('phoneNumber') && checkForMinLength('phoneNumber')">{{getErrorMessage('minLength', phoneMinLength)}}
                                             </mat-error>
                                             <mat-error
-                                                *ngIf="validateForm('phoneNumber') && checkForMaxLength('phoneNumber')">{{getErrorMessage('maxLength', 13)}}
+                                                *ngIf="validateForm('phoneNumber') && checkForMaxLength('phoneNumber')">{{getErrorMessage('maxLength', phoneMaxLength)}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="form-outline col">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Име</mat-label>
+                                            <input matInput placeholder="Въведете своето име"
+                                                formControlName="firstName" />
+                                            <mat-icon matSuffix>account_circle</mat-icon>
+                                            <mat-error
+                                                *ngIf="validateForm('firstName')">{{getErrorMessage('minLength', fieldMinLength)}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-outline col">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Презиме</mat-label>
+                                            <input matInput placeholder="Въведете своето презиме"
+                                                formControlName="middleName" />
+                                            <mat-icon matSuffix>account_circle</mat-icon>
+                                            <mat-error
+                                                *ngIf="validateForm('middleName')">{{getErrorMessage('minLength', fieldMinLength)}}
                                             </mat-error>
                                         </mat-form-field>
                                     </div>
                                 </div>
                                 <div class="form-outline mb-2">
                                     <mat-form-field appearance="outline">
-                                        <mat-label>Име</mat-label>
-                                        <input matInput placeholder="Въведете своето име" formControlName="firstName" />
-                                        <mat-icon matSuffix>account_circle</mat-icon>
-                                        <mat-error *ngIf="validateForm('firstName')">{{getErrorMessage('minLength', 4)}}
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
-
-                                <div class="form-outline mb-2">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Презиме</mat-label>
-                                        <input matInput placeholder="Въведете своето презиме"
-                                            formControlName="middleName" />
-                                        <mat-icon matSuffix>account_circle</mat-icon>
-                                        <mat-error
-                                            *ngIf="validateForm('middleName')">{{getErrorMessage('minLength', 4)}}
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
-
-                                <div class="form-outline mb-2">
-                                    <mat-form-field appearance="outline">
                                         <mat-label>Фамилия</mat-label>
                                         <input matInput placeholder="Въведете своята фамилия"
                                             formControlName="lastName" />
                                         <mat-icon matSuffix>account_circle</mat-icon>
-                                        <mat-error *ngIf="validateForm('lastName')">{{getErrorMessage('minLength', 4)}}
+                                        <mat-error
+                                            *ngIf="validateForm('lastName')">{{getErrorMessage('minLength', fieldMinLength)}}
                                         </mat-error>
                                     </mat-form-field>
                                 </div>
 
-                                <div class="form-outline mb-2" formGroupName="passwords">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Въведете своята парола</mat-label>
-                                        <input matInput [type]="hide ? 'password' : 'text'"
-                                            formControlName="password" />
-                                        <button mat-icon-button matSuffix (click)="toggleHide($event)"
-                                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                                            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-                                        </button>
-                                    </mat-form-field>
-                                </div>
+                                <div class="row mb-3">
+                                    <div class="form-outline col" formGroupName="passwords">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Въведете парола</mat-label>
+                                            <input matInput [type]="hide ? 'password' : 'text'"
+                                                formControlName="password" />
+                                            <button mat-icon-button matSuffix (click)="toggleHide($event)"
+                                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                                <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                            </button>
+                                            <mat-error
+                                                *ngIf="validateForm('password', passwordsGroup) && checkForMinLength('password', passwordsGroup)">
+                                                {{getErrorMessage('minLength', fieldMinLength)}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
 
-                                <div class="form-outline mb-4" formGroupName="passwords">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Повторете своята парола</mat-label>
-                                        <input matInput [type]="hide ? 'password' : 'text'"
-                                            formControlName="repeatPassword" />
-                                        <button mat-icon-button matSuffix (click)="toggleHide($event)"
-                                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                                            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-                                        </button>
-                                    </mat-form-field>
-                                </div>
+                                    <div class="form-outline col" formGroupName="passwords">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Повторете паролата</mat-label>
+                                            <input matInput [type]="hide ? 'password' : 'text'"
+                                                formControlName="repeatPassword" />
+                                            <button mat-icon-button matSuffix (click)="toggleHide($event)"
+                                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                                <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                            </button>
 
+                                            <mat-error
+                                                *ngIf="passwordsGroup.controls['repeatPassword'].errors?.['passwordMissmatch']">
+                                                {{getErrorMessage('passwordMatch')}}</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
                                 <div class="form-check d-flex justify-content-center mb-5">
                                     <mat-checkbox color="primary">Съгласявам се с всички <a href="#!"
                                             class="text-body"><u>условия за ползване</u></a></mat-checkbox>
