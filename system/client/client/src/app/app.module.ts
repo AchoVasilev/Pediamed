@@ -18,6 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { httpInterceptorProviders } from './helpers/http-request.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
+import { UserModule } from './user/user.module';
+import { OfferedServicesModule } from './offered-services/offered-services.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     RouterModule,
+    UserModule,
+    OfferedServicesModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,

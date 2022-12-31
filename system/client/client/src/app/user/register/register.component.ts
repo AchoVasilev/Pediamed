@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { checkForMaxLength, checkForMinLength, parseErrorMessage, shouldShowErrorForControl } from 'src/app/shared/utils/formValidator';
 import { passwordMatch } from 'src/app/shared/utils/passwordValidator';
 
 @Component({
@@ -27,8 +28,22 @@ export class RegisterComponent {
     });
   }
 
-  validateForm(control: string, error: string) {
-    let err = this.form?.controls[control]?.errors?.[error];
+  validateForm(control: string) {
+    return shouldShowErrorForControl(control, this.form);
+  }
+
+  checkForMinLength(control: string, formGroup: FormGroup = this.form) {
+    return checkForMinLength(control, formGroup);
+  }
+
+  checkForMaxLength(control: string, formGroup: FormGroup = this.form) {
+    return checkForMaxLength(control, formGroup);
+  }
+
+  getErrorMessage(control: string, numberOfSymbols?: number) {
+    console.log('here');
+
+    return parseErrorMessage(control, numberOfSymbols);
   }
 
   toggleHide(event: Event) {
