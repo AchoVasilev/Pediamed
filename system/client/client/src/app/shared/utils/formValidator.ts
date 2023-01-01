@@ -21,7 +21,8 @@ export const ERROR_MESSAGES: any = {
     minLength: 'Полето трябва да е дълго поне %d символа!',
     maxLength: 'Полето не трябва да е повече от %d символа!',
     email: 'Въведете валиден и-мейл!',
-    passwordMatch: 'Паролите не съвпадат'
+    passwordMatch: 'Паролите не съвпадат',
+    terms: 'Трябва да се съгласите с условията!'
 }
 
 function formatString(str: string, num?: number) {

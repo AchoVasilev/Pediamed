@@ -19,10 +19,11 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) { }
 
-  login(email: string, password: string): Observable<AuthResult> {
+  login(email: string, password: string, persist: boolean): Observable<AuthResult> {
     return this.httpClient.post<AuthResult>(this.apiUrl + '/login', {
       email,
-      password
+      password,
+      persist
     }, this.httpOptions)
       .pipe(
         tap(data => this.setSession),
@@ -39,7 +40,7 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    return moment().isBefore(this.getExpiration())
+    return moment().isBefore(this.getExpiration()) && this.getToken() !== null;
   }
 
   isLoggedOut() {

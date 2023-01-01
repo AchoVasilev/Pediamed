@@ -34,7 +34,8 @@ export class RegisterComponent {
       firstName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
       middleName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
       lastName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      phoneNumber: new FormControl('', [Validators.required, Validators.minLength(this.phoneMinLength), Validators.maxLength(this.phoneMaxLength)])
+      phoneNumber: new FormControl('', [Validators.required, Validators.minLength(this.phoneMinLength), Validators.maxLength(this.phoneMaxLength)]),
+      terms: new FormControl(false, [Validators.requiredTrue])
     });
   }
 
