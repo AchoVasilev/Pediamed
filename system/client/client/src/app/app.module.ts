@@ -18,7 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { httpInterceptorProviders } from './helpers/http-request.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
-import { UserModule } from './user/user.module';
+import { AuthModule } from './features/auth/auth.module';
 import { OfferedServicesModule } from './offered-services/offered-services.module';
 import { PrivacyComponent } from './shared/privacy/privacy.component';
 
@@ -39,7 +39,7 @@ import { PrivacyComponent } from './shared/privacy/privacy.component';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     RouterModule,
-    UserModule,
+    AuthModule,
     OfferedServicesModule,
     MatIconModule,
     MatFormFieldModule,

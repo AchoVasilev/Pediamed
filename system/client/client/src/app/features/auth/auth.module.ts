@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { UserRoutingModule } from './user-routing.module';
+import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     CommonModule,
-    UserRoutingModule,
+    AuthRoutingModule,
     ReactiveFormsModule,
     MatIconModule,
     MatFormFieldModule,
@@ -27,4 +27,4 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatCheckboxModule
   ]
 })
-export class UserModule { }
+export class AuthModule { }
