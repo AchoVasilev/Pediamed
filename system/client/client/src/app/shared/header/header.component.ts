@@ -13,7 +13,6 @@ export class HeaderComponent {
 
   onHover() {
     this.menu = document.getElementById('menu')!;
-
     this.menu.style.display = 'block';
   }
 

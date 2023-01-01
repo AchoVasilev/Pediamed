@@ -8,7 +8,7 @@
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mb-3">Регистрация</h2>
 
-                            <form method="post" [formGroup]="form">
+                            <form method="post" [formGroup]="form" (ngSubmit)="submitRegisterForm()">
                                 <div class="row mb-3">
                                     <div class="form-outline col">
                                         <mat-form-field appearance="outline">
@@ -107,7 +107,7 @@
                                     </div>
                                 </div>
                                 <div class="form-check d-flex justify-content-center mb-5">
-                                    <mat-checkbox color="primary">Съгласявам се с всички <a href="#!"
+                                    <mat-checkbox color="primary">Съгласявам се с всички <a routerLink="/privacy"
                                             class="text-body"><u>условия за ползване</u></a></mat-checkbox>
                                 </div>
 
@@ -115,8 +115,8 @@
                                     <button class="px-5" mat-flat-button color="primary">Регистрация</button>
                                 </div>
 
-                                <p class="text-center text-muted mt-5 mb-0">Вече имате акаунт? <a href="#!"
-                                        class="fw-bold text-body"><u>Влезте тук</u></a></p>
+                                <p class="text-center text-muted mt-5 mb-0">Вече имате акаунт? <a
+                                        routerLink="/auth/login" class="fw-bold text-body"><u>Влезте тук</u></a></p>
 
                             </form>
                         </div>

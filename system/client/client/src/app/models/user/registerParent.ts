@@ -1,4 +1,4 @@
-export interface RegisterPatient {
+export interface RegisterParent {
     email: string,
     password: string,
     firstName: string,

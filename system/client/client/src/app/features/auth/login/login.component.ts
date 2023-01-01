@@ -11,6 +11,5 @@ export class LoginComponent {
   toggleHide(event: Event) {
     event.preventDefault();
     this.hide = !this.hide;
-    return this.hide;
   }
 }

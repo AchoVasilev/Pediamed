@@ -1,6 +1,12 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { RegisterParent } from 'src/app/models/user/registerParent';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { checkForMaxLength, checkForMinLength, parseErrorMessage, shouldShowErrorForControl } from 'src/app/shared/utils/formValidator';
+import { openSnackBar } from 'src/app/shared/utils/matSnackBarUtil';
 import { passwordMatch } from 'src/app/shared/utils/passwordValidator';
 
 @Component({
@@ -16,7 +22,8 @@ export class RegisterComponent {
   hide: boolean = true;
   form: FormGroup;
 
-  constructor() {
+  constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar) {
+
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       passwords: new FormGroup({
@@ -48,6 +55,34 @@ export class RegisterComponent {
 
   getErrorMessage(control: string, numberOfSymbols?: number) {
     return parseErrorMessage(control, numberOfSymbols);
+  }
+
+  openSnackBar(message: string) {
+    openSnackBar(this.matSnackBar, message);
+  }
+
+  submitRegisterForm() {
+    const { email, firstName, middleName, lastName, phoneNumber, passwords } = this.form.value;
+    const registerParent: RegisterParent = {
+      email,
+      firstName,
+      middleName,
+      lastName,
+      phoneNumber,
+      password: passwords.password
+    };
+
+    this.authService.register(registerParent)
+      .subscribe({
+        next: (data) => {
+          this.router.navigateByUrl('/auth/login');
+        },
+        error: (err: HttpErrorResponse) => {
+          if (err.status === HttpStatusCode.BadRequest) {
+            this.openSnackBar(err.error.message);
+          }
+        },
+      });
   }
 
   toggleHide(event: Event) {
