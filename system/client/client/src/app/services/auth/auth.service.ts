@@ -30,9 +30,7 @@ export class AuthService {
   }
 
   register(register: RegisterParent): Observable<any> {
-    return this.httpClient.post<any>(this.apiUrl + '/register', {
-      register
-    }, this.httpOptions);
+    return this.httpClient.post<any>(this.apiUrl + '/register', register, this.httpOptions);
   }
 
   logout() {
