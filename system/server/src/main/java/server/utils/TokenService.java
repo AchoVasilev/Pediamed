@@ -21,11 +21,11 @@ public class TokenService {
         this.jwtEncoder = jwtEncoder;
     }
 
-    public String generateToken(Authentication authentication) {
+    public TokenModel generateToken(Authentication authentication) {
         return this.generateToken(Instant.now(), issuer, authentication);
     }
 
-    private String generateToken(Instant now, String issuer, Authentication authentication) {
+    private TokenModel generateToken(Instant now, String issuer, Authentication authentication) {
         var scope = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -39,6 +39,7 @@ public class TokenService {
                 .claim("scope", scope)
                 .build();
 
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        var encodedToken = this.jwtEncoder.encode(JwtEncoderParameters.from(claims));
+        return new TokenModel(encodedToken.getTokenValue(), encodedToken.getExpiresAt());
     }
 }

@@ -16,12 +16,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox'
-import { httpInterceptorProviders } from './helpers/http-request.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthModule } from './features/auth/auth.module';
 import { OfferedServicesModule } from './offered-services/offered-services.module';
 import { PrivacyComponent } from './shared/privacy/privacy.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AuthInterceptorProviders } from './services/auth/auth.interceptor';
+import { AuthService } from './services/auth/auth.service';
+import { OfferedServiceService } from './services/offered-service/offered-service.service';
 
 @NgModule({
   declarations: [
@@ -47,9 +50,14 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressSpinnerModule
   ],
-  providers: [httpInterceptorProviders],
+  providers: [
+    AuthService,
+    OfferedServiceService,
+    AuthInterceptorProviders
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

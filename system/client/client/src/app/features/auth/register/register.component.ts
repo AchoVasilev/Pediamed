@@ -20,6 +20,7 @@ export class RegisterComponent {
   phoneMaxLength: number = 13;
   private passwordControl = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
   hide: boolean = true;
+  loading: boolean = false;
   form: FormGroup;
 
   constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar) {
@@ -62,6 +63,7 @@ export class RegisterComponent {
   }
 
   submitRegisterForm() {
+    this.loading = true;
     const { email, firstName, middleName, lastName, phoneNumber, passwords } = this.form.value;
     const registerParent: RegisterParent = {
       email,
@@ -75,11 +77,15 @@ export class RegisterComponent {
     this.authService.register(registerParent)
       .subscribe({
         next: (data) => {
-          this.router.navigateByUrl('/auth/login');
+          if (data) {
+            this.loading = false;
+            this.router.navigateByUrl('/auth/login');
+          }
         },
         error: (err: HttpErrorResponse) => {
           if (err.status === HttpStatusCode.BadRequest) {
             this.openSnackBar(err.error.message);
+            this.loading = false;
           }
         },
       });
