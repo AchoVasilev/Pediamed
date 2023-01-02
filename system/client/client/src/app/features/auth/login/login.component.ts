@@ -12,6 +12,7 @@ export class LoginComponent {
   hide = true;
   form: FormGroup;
   loading = false;
+  errorMsg: string = '';
 
   constructor(private authService: AuthService) {
     this.form = new FormGroup({
@@ -34,9 +35,12 @@ export class LoginComponent {
     const { email, password, persist } = this.form.value;
 
     this.authService.login(email, password, persist)
-      .subscribe(data => {
-        console.log(data);
-
+      .subscribe({
+        error: (err) => {
+          if (err.status === 401) {
+            this.errorMsg = err.error.message;
+          }
+        }
       })
   }
 

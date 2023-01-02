@@ -31,6 +31,7 @@
                                         </button>
                                         <mat-error
                                             *ngIf="validateForm('password')">{{getErrorMessage('required')}}</mat-error>
+                                        <mat-error *ngIf="errorMsg !== ''">{{errorMsg}}</mat-error>
                                     </mat-form-field>
                                 </div>
 

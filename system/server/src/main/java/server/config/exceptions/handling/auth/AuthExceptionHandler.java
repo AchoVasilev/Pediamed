@@ -23,10 +23,18 @@ public class AuthExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(error);
     }
 
-    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
+    @ExceptionHandler({BadCredentialsException.class})
+    @ResponseBody
+    public ResponseEntity<RestError> handleBadCredentialsException(Exception ex) {
+        var error = new RestError(INVALID_CREDENTIALS);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(error);
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class})
     @ResponseBody
     public ResponseEntity<RestError> handleCredentialsExceptions(Exception ex) {
-        var error = new RestError(ex.getLocalizedMessage());
+        var error = new RestError(ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(error);
     }
