@@ -1,0 +1,58 @@
+<section class="vh-100 bg-image"
+    style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+    <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+                            <h2 class="text-uppercase text-center mb-5">Вход към акаунт</h2>
+
+                            <form method="POST" [formGroup]="form" (ngSubmit)="submitForm()">
+
+                                <div class="form-outline mb-4">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>И-мейл</mat-label>
+                                        <input matInput placeholder="Въведете своя и-мейл" formControlName="email" />
+                                        <mat-icon matSuffix>email</mat-icon>
+                                        <mat-error
+                                            *ngIf="validateForm('email')">{{getErrorMessage('email')}}</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-outline mb-2">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Въведете своята парола</mat-label>
+                                        <input matInput [type]="hide ? 'password' : 'text'"
+                                            formControlName="password" />
+                                        <button mat-icon-button matSuffix (click)="toggleHide($event)"
+                                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                        </button>
+                                        <mat-error
+                                            *ngIf="validateForm('password')">{{getErrorMessage('required')}}</mat-error>
+                                        <mat-error *ngIf="errorMsg !== ''">{{errorMsg}}</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-check d-flex justify-content-center mb-3">
+                                    <mat-checkbox color="primary" formControlName="persist">Запомни ме?</mat-checkbox>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <button class="px-5" mat-flat-button color="primary"
+                                        [disabled]="form.valid ? false : true">
+                                        <mat-icon *ngIf="loading"><mat-spinner color="accent" diameter="20">
+                                            </mat-spinner></mat-icon>Влез</button>
+                                </div>
+
+                                <p class="text-center text-muted mt-4 mb-0">Забравена парола? <a href="#!"
+                                        class="fw-bold text-body"><u>Влезте тук</u></a></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

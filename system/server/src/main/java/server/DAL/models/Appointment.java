@@ -29,6 +29,8 @@ public class Appointment extends AuditInfo {
     @ManyToOne
     private Cabinet cabinet;
     @ManyToOne
+    private Parent parent;
+    @ManyToOne
     private Patient patient;
     private boolean deleted = false;
 }

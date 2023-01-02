@@ -1,3 +1,5 @@
+server:
+  max-http-request-header-size: 20KB
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -11,9 +13,12 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
     show-sql: true
+rsa:
+  rsa-private-key: classpath:certs/private.pem
+  rsa-public-key: classpath:certs/public.pem
