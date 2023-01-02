@@ -26,7 +26,7 @@ export class AuthService {
       persist
     }, this.httpOptions)
       .pipe(
-        tap(data => this.setSession),
+        tap(data => this.setSession(data)),
         shareReplay());
   }
 
@@ -58,8 +58,7 @@ export class AuthService {
   }
 
   private setSession(authResult: AuthResult) {
-    const expiresAt = moment().add(authResult.expiresAt, 'hour');
-
+    const expiresAt = moment().add(authResult.expiresAt);
     localStorage.setItem('token', authResult.token);
     localStorage.setItem('expiresAt', JSON.stringify(expiresAt.valueOf()))
   }

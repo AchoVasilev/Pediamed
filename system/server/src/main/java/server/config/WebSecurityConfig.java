@@ -3,6 +3,7 @@ package server.config;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -19,6 +20,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -31,9 +33,11 @@ import java.util.List;
 public class WebSecurityConfig {
 
     private final RsaKeyProperties rsaKeyProperties;
+    private final AuthenticationEntryPoint authEntryPoint;
 
-    public WebSecurityConfig(RsaKeyProperties rsaKeyProperties) {
+    public WebSecurityConfig(RsaKeyProperties rsaKeyProperties, @Qualifier("delegatedAuthenticationEntryPoint") AuthenticationEntryPoint authEntryPoint) {
         this.rsaKeyProperties = rsaKeyProperties;
+        this.authEntryPoint = authEntryPoint;
     }
 
     @Bean
@@ -55,12 +59,12 @@ public class WebSecurityConfig {
     public AuthenticationManager authManager(PediamedUserDetailsService userDetailsService) {
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(getPasswordEncoder());
         return new ProviderManager(authProvider);
     }
 
     @Bean
-    public static PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -78,6 +82,8 @@ public class WebSecurityConfig {
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic()
+                .and()
+                .exceptionHandling().authenticationEntryPoint(this.authEntryPoint)
                 .and()
                 .build();
     }

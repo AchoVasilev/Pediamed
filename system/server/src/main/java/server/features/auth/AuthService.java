@@ -7,8 +7,8 @@ import server.DAL.models.Parent;
 import server.DAL.models.enums.RoleEnum;
 import server.DAL.repositories.RoleRepository;
 import server.DAL.repositories.UserRepository;
-import server.config.exceptions.EntityAlreadyExistsException;
-import server.config.exceptions.EntityNotFoundException;
+import server.config.exceptions.models.EntityAlreadyExistsException;
+import server.config.exceptions.models.EntityNotFoundException;
 import server.features.auth.model.RegistrationRequest;
 
 import java.util.UUID;

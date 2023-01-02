@@ -1,5 +1,6 @@
 package server.features.auth;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,15 +28,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         var authentication = this.authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        return ResponseEntity.ok(this.tokenService.generateToken(authentication));
+        return ResponseEntity.ok(this.tokenService.generateToken(authentication, loginRequest.getPersist()));
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> register(@RequestBody RegistrationRequest registrationRequest) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
         var userId = this.authService.register(registrationRequest);
         return new ResponseEntity<>(userId,HttpStatus.CREATED);
     }

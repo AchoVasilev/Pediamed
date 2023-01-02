@@ -1,6 +1,5 @@
 package server.utils;
 
-import com.nimbusds.jwt.JWTClaimsSet;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -15,26 +14,25 @@ import java.util.stream.Collectors;
 @Service
 public class TokenService {
     private final JwtEncoder jwtEncoder;
-    private final String issuer = "self";
 
     public TokenService(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
     }
 
-    public TokenModel generateToken(Authentication authentication) {
-        return this.generateToken(Instant.now(), issuer, authentication);
+    public TokenModel generateToken(Authentication authentication, boolean persist) {
+        return this.generateToken(Instant.now(), authentication, persist);
     }
 
-    private TokenModel generateToken(Instant now, String issuer, Authentication authentication) {
+    private TokenModel generateToken(Instant now, Authentication authentication, boolean persist) {
         var scope = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
 
         var claims = JwtClaimsSet.builder()
-                .issuer(issuer)
+                .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .expiresAt(now.plus(1, persist ? ChronoUnit.WEEKS : ChronoUnit.DAYS))
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .build();

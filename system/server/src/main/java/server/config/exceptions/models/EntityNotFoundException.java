@@ -1,4 +1,4 @@
-package server.config.exceptions;
+package server.config.exceptions.models;
 
 public class EntityNotFoundException extends RuntimeException {
     public EntityNotFoundException(String message) {

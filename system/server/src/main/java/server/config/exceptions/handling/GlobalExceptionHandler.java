@@ -1,4 +1,4 @@
-package server.config;
+package server.config.exceptions.handling;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import server.config.exceptions.EntityAlreadyExistsException;
-import server.config.exceptions.EntityNotFoundException;
+import server.config.exceptions.models.EntityAlreadyExistsException;
+import server.config.exceptions.models.EntityNotFoundException;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
