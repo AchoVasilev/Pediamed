@@ -25,6 +25,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthInterceptorProviders } from './services/auth/auth.interceptor';
 import { AuthService } from './services/auth/auth.service';
 import { OfferedServiceService } from './services/offered-service/offered-service.service';
+import { CalendarModule } from 'angular-calendar';
+import { DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
   declarations: [
@@ -51,7 +54,8 @@ import { OfferedServiceService } from './services/offered-service/offered-servic
     MatButtonModule,
     MatCheckboxModule,
     MatSnackBarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
   providers: [
     AuthService,

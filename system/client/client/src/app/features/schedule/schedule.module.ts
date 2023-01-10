@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { ScheduleRoutingModule } from './schedule-routing.module';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 
 @NgModule({
@@ -11,7 +13,8 @@ import { ScheduleComponent } from './schedule/schedule.component';
   ],
   imports: [
     CommonModule,
-    ScheduleRoutingModule
+    ScheduleRoutingModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ]
 })
 export class ScheduleModule { }
