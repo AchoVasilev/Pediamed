@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +21,10 @@ public class Cabinet extends AuditInfo {
     private String address;
     private String postCode;
     private String phoneNumber;
-    @OneToMany(mappedBy = "cabinet", cascade = CascadeType.ALL)
-    private HashSet<Appointment> appointments = new HashSet<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "schedule_id", referencedColumnName = "id")
+    private Schedule schedule;
+    @ManyToOne
+    private Doctor doctor;
     private boolean deleted = false;
 }

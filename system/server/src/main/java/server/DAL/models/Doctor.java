@@ -3,8 +3,6 @@ package server.DAL.models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -26,7 +24,7 @@ import java.util.UUID;
 @Setter
 @Table(name = "doctor")
 public class Doctor {
-    @Id
+    @jakarta.persistence.Id
     @GeneratedValue
     @UuidGenerator
     private UUID Id;
@@ -37,7 +35,12 @@ public class Doctor {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_user_id", referencedColumnName = "id")
     private ApplicationUser applicationUser;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "schedule_id", referencedColumnName = "id")
+    private Schedule schedule;
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Specialization> specializations = new ArrayList<>();
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    private List<Cabinet> cabinets = new ArrayList<>();
     private boolean deleted = false;
 }
