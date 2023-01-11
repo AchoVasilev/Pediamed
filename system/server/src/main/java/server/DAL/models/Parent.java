@@ -23,7 +23,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "patient")
+@Table(name = "parents")
 public class Parent {
     @Id
     @GeneratedValue
@@ -41,5 +41,4 @@ public class Parent {
     private Appointment appointment;
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Patient> patients = new ArrayList<>();
-    private boolean deleted = false;
 }

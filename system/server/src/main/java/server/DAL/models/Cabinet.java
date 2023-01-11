@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "cabinet")
+@Table(name = "cabinets")
 public class Cabinet extends AuditInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +26,4 @@ public class Cabinet extends AuditInfo {
     private Schedule schedule;
     @ManyToOne
     private Doctor doctor;
-    private boolean deleted = false;
 }

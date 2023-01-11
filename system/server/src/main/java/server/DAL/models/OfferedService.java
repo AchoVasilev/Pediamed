@@ -13,7 +13,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "offered_service")
+@Table(name = "offered_services")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -24,5 +24,4 @@ public class OfferedService extends AuditInfo {
     private Integer id;
     private String name;
     private BigDecimal price;
-    private boolean deleted = false;
 }

@@ -1,21 +1,20 @@
 package server.DAL.models;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToMany;
-import org.hibernate.annotations.UuidGenerator;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 import server.DAL.models.enums.RoleEnum;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +23,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "role")
+@Table(name = "roles")
 public class Role extends AuditInfo {
     @Id
     @GeneratedValue
@@ -35,5 +34,4 @@ public class Role extends AuditInfo {
 
     @OneToMany(mappedBy = "role")
     private List<ApplicationUser> applicationUsers = new ArrayList<>();
-    private boolean deleted = false;
 }

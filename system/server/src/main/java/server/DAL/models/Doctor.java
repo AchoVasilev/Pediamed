@@ -22,7 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "doctor")
+@Table(name = "doctors")
 public class Doctor {
     @jakarta.persistence.Id
     @GeneratedValue
@@ -42,5 +42,4 @@ public class Doctor {
     private List<Specialization> specializations = new ArrayList<>();
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Cabinet> cabinets = new ArrayList<>();
-    private boolean deleted = false;
 }

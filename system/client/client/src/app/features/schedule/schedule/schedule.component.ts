@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { CalendarView } from 'angular-calendar';
+import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -14,7 +14,12 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   view: CalendarView = CalendarView.Week;
   daysInWeek = 7;
   viewDate = new Date();
-  
+  locale: string = 'bg';
+  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
+  weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
+  events: CalendarEvent[] = [];
+  CalendarView = CalendarView;
+
   constructor(private breakpointObserver: BreakpointObserver,
     private cd: ChangeDetectorRef) {}
 
@@ -56,4 +61,7 @@ export class ScheduleComponent implements OnInit, OnDestroy{
     this.destroy$.next();
   }
 
+  setView(view: CalendarView) {
+    this.view = view;
+  }
 }

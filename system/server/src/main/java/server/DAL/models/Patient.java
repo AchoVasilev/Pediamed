@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "child")
+@Table(name = "patients")
 public class Patient extends AuditInfo {
     @Id
     @GeneratedValue
@@ -23,7 +23,6 @@ public class Patient extends AuditInfo {
     private String firstName;
     private String lastName;
     private Integer age;
-    boolean isDeleted = false;
     @ManyToOne
     private Parent parent;
     @OneToOne(cascade = CascadeType.ALL)

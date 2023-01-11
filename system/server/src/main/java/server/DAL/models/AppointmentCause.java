@@ -14,7 +14,7 @@ import lombok.Setter;
 import java.util.HashSet;
 
 @Entity
-@Table(name = "appointment_cause")
+@Table(name = "appointment_causes")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -26,5 +26,4 @@ public class AppointmentCause extends AuditInfo  {
     private String name;
     @OneToMany(mappedBy = "appointmentCause")
     private HashSet<Appointment> appointment = new HashSet<>();
-    private boolean deleted = false;
 }

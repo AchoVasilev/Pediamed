@@ -21,4 +21,5 @@ public class AuditInfo {
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     protected Date dateModified;
+    protected boolean deleted = false;
 }

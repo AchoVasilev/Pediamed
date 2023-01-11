@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "application_user")
+@Table(name = "application_users")
 public class ApplicationUser extends AuditInfo {
     @Id
     @GeneratedValue
@@ -27,5 +27,4 @@ public class ApplicationUser extends AuditInfo {
     private Doctor doctor;
     @ManyToOne
     private Role role;
-    private boolean deleted = false;
 }

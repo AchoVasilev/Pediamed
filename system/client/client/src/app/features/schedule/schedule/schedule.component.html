@@ -7,14 +7,14 @@
           [view]="view"
           [(viewDate)]="viewDate"
         >
-          Previous
+          Назад
         </div>
         <div
           class="btn btn-outline-secondary"
           mwlCalendarToday
           [(viewDate)]="viewDate"
         >
-          Today
+          Днес
         </div>
         <div
           class="btn btn-primary"
@@ -22,7 +22,7 @@
           [view]="view"
           [(viewDate)]="viewDate"
         >
-          Next
+          Напред
         </div>
       </div>
     </div>
@@ -38,21 +38,21 @@
           (click)="setView(CalendarView.Month)"
           [class.active]="view === CalendarView.Month"
         >
-          Month
+          Месец
         </div>
         <div
           class="btn btn-primary"
           (click)="setView(CalendarView.Week)"
           [class.active]="view === CalendarView.Week"
         >
-          Week
+          Седмица
         </div>
         <div
           class="btn btn-primary"
           (click)="setView(CalendarView.Day)"
           [class.active]="view === CalendarView.Day"
         >
-          Day
+          Ден
         </div>
       </div>
     </div>

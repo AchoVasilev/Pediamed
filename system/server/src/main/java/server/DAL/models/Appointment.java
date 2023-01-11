@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "appointment")
+@Table(name = "appointments")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -20,6 +21,8 @@ public class Appointment extends AuditInfo {
     @GeneratedValue
     @UuidGenerator
     private UUID id;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     @ManyToOne
     private AppointmentCause appointmentCause;
     @ManyToOne
@@ -30,5 +33,7 @@ public class Appointment extends AuditInfo {
     private Parent parent;
     @OneToOne
     private Patient patient;
-    private boolean deleted = false;
+    @OneToOne
+    @JoinColumn(name = "calendar_event_id")
+    private CalendarEvent calendarEvent;
 }
