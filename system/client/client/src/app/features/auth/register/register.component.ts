@@ -5,9 +5,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { RegisterParent } from 'src/app/models/user/registerParent';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { checkForMaxLength, checkForMinLength, parseErrorMessage, shouldShowErrorForControl } from 'src/app/shared/utils/formValidator';
-import { openSnackBar } from 'src/app/shared/utils/matSnackBarUtil';
-import { passwordMatch } from 'src/app/shared/utils/passwordValidator';
+import { checkForMaxLength, checkForMinLength, parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
+import { openSnackBar } from 'src/app/utils/matSnackBarUtil';
+import { passwordMatch } from 'src/app/utils/passwordValidator';
 
 @Component({
   selector: 'app-register',

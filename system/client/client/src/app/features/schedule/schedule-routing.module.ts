@@ -7,7 +7,7 @@ const routes: Routes = [
     path: 'schedule',
     children: [
       {
-        path: '',
+        path: 'calendar',
         pathMatch: 'full',
         component: ScheduleComponent
       }

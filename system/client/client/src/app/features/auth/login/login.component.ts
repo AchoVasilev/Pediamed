@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { shouldShowErrorForControl, parseErrorMessage } from 'src/app/shared/utils/formValidator';
+import { shouldShowErrorForControl, parseErrorMessage } from 'src/app/utils/formValidator';
 
 @Component({
   selector: 'app-login',

@@ -3,6 +3,7 @@ package server.DAL.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,4 +27,7 @@ public class CalendarEvent extends AuditInfo {
     private UUID id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private String title;
+    @OneToOne
+    private Appointment appointment;
 }

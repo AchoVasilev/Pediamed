@@ -11,12 +11,12 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0">
                     <a routerLink="/" class="nav-item nav-link active">Начало</a>
-                    <a routerLink="/about" class="nav-item nav-link">За нас</a>
+                    <a routerLink="/schedule" class="nav-item nav-link">Календар</a>
                     <a routerLink="/services" class="nav-item nav-link">Услуги</a>
                     <div class="nav-item dropdown" (mouseout)="onMouseLeave()" (mouseover)="onHover()">
                         <a href="javascript:void(0)" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Меню</a>
                         <div class="dropdown-menu m-0" id="menu">
-                            <a href="blog.html" class="dropdown-item">Blog Grid</a>
+                            <a routerLink="/about" class="dropdown-item">За нас</a>
                             <a href="detail.html" class="dropdown-item">Blog Detail</a>
                             <a href="team.html" class="dropdown-item">The Team</a>
                             <a href="testimonial.html" class="dropdown-item">Testimonial</a>

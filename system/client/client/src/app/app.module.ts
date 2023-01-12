@@ -1,3 +1,4 @@
+import { ScheduleModule } from './features/schedule/schedule.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -28,6 +29,9 @@ import { OfferedServiceService } from './services/offered-service/offered-servic
 import { CalendarModule } from 'angular-calendar';
 import { DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { registerLocaleData } from '@angular/common';
+import localeBg from '@angular/common/locales/bg'
+registerLocaleData(localeBg)
 
 @NgModule({
   declarations: [
@@ -48,6 +52,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     RouterModule,
     AuthModule,
     OfferedServicesModule,
+    ScheduleModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
