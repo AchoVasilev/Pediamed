@@ -19,6 +19,10 @@ public class ApplicationUser extends AuditInfo {
     private UUID Id;
     private String email;
     private String password;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private String phoneNumber;
     @OneToOne(mappedBy = "applicationUser",
      cascade = CascadeType.ALL)
     private Parent parent;

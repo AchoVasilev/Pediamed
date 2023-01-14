@@ -10,6 +10,7 @@ import server.DAL.repositories.UserRepository;
 import server.config.exceptions.models.EntityAlreadyExistsException;
 import server.config.exceptions.models.EntityNotFoundException;
 import server.features.auth.model.RegistrationRequest;
+import server.features.auth.model.UserDto;
 
 import java.util.UUID;
 
@@ -39,10 +40,10 @@ public class AuthService {
         newUser.setPassword(this.passwordEncoder.encode(registrationRequest.getPassword()));
 
         var patient = new Parent();
-        patient.setFirstName(registrationRequest.getFirstName());
-        patient.setMiddleName(registrationRequest.getMiddleName());
-        patient.setLastName(registrationRequest.getLastName());
-        patient.setPhoneNumber(registrationRequest.getPhoneNumber());
+        newUser.setFirstName(registrationRequest.getFirstName());
+        newUser.setMiddleName(registrationRequest.getMiddleName());
+        newUser.setLastName(registrationRequest.getLastName());
+        newUser.setPhoneNumber(registrationRequest.getPhoneNumber());
 
         var role = this.roleRepository.findByName(RoleEnum.ROLE_PARENT)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
@@ -50,5 +51,15 @@ public class AuthService {
         newUser.setParent(patient);
 
         return this.userRepository.save(newUser).getId();
+    }
+
+    public UserDto findByEmail(String email) {
+        return this.userRepository.findByEmail(email)
+                .map(u -> new UserDto(
+                        u.getId(),
+                        u.getFirstName(),
+                        u.getLastName(),
+                        u.getEmail()))
+                .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
     }
 }

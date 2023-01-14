@@ -28,10 +28,6 @@ public class Doctor {
     @GeneratedValue
     @UuidGenerator
     private UUID Id;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private String phoneNumber;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_user_id", referencedColumnName = "id")
     private ApplicationUser applicationUser;

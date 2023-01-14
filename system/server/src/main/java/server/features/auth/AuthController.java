@@ -52,10 +52,15 @@ public class AuthController {
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND)).toString();
 
+        var user = this.authService.findByEmail(authentication.getName());
+
         return new LoginResponse(
-                this.tokenService.generateToken(authentication, persist),
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
                 role,
-                authentication.getName()
+                user.getEmail(),
+                this.tokenService.generateToken(authentication, persist)
         );
     }
 }

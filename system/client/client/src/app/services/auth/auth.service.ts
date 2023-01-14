@@ -1,3 +1,5 @@
+import { UserModel } from './../data/user/userModel';
+import { UserDataService } from './../data/user/user-data.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, shareReplay, tap } from 'rxjs';
@@ -17,7 +19,7 @@ export class AuthService {
     })
   };
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private userDataService: UserDataService) { }
 
   login(email: string, password: string, persist: boolean): Observable<AuthResult> {
     return this.httpClient.post<AuthResult>(this.apiUrl + '/login', {
@@ -26,7 +28,19 @@ export class AuthService {
       persist
     }, this.httpOptions)
       .pipe(
-        tap(data => this.setSession(data)),
+        tap(data => {
+          this.setSession(data);
+
+          const user: UserModel = {
+            id: data.id,
+            email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            role: data.role
+          };
+
+          this.userDataService.setUser(user);
+        }),
         shareReplay());
   }
 
@@ -37,6 +51,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('expiresAt');
+    this.userDataService.removeUser();
   }
 
   isLoggedIn() {
