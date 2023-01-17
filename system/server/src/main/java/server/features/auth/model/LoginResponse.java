@@ -12,8 +12,8 @@ import java.util.UUID;
 @Setter
 public class LoginResponse {
     private UUID id;
-    private String firstName,
-    private String lastName,
+    private String firstName;
+    private String lastName;
     private String role;
     private String email;
     private TokenModel tokenModel;

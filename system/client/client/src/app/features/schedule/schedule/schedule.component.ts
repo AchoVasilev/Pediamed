@@ -1,3 +1,5 @@
+import { UserModel } from './../../../services/data/user/userModel';
+import { UserDataService } from './../../../services/data/user/user-data.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
@@ -19,9 +21,12 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
   events: CalendarEvent[] = [];
   CalendarView = CalendarView;
+  user: UserModel;
 
   constructor(private breakpointObserver: BreakpointObserver,
-    private cd: ChangeDetectorRef) {}
+    private cd: ChangeDetectorRef, private userDataService: UserDataService) {
+      this.user = this.userDataService.getUser();
+    }
 
   ngOnInit(): void {
     const CALENDAR_RESPONSIVE = {
