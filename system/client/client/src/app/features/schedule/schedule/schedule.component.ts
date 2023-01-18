@@ -1,20 +1,31 @@
+import { DateFormatter } from './../../../utils/dateFormatter';
+import { CalendarDateFormatter } from 'angular-calendar';
 import { UserModel } from './../../../services/data/user/userModel';
 import { UserDataService } from './../../../services/data/user/user-data.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { Subject, takeUntil } from 'rxjs';
+import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
 
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
-  styleUrls: ['./schedule.component.css']
+  styleUrls: ['./schedule.component.css'],
+  providers: [
+    {
+      provide: CalendarDateFormatter,
+      useClass: DateFormatter
+    }
+  ]
 })
 export class ScheduleComponent implements OnInit, OnDestroy{
   private destroy$ = new Subject<void>();
 
   view: CalendarView = CalendarView.Week;
   daysInWeek = 7;
+  dayStartHour = 7;
+  dayEndHour = 20;
   viewDate = new Date();
   locale: string = 'bg-BG';
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
@@ -22,6 +33,7 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   events: CalendarEvent[] = [];
   CalendarView = CalendarView;
   user: UserModel;
+  cabinetName: string = '';
 
   constructor(private breakpointObserver: BreakpointObserver,
     private cd: ChangeDetectorRef, private userDataService: UserDataService) {
@@ -32,7 +44,7 @@ export class ScheduleComponent implements OnInit, OnDestroy{
     const CALENDAR_RESPONSIVE = {
       small: {
         breakpoint: '(max-width: 576px)',
-        daysInWeek: 2,
+        daysInWeek: 1,
       },
       medium: {
         breakpoint: '(max-width: 768px)',
@@ -60,6 +72,8 @@ export class ScheduleComponent implements OnInit, OnDestroy{
         }
         this.cd.markForCheck();
       });
+
+    this.cabinetName = CabinetName[CabinetName.Плевен];
   }
   
   ngOnDestroy(): void {
