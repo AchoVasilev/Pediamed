@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { EventData } from './../../models/events/eventData';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -8,11 +9,14 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ScheduleDialogComponent {
 
+  @Input()
+  eventData!: EventData[];
+
   constructor(private dialog: MatDialog) {}
 
   openDialog() {
     const dialogRef = this.dialog.open(ScheduleDialogComponent, {
-      
+
     });
   }
 }
