@@ -10,13 +10,13 @@ import { HomeComponent } from './shared/home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthModule } from './features/auth/auth.module';
 import { OfferedServicesModule } from './offered-services/offered-services.module';
@@ -31,10 +31,10 @@ import { DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { registerLocaleData } from '@angular/common';
 import localeBg from '@angular/common/locales/bg';
-import { ScheduleDialogComponent } from './reusableComponents/schedule-dialog/schedule-dialog.component'
-import {MatDialogModule} from '@angular/material/dialog'
-
-registerLocaleData(localeBg)
+import { ScheduleDialogComponent } from './reusableComponents/schedule-dialog/schedule-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+registerLocaleData(localeBg);
 
 @NgModule({
   declarations: [
@@ -43,7 +43,7 @@ registerLocaleData(localeBg)
     FooterComponent,
     HomeComponent,
     PrivacyComponent,
-    ScheduleDialogComponent
+    ScheduleDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,13 +65,13 @@ registerLocaleData(localeBg)
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatDialogModule,
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
+    MatSelectModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
   ],
-  providers: [
-    AuthService,
-    OfferedServiceService,
-    AuthInterceptorProviders
-  ],
-  bootstrap: [AppComponent]
+  providers: [AuthService, OfferedServiceService, AuthInterceptorProviders],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

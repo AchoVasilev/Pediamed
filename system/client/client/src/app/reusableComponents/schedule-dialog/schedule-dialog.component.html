@@ -1,1 +1,22 @@
-<p>schedule-dialog works!</p>
+<h1 mat-dialog-title>Създаване на свободни часове</h1>
+<div mat-dialog-content>
+  <p>Изберете часове и продължителност</p>
+  <mat-form-field appearance="fill">
+    <mat-label>Часове</mat-label>
+    <mat-select [(value)]="selectedHour">
+      <mat-option></mat-option>
+      <mat-option [value]="data.hours" *ngFor="let data of eventData">{{ data.hours }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Минути</mat-label>
+    <mat-select [(value)]="selectedMinutes">
+      <mat-option></mat-option>
+      <mat-option [value]="data.intervals" *ngFor="let data of eventData">{{ data.intervals }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Затвори</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Създаване</button>
+</div>

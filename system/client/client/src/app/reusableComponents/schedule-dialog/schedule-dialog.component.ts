@@ -1,6 +1,5 @@
 import { EventData } from './../../models/events/eventData';
-import { Component, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-schedule-dialog',
@@ -9,14 +8,9 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ScheduleDialogComponent {
 
-  @Input()
   eventData!: EventData[];
-
-  constructor(private dialog: MatDialog) {}
-
-  openDialog() {
-    const dialogRef = this.dialog.open(ScheduleDialogComponent, {
-
-    });
-  }
+  selectedHour: string = '';
+  selectedMinutes: number = 0;
+  
+  constructor() {}
 }

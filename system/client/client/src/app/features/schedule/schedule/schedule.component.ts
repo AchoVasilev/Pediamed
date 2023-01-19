@@ -1,3 +1,7 @@
+import { ScheduleDialogComponent } from './../../../reusableComponents/schedule-dialog/schedule-dialog.component';
+import { EventData } from './../../../models/events/eventData';
+import { ScheduleService } from './../../../services/schedule/schedule.service';
+import { MatDialog } from '@angular/material/dialog';
 import { DateFormatter } from './../../../utils/dateFormatter';
 import { CalendarDateFormatter } from 'angular-calendar';
 import { UserModel } from './../../../services/data/user/userModel';
@@ -34,10 +38,17 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   CalendarView = CalendarView;
   user: UserModel;
   cabinetName: string = '';
+  eventData: EventData[] = [];
 
-  constructor(private breakpointObserver: BreakpointObserver,
-    private cd: ChangeDetectorRef, private userDataService: UserDataService) {
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private cd: ChangeDetectorRef, 
+    private userDataService: UserDataService,
+    private scheduleService: ScheduleService,
+    private dialog: MatDialog) {
       this.user = this.userDataService.getUser();
+      this.scheduleService.getEventData()
+        .subscribe(data => this.eventData = data);
     }
 
   ngOnInit(): void {
@@ -82,5 +93,11 @@ export class ScheduleComponent implements OnInit, OnDestroy{
 
   setView(view: CalendarView) {
     this.view = view;
+  }
+
+  openDialog() {
+    this.dialog.open(ScheduleDialogComponent, {
+      data: this.eventData
+    })
   }
 }
