@@ -17,7 +17,7 @@ INSERT INTO roles (id, name, deleted, date_created)
 VALUES ('83f00c4a-3e7a-4f74-b8d7-04705dad0be1', 'ROLE_DOCTOR', false, (now() at time zone 'utc')),
        ('e02fe4eb-a24b-4588-a48c-197bd00138a2', 'ROLE_PATIENT', false, (now() at time zone 'utc')),
        ('e02fe4eb-a24b-4588-a48c-197bd00138a3', 'ROLE_PARENT', false, (now() at time zone 'utc')),
-       ('107d12ee-6469-42ae-9439-db1d377b61a5', 'ROLE_ADMINISTRATOR', false, (now() at time zone 'utc'))
+       ('107d12ee-6469-42ae-9439-db1d377b61a5', 'ROLE_ADMINISTRATOR', false, (now() at time zone 'utc'));
 
 INSERT INTO event_data(hours, intervals)
 VALUES  ('08:00', 5),
@@ -44,4 +44,4 @@ VALUES  ('08:00', 5),
         ('18:30', 110),
         ('19:00', 115),
         ('19:30', 120),
-        ('20:00', 125),
+        ('20:00', 125);

@@ -23,13 +23,12 @@ public class ScheduleController {
     }
 
     @GetMapping("/event-data")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<EventDataResponse>> getEventData() {
+        var data = this.scheduleService.getEventData();
         return ResponseEntity.ok(this.scheduleService.getEventData());
     }
 
     @GetMapping("/cabinets")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<CabinetResponse>> getCabinets() {
         return ResponseEntity.ok(this.cabinetService.getCabinets());
     }

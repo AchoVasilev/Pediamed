@@ -96,8 +96,10 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   }
 
   openDialog() {
+    console.log(this.eventData);
+    
     this.dialog.open(ScheduleDialogComponent, {
       data: this.eventData
-    })
+    });
   }
 }
