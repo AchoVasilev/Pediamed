@@ -1,7 +1,10 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { shouldShowErrorForControl, parseErrorMessage } from 'src/app/utils/formValidator';
+import { openSnackBar } from 'src/app/utils/matSnackBarUtil';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +17,7 @@ export class LoginComponent {
   loading = false;
   errorMsg: string = '';
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router, private snackBar: MatSnackBar) {
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
@@ -36,9 +39,14 @@ export class LoginComponent {
 
     this.authService.login(email, password, persist)
       .subscribe({
+        next: () => {
+          this.loading = false;
+          this.router.navigateByUrl('');
+        },
         error: (err) => {
           if (err.status === 401) {
-            this.errorMsg = err.error.message;
+            this.openSnackBar(err.error.message);
+            this.loading = false;
           }
         }
       })
@@ -47,5 +55,9 @@ export class LoginComponent {
   toggleHide(event: Event) {
     event.preventDefault();
     this.hide = !this.hide;
+  }
+
+  openSnackBar(message: string) {
+    openSnackBar(this.snackBar, message);
   }
 }

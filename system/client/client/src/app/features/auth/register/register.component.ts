@@ -77,11 +77,9 @@ export class RegisterComponent {
 
     this.authService.register(registerParent)
       .subscribe({
-        next: (data) => {
-          if (data) {
+        next: () => {
             this.loading = false;
             this.router.navigateByUrl('/auth/login');
-          }
         },
         error: (err: HttpErrorResponse) => {
           if (err.status === HttpStatusCode.BadRequest) {
