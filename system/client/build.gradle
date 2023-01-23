@@ -7,7 +7,5 @@ node {
     npmVersion = '8.19.2'
     download = true
 }
-jar.dependsOn 'npm_run_build'
-jar {
-    from 'dist/client' into 'static'
-}
+
+build.dependsOn 'npm_run_build'

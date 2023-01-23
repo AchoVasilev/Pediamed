@@ -1,5 +1,6 @@
 package server.features.auth;
 
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import server.DAL.models.ApplicationUser;
@@ -29,6 +30,7 @@ public class AuthService {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional
     public UUID register(RegistrationRequest registrationRequest) {
         var user = this.userRepository.findByEmail(registrationRequest.getEmail());
         if (user.isPresent()) {

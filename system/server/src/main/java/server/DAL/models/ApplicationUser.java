@@ -24,10 +24,12 @@ public class ApplicationUser extends AuditInfo {
     private String lastName;
     private String phoneNumber;
     @OneToOne(mappedBy = "applicationUser",
-     cascade = CascadeType.ALL)
+     cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY)
     private Parent parent;
     @OneToOne(mappedBy = "applicationUser",
-    cascade = CascadeType.ALL)
+    cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY)
     private Doctor doctor;
     @ManyToOne
     private Role role;
