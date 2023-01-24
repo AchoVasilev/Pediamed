@@ -1,6 +1,6 @@
 import { ScheduleDialogComponent } from './../../../reusableComponents/schedule-dialog/schedule-dialog.component';
 import { EventData } from './../../../models/events/eventData';
-import { ScheduleService } from './../../../services/schedule/schedule.service';
+import { ScheduleService } from '../../../services/schedule/schedule.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DateFormatter } from './../../../utils/dateFormatter';
 import { CalendarDateFormatter } from 'angular-calendar';
