@@ -5,14 +5,14 @@
     <mat-label>Часове</mat-label>
     <mat-select [(value)]="selectedHour">
       <mat-option></mat-option>
-      <mat-option [value]="data.hours" *ngFor="let data of eventData">{{ data.hours }}</mat-option>
+      <mat-option [value]="data.hours" *ngFor="let data of data">{{ data.hours }}</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Минути</mat-label>
     <mat-select [(value)]="selectedMinutes">
       <mat-option></mat-option>
-      <mat-option [value]="data.intervals" *ngFor="let data of eventData">{{ data.intervals }}</mat-option>
+      <mat-option [value]="data.intervals" *ngFor="let data of data">{{ data.intervals }}</mat-option>
     </mat-select>
   </mat-form-field>
 </div>

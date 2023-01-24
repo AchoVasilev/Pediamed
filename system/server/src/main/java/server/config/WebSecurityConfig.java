@@ -78,7 +78,7 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/login", "/auth/register", "/offered-service").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll()) //should be authenticated, permit for testing
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic()

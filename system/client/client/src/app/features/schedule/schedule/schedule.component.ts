@@ -32,8 +32,7 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   dayEndHour = 20;
   viewDate = new Date();
   locale: string = 'bg-BG';
-  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-  weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
+  weekStartsOn: number = DAYS_OF_WEEK.SUNDAY;
   events: CalendarEvent[] = [];
   CalendarView = CalendarView;
   user: UserModel;
@@ -96,10 +95,21 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   }
 
   openDialog() {
-    console.log(this.eventData);
-    
     this.dialog.open(ScheduleDialogComponent, {
       data: this.eventData
     });
+  }
+
+  generateDayEvents(event: any) {
+    const date = event.date;
+    const hours = '';
+    const intervals = 0;
+
+    this.dialog.open(ScheduleDialogComponent, {
+      data: this.eventData
+    }).afterClosed()
+    .subscribe(res => {
+      console.log(res);
+    })
   }
 }

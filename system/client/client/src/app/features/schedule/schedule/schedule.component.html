@@ -57,17 +57,6 @@
       </div>
     </div>
   </div>
-  <div class="col-md-4">
-    <div class="btn-group">
-      <button
-        class="btn btn-primary"
-        (click)="openDialog()"
-      >Часове</button>
-      <div class="btn btn-primary" (click)="setView(CalendarView.Week)">
-        Седмица
-      </div>
-    </div>
-  </div>
 </div>
 <br />
 
@@ -78,7 +67,6 @@
     [events]="events"
     [locale]="locale"
     [weekStartsOn]="weekStartsOn"
-    [weekendDays]="weekendDays"
   >
   </mwl-calendar-month-view>
   <mwl-calendar-week-view
@@ -87,9 +75,9 @@
     [events]="events"
     [locale]="locale"
     [weekStartsOn]="weekStartsOn"
-    [weekendDays]="weekendDays"
     [dayStartHour]="dayStartHour"
     [dayEndHour]="dayEndHour"
+    (dayHeaderClicked)="generateDayEvents($event)"
   >
   </mwl-calendar-week-view>
   <mwl-calendar-day-view
