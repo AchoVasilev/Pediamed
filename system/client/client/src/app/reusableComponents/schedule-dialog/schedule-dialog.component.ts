@@ -1,7 +1,8 @@
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { EventData } from './../../models/events/eventData';
+import { EventData, EventDataInput } from './../../models/events/eventData';
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
 
 @Component({
   selector: 'app-schedule-dialog',
@@ -10,7 +11,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ScheduleDialogComponent {
 
-  data!: EventData[];
+  data: EventDataInput;
   selectedHour: string = '';
   selectedMinutes: number = 0;
   form: FormGroup = this.fb.group({
@@ -19,7 +20,7 @@ export class ScheduleDialogComponent {
   });
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) data: EventData[], 
+    @Inject(MAT_DIALOG_DATA) data: EventDataInput, 
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<ScheduleDialogComponent>) {
     this.data = data;
@@ -31,5 +32,13 @@ export class ScheduleDialogComponent {
 
   close() {
     this.dialogRef.close(this.form.value);
+  }
+
+  validateForm(control: string, form: FormGroup = this.form) {
+    return shouldShowErrorForControl(control, form);
+  }
+
+  getErrorMessage(errorType: string, numberOfSymbols?: number) {
+    return parseErrorMessage(errorType, numberOfSymbols);
   }
 }

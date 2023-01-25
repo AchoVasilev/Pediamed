@@ -1,5 +1,5 @@
 import { ScheduleDialogComponent } from './../../../reusableComponents/schedule-dialog/schedule-dialog.component';
-import { EventData } from './../../../models/events/eventData';
+import { EventData, EventDataInput } from './../../../models/events/eventData';
 import { ScheduleService } from '../../../services/schedule/schedule.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DateFormatter } from './../../../utils/dateFormatter';
@@ -101,12 +101,14 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   }
 
   generateDayEvents(event: any) {
-    const date = event.date;
-    const hours = '';
-    const intervals = 0;
+    const date = event.day.date as Date;
+    const eventDataInput: EventDataInput = {
+      date,
+      eventData: this.eventData
+    };
 
     this.dialog.open(ScheduleDialogComponent, {
-      data: this.eventData
+      data: eventDataInput
     }).afterClosed()
     .subscribe(res => {
       console.log(res);
