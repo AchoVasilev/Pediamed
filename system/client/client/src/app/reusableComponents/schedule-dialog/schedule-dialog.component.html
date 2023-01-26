@@ -1,18 +1,26 @@
-<h1 mat-dialog-title>Създаване на свободни часове</h1>
+<h1 mat-dialog-title>Създаване на свободни часове за {{ this.data.date }}</h1>
 <div mat-dialog-content>
   <p>Изберете часове и продължителност</p>
   <form action="" [formGroup]="form">
   <mat-form-field appearance="fill">
-    <mat-label>Часове</mat-label>
-    <mat-select [(value)]="selectedHour" formControlName="hours">
+    <mat-label>Начален час</mat-label>
+    <mat-select formControlName="hours">
       <mat-option></mat-option>
       <mat-option [value]="data.hours" *ngFor="let data of data.eventData">{{ data.hours }}</mat-option>
     </mat-select>
     <mat-error *ngIf="validateForm('hours')">{{ getErrorMessage('required') }}</mat-error>
   </mat-form-field>
   <mat-form-field appearance="fill">
-    <mat-label>Минути</mat-label>
-    <mat-select [(value)]="selectedMinutes" formControlName="intervals">
+    <mat-label>Краен час</mat-label>
+    <mat-select formControlName="endHour">
+      <mat-option></mat-option>
+      <mat-option [value]="data.hours" *ngFor="let data of data.eventData">{{ data.hours }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="validateForm('endHour')">{{ getErrorMessage('required') }}</mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Продължителност</mat-label>
+    <mat-select formControlName="intervals">
       <mat-option></mat-option>
       <mat-option [value]="data.intervals" *ngFor="let data of data.eventData">{{ data.intervals }}</mat-option>
     </mat-select>
@@ -22,5 +30,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Затвори</button>
-  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Създаване</button>
+  <button mat-button [mat-dialog-close]="true" (click)="close()" cdkFocusInitial>Създаване</button>
 </div>

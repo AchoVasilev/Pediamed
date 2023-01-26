@@ -11,6 +11,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { Subject, takeUntil } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-schedule',
@@ -32,7 +33,7 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   dayEndHour = 20;
   viewDate = new Date();
   locale: string = 'bg-BG';
-  weekStartsOn: number = DAYS_OF_WEEK.SUNDAY;
+  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
   events: CalendarEvent[] = [];
   CalendarView = CalendarView;
   user: UserModel;
@@ -94,14 +95,14 @@ export class ScheduleComponent implements OnInit, OnDestroy{
     this.view = view;
   }
 
-  openDialog() {
-    this.dialog.open(ScheduleDialogComponent, {
-      data: this.eventData
-    });
-  }
-
   generateDayEvents(event: any) {
-    const date = event.day.date as Date;
+    let date = event.day.date;
+    if(moment(date).isBefore(Date.now(), 'day')) {
+      return;
+    }
+
+    date = moment(date).format('DD/MM/yyyy');
+
     const eventDataInput: EventDataInput = {
       date,
       eventData: this.eventData

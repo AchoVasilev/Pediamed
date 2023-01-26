@@ -4,6 +4,6 @@ export interface EventData {
 }
 
 export interface EventDataInput {
-    date: Date,
+    date: string,
     eventData: EventData[]
 }

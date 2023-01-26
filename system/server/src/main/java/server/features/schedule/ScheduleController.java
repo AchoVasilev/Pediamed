@@ -22,7 +22,6 @@ public class ScheduleController {
 
     @GetMapping("/event-data")
     public ResponseEntity<List<EventDataResponse>> getEventData() {
-        var data = this.scheduleService.getEventData();
         return ResponseEntity.ok(this.scheduleService.getEventData());
     }
 
