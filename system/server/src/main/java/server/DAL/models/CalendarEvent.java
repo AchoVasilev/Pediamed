@@ -1,8 +1,10 @@
 package server.DAL.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -30,4 +32,6 @@ public class CalendarEvent extends AuditInfo {
     private String title;
     @OneToOne
     private Appointment appointment;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Schedule schedule;
 }

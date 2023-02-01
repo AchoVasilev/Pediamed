@@ -27,7 +27,7 @@ public class Appointment extends AuditInfo {
     private AppointmentCause appointmentCause;
     @ManyToOne
     private Cabinet cabinet;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Schedule schedule;
     @OneToOne
     private Parent parent;

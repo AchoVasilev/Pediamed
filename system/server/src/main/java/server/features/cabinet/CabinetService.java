@@ -1,8 +1,8 @@
-package server.features.schedule;
+package server.features.cabinet;
 
 import org.springframework.stereotype.Service;
 import server.DAL.repositories.CabinetRepository;
-import server.features.schedule.models.CabinetResponse;
+import server.features.cabinet.models.CabinetResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +22,7 @@ public class CabinetService {
                 .map(c -> new CabinetResponse(
                         c.getId(),
                         c.getName(),
-                        c.getCity(),
-                        c.getAddress(),
-                        c.getPostCode(),
-                        c.getPhoneNumber()
+                        c.getCity()
                 )).collect(Collectors.toList());
     }
 }

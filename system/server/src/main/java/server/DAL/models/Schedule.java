@@ -32,4 +32,6 @@ public class Schedule extends AuditInfo {
     private Cabinet cabinet;
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<Appointment> appointments = new ArrayList<>();
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    private List<CalendarEvent> calendarEvents = new ArrayList<>();
 }

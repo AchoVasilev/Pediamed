@@ -4,7 +4,7 @@ import {
   FormControl,
   Validators,
 } from '@angular/forms';
-import { EventDataInput } from './../../models/events/eventData';
+import { EventDataInput } from '../../models/events/schedule';
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
@@ -41,7 +41,8 @@ export class ScheduleDialogComponent {
     const date = this.data.date;
     const { hours, endHour, intervals } = this.form.value;
 
-    this.dialogRef.close(this.form.value);
+    
+    this.dialogRef.close(true);
   }
 
   validateForm(control: string, form: FormGroup = this.form) {

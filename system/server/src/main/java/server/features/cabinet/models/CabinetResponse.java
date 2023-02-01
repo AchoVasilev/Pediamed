@@ -1,4 +1,4 @@
-package server.features.schedule.models;
+package server.features.cabinet.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,4 @@ public class CabinetResponse {
     private Integer id;
     private String name;
     private String city;
-    private String address;
-    private String postCode;
-    private String phoneNumber;
 }
