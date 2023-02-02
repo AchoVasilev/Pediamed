@@ -1,3 +1,5 @@
+import { CabinetService } from './../../../services/cabinet/cabinet.service';
+import { CabinetResponse } from './../../../models/events/schedule';
 import { ScheduleDialogComponent } from './../../../reusableComponents/schedule-dialog/schedule-dialog.component';
 import { EventData, EventDataInput } from '../../../models/events/schedule';
 import { ScheduleService } from '../../../services/schedule/schedule.service';
@@ -39,12 +41,14 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   user: UserModel;
   cabinetName: string = '';
   eventData: EventData[] = [];
+  cabinetResponse: CabinetResponse | undefined;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private cd: ChangeDetectorRef, 
     private userDataService: UserDataService,
     private scheduleService: ScheduleService,
+    private cabinetService: CabinetService,
     private dialog: MatDialog) {
       this.user = this.userDataService.getUser();
       this.scheduleService.getEventData()
@@ -85,10 +89,16 @@ export class ScheduleComponent implements OnInit, OnDestroy{
       });
 
     this.cabinetName = CabinetName[CabinetName.Плевен];
+    this.getCabinets()
+      .subscribe(data => this.cabinetResponse = data);
   }
   
   ngOnDestroy(): void {
     this.destroy$.next();
+  }
+
+  getCabinets() {
+    return this.cabinetService.getCabinets();
   }
 
   setView(view: CalendarView) {

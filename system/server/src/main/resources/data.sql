@@ -45,3 +45,6 @@ VALUES  ('08:00', 5),
         ('19:00', 115),
         ('19:30', 120),
         ('20:00', 125);
+
+INSERT INTO cabinets(name, city, address, post_code, phone_number)
+VALUES ()

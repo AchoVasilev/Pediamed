@@ -9,7 +9,7 @@ import server.features.cabinet.models.CabinetResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cabinets")
+@RequestMapping("/cabinet")
 public class CabinetController {
     private final CabinetService cabinetService;
 
@@ -19,6 +19,7 @@ public class CabinetController {
 
     @GetMapping
     public ResponseEntity<List<CabinetResponse>> getCabinets() {
+        var cabinets = this.cabinetService.getCabinets();
         return ResponseEntity.ok(this.cabinetService.getCabinets());
     }
 }

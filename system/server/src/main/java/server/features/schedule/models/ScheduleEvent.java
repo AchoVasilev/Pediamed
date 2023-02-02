@@ -2,16 +2,18 @@ package server.features.schedule.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class CabinetSchedule {
+@NoArgsConstructor
+public class ScheduleEvent {
     private UUID id;
-    private List<ScheduleAppointment> scheduleAppointments;
-    private List<ScheduleEvent> scheduleEvents;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 }
