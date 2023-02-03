@@ -2,6 +2,7 @@ package server.features.schedule;
 
 import org.springframework.stereotype.Service;
 import server.DAL.repositories.EventDataRepository;
+import server.features.schedule.models.EventDataInputRequest;
 import server.features.schedule.models.EventDataResponse;
 
 import java.util.List;
@@ -20,5 +21,9 @@ public class ScheduleService {
                 .stream()
                 .map(ev -> new EventDataResponse(ev.getHours(), ev.getIntervals()))
                 .toList();
+    }
+
+    public void generateEvents(EventDataInputRequest data) {
+
     }
 }
