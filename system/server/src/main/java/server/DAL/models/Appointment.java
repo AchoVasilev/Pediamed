@@ -23,15 +23,18 @@ public class Appointment extends AuditInfo {
     private UUID id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "appointment_cause_id", referencedColumnName = "id")
     private AppointmentCause appointmentCause;
     @ManyToOne
     private Cabinet cabinet;
     @ManyToOne(fetch = FetchType.LAZY)
     private Schedule schedule;
     @OneToOne
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private Parent parent;
     @OneToOne
+    @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
     @OneToOne
     @JoinColumn(name = "calendar_event_id")

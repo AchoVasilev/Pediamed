@@ -46,5 +46,10 @@ VALUES  ('08:00', 5),
         ('19:30', 120),
         ('20:00', 125);
 
-INSERT INTO cabinets(name, city, address, post_code, phone_number)
-VALUES ()
+INSERT INTO schedules(id, deleted, date_created)
+VALUES ('dd7e7a79-18fe-46f3-9ffe-29aef8c18ed6', false, (now() at time zone 'utc')),
+        ('6bba2627-3f52-43f4-9c28-5ab3d7ce6151', false, (now() at time zone 'utc'));
+
+INSERT INTO cabinets(id, name, city, address, post_code, phone_number, deleted, date_created, schedule_id)
+VALUES (1, 'Габрово', 'гр. Габрово', 'Медицински център Хипократ, площад Белорусия 2', '5300', '123456789', false, (now() at time zone 'utc'), 'dd7e7a79-18fe-46f3-9ffe-29aef8c18ed6'),
+        (2, 'Плевен', 'гр. Плевен', 'ул. Стефан Караджа 49', '5800', '123456789', false, (now() at time zone 'utc'), '6bba2627-3f52-43f4-9c28-5ab3d7ce6151');

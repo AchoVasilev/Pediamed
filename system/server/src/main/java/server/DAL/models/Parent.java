@@ -32,9 +32,6 @@ public class Parent {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_user_id", referencedColumnName = "id")
     private ApplicationUser applicationUser;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "appointment_id", referencedColumnName = "id")
-    private Appointment appointment;
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Patient> patients = new ArrayList<>();
 }

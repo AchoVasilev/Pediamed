@@ -25,7 +25,4 @@ public class Patient extends AuditInfo {
     private Integer age;
     @ManyToOne
     private Parent parent;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "appointment_id", referencedColumnName = "id")
-    private Appointment appointment;
 }

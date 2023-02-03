@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EventData } from 'src/app/models/events/schedule';
+import { EventData, EventDataCreate } from 'src/app/models/events/schedule';
 
 @Injectable({
   providedIn: 'root'
@@ -14,5 +14,9 @@ export class ScheduleService {
 
   getEventData(): Observable<EventData[]> {
     return this.http.get<EventData[]>(this.apiUrl + '/event-data');
+  }
+
+  postEventData(data: EventDataCreate): Observable<any> {
+    return this.http.post<any>(this.apiUrl + '/event-data', data);
   }
 }

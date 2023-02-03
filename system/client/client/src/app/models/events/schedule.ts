@@ -8,6 +8,13 @@ export interface EventDataInput {
     eventData: EventData[]
 }
 
+export interface EventDataCreate {
+    date: string,
+    startHour: string,
+    endHour: string,
+    intervals: number
+}
+
 export interface CabinetResponse {
     id: number,
     name: string,

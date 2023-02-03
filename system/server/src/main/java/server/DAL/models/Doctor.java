@@ -31,9 +31,6 @@ public class Doctor {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_user_id", referencedColumnName = "id")
     private ApplicationUser applicationUser;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "schedule_id", referencedColumnName = "id")
-    private Schedule schedule;
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Specialization> specializations = new ArrayList<>();
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)

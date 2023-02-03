@@ -1,3 +1,4 @@
+import { EventDataCreate } from './../../models/events/schedule';
 import {
   FormBuilder,
   FormGroup,
@@ -41,8 +42,14 @@ export class ScheduleDialogComponent {
     const date = this.data.date;
     const { hours, endHour, intervals } = this.form.value;
 
+    const eventData: EventDataCreate = {
+      date,
+      startHour: hours,
+      endHour,
+      intervals
+    }
     
-    this.dialogRef.close(true);
+    this.dialogRef.close(eventData);
   }
 
   validateForm(control: string, form: FormGroup = this.form) {
