@@ -35,8 +35,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         var authentication = this.authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        return ResponseEntity.ok(this.getLoginResponse(authentication, loginRequest.getPersist()));
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
+        return ResponseEntity.ok(this.getLoginResponse(authentication, loginRequest.persist()));
     }
 
     @PostMapping("/register")
@@ -55,11 +55,11 @@ public class AuthController {
         var user = this.authService.findByEmail(authentication.getName());
 
         return new LoginResponse(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
+                user.id(),
+                user.firstName(),
+                user.lastName(),
                 role,
-                user.getEmail(),
+                user.email(),
                 this.tokenService.generateToken(authentication, persist)
         );
     }

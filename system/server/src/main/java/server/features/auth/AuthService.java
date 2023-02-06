@@ -32,20 +32,20 @@ public class AuthService {
 
     @Transactional
     public UUID register(RegistrationRequest registrationRequest) {
-        var user = this.userRepository.findByEmail(registrationRequest.getEmail());
+        var user = this.userRepository.findByEmail(registrationRequest.email());
         if (user.isPresent()) {
-            throw new EntityAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS,registrationRequest.getEmail()));
+            throw new EntityAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS,registrationRequest.email()));
         }
 
         var newUser = new ApplicationUser();
-        newUser.setEmail(registrationRequest.getEmail());
-        newUser.setPassword(this.passwordEncoder.encode(registrationRequest.getPassword()));
+        newUser.setEmail(registrationRequest.email());
+        newUser.setPassword(this.passwordEncoder.encode(registrationRequest.password()));
 
         var patient = new Parent();
-        newUser.setFirstName(registrationRequest.getFirstName());
-        newUser.setMiddleName(registrationRequest.getMiddleName());
-        newUser.setLastName(registrationRequest.getLastName());
-        newUser.setPhoneNumber(registrationRequest.getPhoneNumber());
+        newUser.setFirstName(registrationRequest.firstName());
+        newUser.setMiddleName(registrationRequest.middleName());
+        newUser.setLastName(registrationRequest.lastName());
+        newUser.setPhoneNumber(registrationRequest.phoneNumber());
 
         var role = this.roleRepository.findByName(RoleEnum.ROLE_PARENT)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
