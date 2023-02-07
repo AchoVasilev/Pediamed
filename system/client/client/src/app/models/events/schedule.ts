@@ -9,9 +9,8 @@ export interface EventDataInput {
 }
 
 export interface EventDataCreate {
-    date: string,
-    startHour: string,
-    endHour: string,
+    startDateTime: string,
+    endDateTime: string,
     intervals: number
 }
 

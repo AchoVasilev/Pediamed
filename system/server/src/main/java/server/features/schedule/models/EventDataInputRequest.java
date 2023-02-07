@@ -6,11 +6,9 @@ import static server.constants.ErrorMessages.REQUIRED_FIELD;
 
 public record EventDataInputRequest(
         @NotBlank(message = REQUIRED_FIELD)
-        String date,
+        String startDateTime,
         @NotBlank(message = REQUIRED_FIELD)
-        String startHour,
-        @NotBlank(message = REQUIRED_FIELD)
-        String endHour,
+        String endDateTime,
         Integer intervals
 ) {
 }

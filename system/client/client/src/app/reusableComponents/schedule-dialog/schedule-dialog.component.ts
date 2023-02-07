@@ -12,6 +12,7 @@ import {
   parseErrorMessage,
   shouldShowErrorForControl,
 } from 'src/app/utils/formValidator';
+import { ScheduleService } from 'src/app/services/schedule/schedule.service';
 
 @Component({
   selector: 'app-schedule-dialog',
@@ -29,7 +30,8 @@ export class ScheduleDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) data: EventDataInput,
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<ScheduleDialogComponent>
+    private dialogRef: MatDialogRef<ScheduleDialogComponent>,
+    private scheduleService: ScheduleService
   ) {
     this.data = data;
   }
@@ -43,12 +45,14 @@ export class ScheduleDialogComponent {
     const { hours, endHour, intervals } = this.form.value;
 
     const eventData: EventDataCreate = {
-      date,
-      startHour: hours,
-      endHour,
+      startDateTime: `${date} ${hours}`,
+      endDateTime: `${date} ${endHour}`,
       intervals
     }
     
+    this.scheduleService.postEventData(eventData)
+      .subscribe(res => console.log(res));
+      
     this.dialogRef.close(eventData);
   }
 

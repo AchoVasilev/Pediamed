@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import server.DAL.repositories.EventDataRepository;
 import server.features.schedule.models.EventDataInputRequest;
 import server.features.schedule.models.EventDataResponse;
+import server.utils.DateTimeUtility;
 
 import java.util.List;
 
@@ -24,6 +25,12 @@ public class ScheduleService {
     }
 
     public void generateEvents(EventDataInputRequest data) {
+        var startDate = DateTimeUtility.parseDate(data.startDateTime());
+        var endDate = DateTimeUtility.parseDate(data.endDateTime());
+        DateTimeUtility.validateDate(startDate, endDate);
 
+        for (var slotStart = startDate; slotStart.isBefore(endDate); slotStart = slotStart.plusMinutes(data.intervals())) {
+
+        }
     }
 }
