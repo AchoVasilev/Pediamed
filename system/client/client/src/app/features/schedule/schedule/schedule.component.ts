@@ -115,7 +115,8 @@ export class ScheduleComponent implements OnInit, OnDestroy{
 
     const eventDataInput: EventDataInput = {
       date,
-      eventData: this.eventData
+      eventData: this.eventData,
+      cabinetName: this.cabinetName
     };
 
     this.dialog.open(ScheduleDialogComponent, {

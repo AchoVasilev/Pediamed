@@ -47,7 +47,8 @@ export class ScheduleDialogComponent {
     const eventData: EventDataCreate = {
       startDateTime: `${date} ${hours}`,
       endDateTime: `${date} ${endHour}`,
-      intervals
+      intervals,
+      cabinetName: this.data.cabinetName
     }
     
     this.scheduleService.postEventData(eventData)

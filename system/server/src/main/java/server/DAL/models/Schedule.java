@@ -34,4 +34,16 @@ public class Schedule extends AuditInfo {
     private List<Appointment> appointments = new ArrayList<>();
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<CalendarEvent> calendarEvents = new ArrayList<>();
+
+    public void addCalendarEvent(CalendarEvent calendarEvent) {
+        if(this.calendarEvents.contains(calendarEvent)) {
+            return;
+        }
+
+        this.calendarEvents.add(calendarEvent);
+    }
+
+    public Integer getEventsCount() {
+        return this.calendarEvents.size();
+    }
 }

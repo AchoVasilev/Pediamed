@@ -3,6 +3,7 @@ package server.DAL.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -11,10 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "calendar_events")
@@ -24,9 +23,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CalendarEvent extends AuditInfo {
     @Id
-    @GeneratedValue
-    @UuidGenerator
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String title;
@@ -34,4 +32,10 @@ public class CalendarEvent extends AuditInfo {
     private Appointment appointment;
     @ManyToOne(fetch = FetchType.LAZY)
     private Schedule schedule;
+
+    public CalendarEvent(LocalDateTime startDate, LocalDateTime endDate, String title) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.title = title;
+    }
 }

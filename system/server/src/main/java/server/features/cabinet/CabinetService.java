@@ -1,7 +1,9 @@
 package server.features.cabinet;
 
 import org.springframework.stereotype.Service;
+import server.DAL.models.Cabinet;
 import server.DAL.repositories.CabinetRepository;
+import server.config.exceptions.models.EntityNotFoundException;
 import server.features.cabinet.models.CabinetResponse;
 import server.features.schedule.models.CabinetSchedule;
 import server.features.schedule.models.ScheduleAppointment;
@@ -9,6 +11,8 @@ import server.features.schedule.models.ScheduleEvent;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static server.constants.ErrorMessages.CABINET_NOT_FOUND;
 
 @Service
 public class CabinetService {
@@ -38,5 +42,14 @@ public class CabinetService {
                                         .collect(Collectors.toList())
                         )
                 )).collect(Collectors.toList());
+    }
+
+    public Cabinet getCabinetByCity(String name) {
+        return this.cabinetRepository.findByCity(name)
+                .orElseThrow(() -> new EntityNotFoundException(CABINET_NOT_FOUND));
+    }
+
+    public void saveCabinet(Cabinet cabinet) {
+        this.cabinetRepository.save(cabinet);
     }
 }

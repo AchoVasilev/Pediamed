@@ -9,6 +9,8 @@ public record EventDataInputRequest(
         String startDateTime,
         @NotBlank(message = REQUIRED_FIELD)
         String endDateTime,
+        @NotBlank(message = REQUIRED_FIELD)
+        String cabinetName,
         Integer intervals
 ) {
 }

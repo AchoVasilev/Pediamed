@@ -5,13 +5,15 @@ export interface EventData {
 
 export interface EventDataInput {
     date: string,
-    eventData: EventData[]
+    eventData: EventData[],
+    cabinetName: string
 }
 
 export interface EventDataCreate {
     startDateTime: string,
     endDateTime: string,
     intervals: number
+    cabinetName: string
 }
 
 export interface CabinetResponse {
