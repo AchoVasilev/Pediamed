@@ -40,3 +40,9 @@ export interface ScheduleEvent {
     startDate: Date,
     endDate: Date,
 }
+
+export interface EventRes {
+    id: string,
+    startDate: Date,
+    endDate: Date,
+}

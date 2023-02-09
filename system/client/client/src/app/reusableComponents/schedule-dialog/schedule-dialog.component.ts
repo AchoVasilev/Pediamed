@@ -54,7 +54,7 @@ export class ScheduleDialogComponent {
     this.scheduleService.postEventData(eventData)
       .subscribe(res => console.log(res));
       
-    this.dialogRef.close(eventData);
+    this.dialogRef.close(true);
   }
 
   validateForm(control: string, form: FormGroup = this.form) {

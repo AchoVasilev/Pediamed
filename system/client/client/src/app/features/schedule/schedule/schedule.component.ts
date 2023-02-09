@@ -1,5 +1,5 @@
 import { CabinetService } from './../../../services/cabinet/cabinet.service';
-import { CabinetResponse } from './../../../models/events/schedule';
+import { CabinetResponse, EventRes } from './../../../models/events/schedule';
 import { ScheduleDialogComponent } from './../../../reusableComponents/schedule-dialog/schedule-dialog.component';
 import { EventData, EventDataInput } from '../../../models/events/schedule';
 import { ScheduleService } from '../../../services/schedule/schedule.service';
@@ -11,7 +11,7 @@ import { UserDataService } from './../../../services/data/user/user-data.service
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
 import * as moment from 'moment';
 
@@ -36,7 +36,7 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   viewDate = new Date();
   locale: string = 'bg-BG';
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-  events: CalendarEvent[] = [];
+  events: CalendarEvent<{event: EventRes}>[] = [];
   CalendarView = CalendarView;
   user: UserModel;
   cabinetName: string = '';
@@ -51,6 +51,8 @@ export class ScheduleComponent implements OnInit, OnDestroy{
     private cabinetService: CabinetService,
     private dialog: MatDialog) {
       this.user = this.userDataService.getUser();
+
+      // could be cached
       this.scheduleService.getEventData()
         .subscribe(data => this.eventData = data);
     }
@@ -90,7 +92,12 @@ export class ScheduleComponent implements OnInit, OnDestroy{
 
     this.cabinetName = CabinetName[CabinetName.Плевен];
     this.getCabinets()
-      .subscribe(data => this.cabinetResponse = data);
+      .pipe(
+        map((result) => {
+          this.cabinetResponse = result;
+          
+        })
+      )
   }
   
   ngOnDestroy(): void {
@@ -123,7 +130,13 @@ export class ScheduleComponent implements OnInit, OnDestroy{
       data: eventDataInput
     }).afterClosed()
     .subscribe(res => {
-      console.log(res);
+      if(res) {
+
+      }
     })
+  }
+
+  refetchEvents() {
+
   }
 }

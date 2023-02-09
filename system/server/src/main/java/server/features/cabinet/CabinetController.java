@@ -19,7 +19,6 @@ public class CabinetController {
 
     @GetMapping
     public ResponseEntity<List<CabinetResponse>> getCabinets() {
-        var cabinets = this.cabinetService.getCabinets();
         return ResponseEntity.ok(this.cabinetService.getCabinets());
     }
 }
