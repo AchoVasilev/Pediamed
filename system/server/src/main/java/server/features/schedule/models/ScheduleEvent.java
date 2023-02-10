@@ -6,5 +6,7 @@ import java.time.LocalDateTime;
 public record ScheduleEvent (
     Integer id,
     LocalDateTime startDate,
-    LocalDateTime endDate
+    LocalDateTime endDate,
+    String title
 ) {}
+

@@ -1,5 +1,5 @@
 import { CabinetService } from './../../../services/cabinet/cabinet.service';
-import { CabinetResponse, EventRes } from './../../../models/events/schedule';
+import { CabinetResponse, ScheduleData } from './../../../models/events/schedule';
 import { ScheduleDialogComponent } from './../../../reusableComponents/schedule-dialog/schedule-dialog.component';
 import { EventData, EventDataInput } from '../../../models/events/schedule';
 import { ScheduleService } from '../../../services/schedule/schedule.service';
@@ -36,7 +36,7 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   viewDate = new Date();
   locale: string = 'bg-BG';
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-  events: CalendarEvent<{event: EventRes}>[] = [];
+  events: CalendarEvent<{event: ScheduleData}>[] = [];
   CalendarView = CalendarView;
   user: UserModel;
   cabinetName: string = '';
@@ -95,7 +95,15 @@ export class ScheduleComponent implements OnInit, OnDestroy{
       .pipe(
         map((result) => {
           this.cabinetResponse = result;
-          
+
+          this.events = ([...result.CabinetSchedule.scheduleAppointments, ...result.CabinetSchedule.scheduleEvents]).map((ev) => {
+            return {
+              start: ev.startDate,
+              title: ev.title,
+              end: ev.endDate,
+              id: ev.id
+            }
+          })
         })
       )
   }

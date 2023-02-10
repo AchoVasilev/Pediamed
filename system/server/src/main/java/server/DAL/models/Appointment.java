@@ -23,6 +23,7 @@ public class Appointment extends AuditInfo {
     private UUID id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private String title;
     @OneToOne
     @JoinColumn(name = "appointment_cause_id", referencedColumnName = "id")
     private AppointmentCause appointmentCause;

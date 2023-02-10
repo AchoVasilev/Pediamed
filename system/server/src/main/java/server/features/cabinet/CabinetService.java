@@ -34,11 +34,11 @@ public class CabinetService {
                                 c.getSchedule().getId(),
                                 c.getSchedule().getAppointments()
                                         .stream()
-                                        .map(a -> new ScheduleAppointment(a.getId(), a.getStartDate(), a.getEndDate()))
+                                        .map(a -> new ScheduleAppointment(a.getId(), a.getStartDate(), a.getEndDate(), a.getTitle()))
                                         .collect(Collectors.toList()),
                                 c.getSchedule().getCalendarEvents()
                                         .stream()
-                                        .map(e -> new ScheduleEvent(e.getId(), e.getStartDate(), e.getEndDate()))
+                                        .map(e -> new ScheduleEvent(e.getId(), e.getStartDate(), e.getEndDate(), e.getTitle()))
                                         .collect(Collectors.toList())
                         )
                 )).collect(Collectors.toList());

@@ -25,24 +25,13 @@ export interface CabinetResponse {
 
 export interface CabinetSchedule {
     id: string,
-    scheduleAppointments: ScheduleAppointment[],
-    scheduleEvents: ScheduleEvent[]
+    scheduleAppointments: ScheduleData[],
+    scheduleEvents: ScheduleData[]
 }
 
-export interface ScheduleAppointment {
+export interface ScheduleData {
     id: string,
     startDate: Date,
     endDate: Date,
-}
-
-export interface ScheduleEvent {
-    id: string,
-    startDate: Date,
-    endDate: Date,
-}
-
-export interface EventRes {
-    id: string,
-    startDate: Date,
-    endDate: Date,
+    title: string
 }
