@@ -114,10 +114,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       map((result) => {
         this.cabinetResponse = result;
 
-        const merged: ScheduleData[] = [];
-        result.forEach(res => {          
-          merged.push(...res.cabinetSchedule?.scheduleAppointments, ...res.cabinetSchedule?.scheduleEvents)
-        })
+        const filteredCity = result.find(res => res.name == this.cabinetName);
+        const merged: ScheduleData[] = [...filteredCity!.cabinetSchedule.scheduleAppointments, ...filteredCity!.cabinetSchedule.scheduleAppointments]
 
         this.events = [
           ...merged
