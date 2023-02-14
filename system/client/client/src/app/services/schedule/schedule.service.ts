@@ -1,3 +1,4 @@
+import { CabinetSchedule } from './../../models/events/schedule';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -8,6 +9,7 @@ import { EventData, EventDataCreate } from 'src/app/models/events/schedule';
   providedIn: 'root'
 })
 export class ScheduleService {
+  
   private apiUrl: string = environment.apiUrl + '/schedule';
 
   constructor(private http: HttpClient) { }
@@ -18,5 +20,9 @@ export class ScheduleService {
 
   postEventData(data: EventDataCreate): Observable<any> {
     return this.http.post<any>(this.apiUrl + '/event-data', data);
+  }
+
+  getSchedule(id: string): Observable<CabinetSchedule> {
+    return this.http.get<CabinetSchedule>(`${this.apiUrl}/${id}`);
   }
 }

@@ -12,7 +12,7 @@ export class CabinetService {
 
   constructor(private httpClinet: HttpClient) { }
 
-  getCabinets(): Observable<CabinetResponse> {
-    return this.httpClinet.get<CabinetResponse>(this.apiUrl);
+  getCabinets(): Observable<CabinetResponse[]> {
+    return this.httpClinet.get<CabinetResponse[]>(this.apiUrl);
   }
 }

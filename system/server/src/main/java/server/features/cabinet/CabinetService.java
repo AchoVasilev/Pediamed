@@ -23,7 +23,7 @@ public class CabinetService {
     }
 
     public List<CabinetResponse> getCabinets() {
-        return this.cabinetRepository
+        var res = this.cabinetRepository
                 .findAll()
                 .stream()
                 .map(c -> new CabinetResponse(
@@ -42,10 +42,12 @@ public class CabinetService {
                                         .collect(Collectors.toList())
                         )
                 )).collect(Collectors.toList());
+
+        return res;
     }
 
     public Cabinet getCabinetByCity(String name) {
-        return this.cabinetRepository.findByCity(name)
+        return this.cabinetRepository.findByName(name)
                 .orElseThrow(() -> new EntityNotFoundException(CABINET_NOT_FOUND));
     }
 

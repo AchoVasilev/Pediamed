@@ -20,7 +20,7 @@ export interface CabinetResponse {
     id: number,
     name: string,
     city: string
-    CabinetSchedule: CabinetSchedule
+    cabinetSchedule: CabinetSchedule
 }
 
 export interface CabinetSchedule {

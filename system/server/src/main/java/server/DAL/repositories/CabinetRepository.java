@@ -7,5 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface CabinetRepository extends BaseRepository<Cabinet, Integer> {
-    Optional<Cabinet> findByCity(String name);
+    Optional<Cabinet> findByName(String name);
 }

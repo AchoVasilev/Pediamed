@@ -1,5 +1,8 @@
 import { CabinetService } from './../../../services/cabinet/cabinet.service';
-import { CabinetResponse, ScheduleData } from './../../../models/events/schedule';
+import {
+  CabinetResponse,
+  ScheduleData,
+} from './../../../models/events/schedule';
 import { ScheduleDialogComponent } from './../../../reusableComponents/schedule-dialog/schedule-dialog.component';
 import { EventData, EventDataInput } from '../../../models/events/schedule';
 import { ScheduleService } from '../../../services/schedule/schedule.service';
@@ -9,7 +12,7 @@ import { CalendarDateFormatter } from 'angular-calendar';
 import { UserModel } from './../../../services/data/user/userModel';
 import { UserDataService } from './../../../services/data/user/user-data.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { map, Subject, takeUntil } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
@@ -22,11 +25,11 @@ import * as moment from 'moment';
   providers: [
     {
       provide: CalendarDateFormatter,
-      useClass: DateFormatter
-    }
-  ]
+      useClass: DateFormatter,
+    },
+  ],
 })
-export class ScheduleComponent implements OnInit, OnDestroy{
+export class ScheduleComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   view: CalendarView = CalendarView.Week;
@@ -36,26 +39,31 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   viewDate = new Date();
   locale: string = 'bg-BG';
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-  events: CalendarEvent<{event: ScheduleData}>[] = [];
+  events: CalendarEvent<{ event: ScheduleData }>[] = [];
   CalendarView = CalendarView;
   user: UserModel;
   cabinetName: string = '';
+  cabinetScheduleId = '';
   eventData: EventData[] = [];
-  cabinetResponse: CabinetResponse | undefined;
+  cabinetResponse: CabinetResponse[] = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private cd: ChangeDetectorRef, 
+    private cd: ChangeDetectorRef,
     private userDataService: UserDataService,
     private scheduleService: ScheduleService,
     private cabinetService: CabinetService,
-    private dialog: MatDialog) {
-      this.user = this.userDataService.getUser();
+    private dialog: MatDialog
+  ) {
+    this.user = this.userDataService.getUser();
 
-      // could be cached
-      this.scheduleService.getEventData()
-        .subscribe(data => this.eventData = data);
-    }
+    // could be cached
+    this.scheduleService
+      .getEventData()
+      .subscribe((data) => (this.eventData = data));
+
+    this.getCabinets().subscribe((res) => console.log(res));
+  }
 
   ngOnInit(): void {
     const CALENDAR_RESPONSIVE = {
@@ -91,29 +99,38 @@ export class ScheduleComponent implements OnInit, OnDestroy{
       });
 
     this.cabinetName = CabinetName[CabinetName.Плевен];
-    this.getCabinets()
-      .pipe(
-        map((result) => {
-          this.cabinetResponse = result;
-
-          this.events = ([...result.CabinetSchedule.scheduleAppointments, ...result.CabinetSchedule.scheduleEvents]).map((ev) => {
-            return {
-              start: ev.startDate,
-              title: ev.title,
-              end: ev.endDate,
-              id: ev.id
-            }
-          })
-        })
-      )
   }
-  
+
   ngOnDestroy(): void {
     this.destroy$.next();
   }
 
+  private set scheduleId(id : string) {
+    this.cabinetScheduleId = id;
+  }
+  
   getCabinets() {
-    return this.cabinetService.getCabinets();
+    return this.cabinetService.getCabinets().pipe(
+      map((result) => {
+        this.cabinetResponse = result;
+
+        const merged: ScheduleData[] = [];
+        result.forEach(res => {          
+          merged.push(...res.cabinetSchedule?.scheduleAppointments, ...res.cabinetSchedule?.scheduleEvents)
+        })
+
+        this.events = [
+          ...merged
+        ].map((ev) => {
+          return {
+            start: ev?.startDate,
+            title: ev?.title,
+            end: ev?.endDate,
+            id: ev?.id,
+          };
+        });
+      })
+    );
   }
 
   setView(view: CalendarView) {
@@ -121,8 +138,11 @@ export class ScheduleComponent implements OnInit, OnDestroy{
   }
 
   generateDayEvents(event: any) {
+    this.cabinetScheduleId = this.cabinetResponse?.filter(x => x.name == this.cabinetName)[0]?.cabinetSchedule?.id;
+
+    debugger;
     let date = event.day.date;
-    if(moment(date).isBefore(Date.now(), 'day')) {
+    if (moment(date).isBefore(Date.now(), 'day')) {
       return;
     }
 
@@ -131,20 +151,22 @@ export class ScheduleComponent implements OnInit, OnDestroy{
     const eventDataInput: EventDataInput = {
       date,
       eventData: this.eventData,
-      cabinetName: this.cabinetName
+      cabinetName: this.cabinetName,
     };
 
-    this.dialog.open(ScheduleDialogComponent, {
-      data: eventDataInput
-    }).afterClosed()
-    .subscribe(res => {
-      if(res) {
-
-      }
-    })
+    this.dialog
+      .open(ScheduleDialogComponent, {
+        data: eventDataInput,
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.refetchEvents(this.scheduleId);
+        }
+      });
   }
 
-  refetchEvents() {
-
+  refetchEvents(id: string) {
+    this.scheduleService.getSchedule(id);
   }
 }
