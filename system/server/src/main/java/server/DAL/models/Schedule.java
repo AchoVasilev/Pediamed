@@ -36,7 +36,12 @@ public class Schedule extends AuditInfo {
     private List<CalendarEvent> calendarEvents = new ArrayList<>();
 
     public void addCalendarEvent(CalendarEvent calendarEvent) {
-        if(this.calendarEvents.contains(calendarEvent)) {
+        var isEventPresent = this.calendarEvents
+                .stream()
+                .anyMatch(e -> e.getEndDate() == calendarEvent.getStartDate()
+                        && e.getStartDate() == calendarEvent.getStartDate());
+
+        if (isEventPresent) {
             return;
         }
 

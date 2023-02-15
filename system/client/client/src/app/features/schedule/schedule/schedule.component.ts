@@ -12,9 +12,15 @@ import { CalendarDateFormatter } from 'angular-calendar';
 import { UserModel } from './../../../services/data/user/userModel';
 import { UserDataService } from './../../../services/data/user/user-data.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
-import { map, Subject, takeUntil } from 'rxjs';
+import { firstValueFrom, map, Subject, takeUntil } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
 import * as moment from 'moment';
 
@@ -43,7 +49,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   CalendarView = CalendarView;
   user: UserModel;
   cabinetName: string = '';
-  cabinetScheduleId = '';
+  cabinetScheduleId: string | undefined;
   eventData: EventData[] = [];
   cabinetResponse: CabinetResponse[] = [];
 
@@ -62,7 +68,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       .getEventData()
       .subscribe((data) => (this.eventData = data));
 
-    this.getCabinets().subscribe((res) => console.log(res));
+    firstValueFrom(this.getCabinets());
   }
 
   ngOnInit(): void {
@@ -105,21 +111,22 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.destroy$.next();
   }
 
-  private set scheduleId(id : string) {
+  private set scheduleId(id: string) {
     this.cabinetScheduleId = id;
   }
-  
+
   getCabinets() {
     return this.cabinetService.getCabinets().pipe(
       map((result) => {
         this.cabinetResponse = result;
 
-        const filteredCity = result.find(res => res.name == this.cabinetName);
-        const merged: ScheduleData[] = [...filteredCity!.cabinetSchedule.scheduleAppointments, ...filteredCity!.cabinetSchedule.scheduleAppointments]
+        const filteredCity = result.find((res) => res.name == this.cabinetName);
+        const merged: ScheduleData[] = [
+          ...filteredCity!.cabinetSchedule.scheduleAppointments,
+          ...filteredCity!.cabinetSchedule.scheduleAppointments,
+        ];
 
-        this.events = [
-          ...merged
-        ].map((ev) => {
+        this.events = [...merged].map((ev) => {
           return {
             start: ev?.startDate,
             title: ev?.title,
@@ -136,9 +143,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   generateDayEvents(event: any) {
-    this.cabinetScheduleId = this.cabinetResponse?.filter(x => x.name == this.cabinetName)[0]?.cabinetSchedule?.id;
+    this.cabinetScheduleId = this.cabinetResponse.find((x) => x.name == this.cabinetName)?.cabinetSchedule?.id;
 
-    debugger;
     let date = event.day.date;
     if (moment(date).isBefore(Date.now(), 'day')) {
       return;
