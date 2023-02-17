@@ -23,7 +23,7 @@ public class CabinetService {
     }
 
     public List<CabinetResponse> getCabinets() {
-        var res = this.cabinetRepository
+        return this.cabinetRepository
                 .findAll()
                 .stream()
                 .map(c -> new CabinetResponse(
@@ -42,8 +42,6 @@ public class CabinetService {
                                         .collect(Collectors.toList())
                         )
                 )).collect(Collectors.toList());
-
-        return res;
     }
 
     public Cabinet getCabinetByCity(String name) {

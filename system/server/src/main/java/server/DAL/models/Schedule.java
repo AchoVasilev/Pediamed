@@ -45,6 +45,8 @@ public class Schedule extends AuditInfo {
             return;
         }
 
+        calendarEvent.setSchedule(this);
+
         this.calendarEvents.add(calendarEvent);
     }
 

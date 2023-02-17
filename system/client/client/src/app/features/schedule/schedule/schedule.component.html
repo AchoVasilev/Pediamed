@@ -60,33 +60,42 @@
 </div>
 <br />
 
-<div [ngSwitch]="view" class="py-5 px-5">
-  <mwl-calendar-month-view
-    *ngSwitchCase="'month'"
-    [viewDate]="viewDate"
-    [events]="events"
-    [locale]="locale"
-    [weekStartsOn]="weekStartsOn"
-  >
-  </mwl-calendar-month-view>
-  <mwl-calendar-week-view
-    *ngSwitchCase="'week'"
-    [viewDate]="viewDate"
-    [events]="events"
-    [locale]="locale"
-    [weekStartsOn]="weekStartsOn"
-    [dayStartHour]="dayStartHour"
-    [dayEndHour]="dayEndHour"
-    (dayHeaderClicked)="generateDayEvents($event)"
-  >
-  </mwl-calendar-week-view>
-  <mwl-calendar-day-view
-    *ngSwitchCase="'day'"
-    [viewDate]="viewDate"
-    [events]="events"
-    [locale]="locale"
-    [dayStartHour]="dayStartHour"
-    [dayEndHour]="dayEndHour"
-  >
-  </mwl-calendar-day-view>
+<ng-template #loading>
+  <div class="text-center">
+    <i class="fas fa-spin fa-spinner fa-5x"></i> <br />
+    Loading events...
+  </div>
+</ng-template>
+
+<div *ngIf="events$ | async; else loading; let events">
+  <div [ngSwitch]="view" class="py-5 px-5">
+    <mwl-calendar-month-view
+      *ngSwitchCase="'month'"
+      [viewDate]="viewDate"
+      [events]="events"
+      [locale]="locale"
+      [weekStartsOn]="weekStartsOn"
+    >
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view
+      *ngSwitchCase="'week'"
+      [viewDate]="viewDate"
+      [events]="events"
+      [locale]="locale"
+      [weekStartsOn]="weekStartsOn"
+      [dayStartHour]="dayStartHour"
+      [dayEndHour]="dayEndHour"
+      (dayHeaderClicked)="generateDayEvents($event)"
+    >
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view
+      *ngSwitchCase="'day'"
+      [viewDate]="viewDate"
+      [events]="events"
+      [locale]="locale"
+      [dayStartHour]="dayStartHour"
+      [dayEndHour]="dayEndHour"
+    >
+    </mwl-calendar-day-view>
+  </div>
 </div>
