@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import server.features.schedule.models.CabinetSchedule;
 import server.features.schedule.models.EventDataInputRequest;
 import server.features.schedule.models.EventDataResponse;
+import server.features.schedule.models.EventResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,8 +32,7 @@ public class ScheduleController {
 
     @PostMapping("/event-data")
     public ResponseEntity<?> createEvents(@RequestBody @Valid EventDataInputRequest data) {
-        this.scheduleService.generateEvents(data);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new EventResponse(this.scheduleService.generateEvents(data)));
     }
 
     @GetMapping("/{id}")

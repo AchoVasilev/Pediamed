@@ -86,6 +86,7 @@
       [dayStartHour]="dayStartHour"
       [dayEndHour]="dayEndHour"
       (dayHeaderClicked)="generateDayEvents($event)"
+      (eventClicked)="eventClicked($event)"
     >
     </mwl-calendar-week-view>
     <mwl-calendar-day-view

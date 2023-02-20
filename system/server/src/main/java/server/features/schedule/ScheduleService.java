@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static server.constants.ErrorMessages.EVENTS_GENERATED;
 import static server.constants.ErrorMessages.EVENTS_NOT_GENERATED;
 import static server.constants.ErrorMessages.SCHEDULE_NOT_FOUND;
 
@@ -41,7 +42,7 @@ public class ScheduleService {
                 .toList();
     }
 
-    public void generateEvents(EventDataInputRequest data) {
+    public String generateEvents(EventDataInputRequest data) {
         var startDate = DateTimeUtility.parseDate(data.startDateTime());
         var endDate = DateTimeUtility.parseDate(data.endDateTime());
         DateTimeUtility.validateDate(startDate, endDate);
@@ -60,6 +61,7 @@ public class ScheduleService {
         }
 
         this.cabinetService.saveCabinet(cabinet);
+        return String.format(EVENTS_GENERATED, data.startDateTime(), data.endDateTime(), data.intervals());
     }
 
     public CabinetSchedule findById(UUID scheduleId) {

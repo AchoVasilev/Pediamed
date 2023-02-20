@@ -155,7 +155,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((res) => {
         if (res) {
-          setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 300)
+          setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 500)
         }
       });
   }
@@ -178,5 +178,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         });
       })
     );
+  }
+
+  eventClicked({event}: {event:CalendarEvent}) {
+    console.log(event);
+    
   }
 }

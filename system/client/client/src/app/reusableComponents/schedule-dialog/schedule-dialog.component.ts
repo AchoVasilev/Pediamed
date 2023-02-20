@@ -1,3 +1,5 @@
+import { openSnackBar } from 'src/app/utils/matSnackBarUtil';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventDataCreate } from './../../models/events/schedule';
 import {
   FormBuilder,
@@ -31,7 +33,8 @@ export class ScheduleDialogComponent {
     @Inject(MAT_DIALOG_DATA) data: EventDataInput,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<ScheduleDialogComponent>,
-    private scheduleService: ScheduleService
+    private scheduleService: ScheduleService,
+    private snackBar: MatSnackBar
   ) {
     this.data = data;
   }
@@ -52,7 +55,10 @@ export class ScheduleDialogComponent {
     }
     
     this.scheduleService.postEventData(eventData)
-      .subscribe(res => console.log(res));
+      .subscribe({
+        next: (res) => {
+          openSnackBar(this.snackBar, res.message)}
+      });
       
     this.dialogRef.close(true);
   }
