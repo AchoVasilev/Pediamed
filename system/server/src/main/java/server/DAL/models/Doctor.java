@@ -2,7 +2,6 @@ package server.DAL.models;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -11,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +21,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "doctors")
-public class Doctor {
-    @jakarta.persistence.Id
-    @GeneratedValue
-    @UuidGenerator
-    private UUID Id;
+public class Doctor extends BaseEntity<UUID>{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_user_id", referencedColumnName = "id")
     private ApplicationUser applicationUser;

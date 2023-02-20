@@ -46,7 +46,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   cabinetScheduleId: string | undefined;
   eventData: EventData[] = [];
   cabinetResponse: CabinetResponse[] = [];
-
+  
   constructor(
     private breakpointObserver: BreakpointObserver,
     private cd: ChangeDetectorRef,

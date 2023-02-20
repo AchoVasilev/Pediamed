@@ -1,11 +1,15 @@
 package server.DAL.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,11 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Appointment extends AuditInfo {
-    @Id
-    @GeneratedValue
-    @UuidGenerator
-    private UUID id;
+public class Appointment extends BaseEntity<UUID> {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String title;

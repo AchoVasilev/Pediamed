@@ -12,10 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "cabinets")
-public class Cabinet extends AuditInfo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Cabinet extends BaseEntity<Integer> {
     private String name;
     private String city;
     private String address;

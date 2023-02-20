@@ -1,8 +1,15 @@
 package server.DAL.models;
 
-import org.hibernate.annotations.UuidGenerator;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
@@ -12,11 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "application_users")
-public class ApplicationUser extends AuditInfo {
-    @Id
-    @GeneratedValue
-    @UuidGenerator
-    private UUID Id;
+public class ApplicationUser extends BaseEntity<UUID> {
     private String email;
     private String password;
     private String firstName;
