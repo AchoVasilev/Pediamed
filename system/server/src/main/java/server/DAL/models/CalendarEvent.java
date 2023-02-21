@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import server.utils.guards.Guard;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +31,6 @@ public class CalendarEvent extends BaseEntity<Integer> {
     public CalendarEvent(LocalDateTime startDate, LocalDateTime endDate, String title) {
         this.startDate = startDate;
         this.endDate = endDate;
-        this.title = title;
+        this.title = Guard.Against.EmptyOrBlank(title);
     }
 }

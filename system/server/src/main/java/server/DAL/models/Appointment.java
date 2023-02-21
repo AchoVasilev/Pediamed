@@ -19,11 +19,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 public class Appointment extends BaseEntity<UUID> {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String title;
+    @Setter
     @OneToOne
     @JoinColumn(name = "appointment_cause_id", referencedColumnName = "id")
     private AppointmentCause appointmentCause;
@@ -37,6 +37,7 @@ public class Appointment extends BaseEntity<UUID> {
     @OneToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
+    @Setter
     @OneToOne
     @JoinColumn(name = "calendar_event_id")
     private CalendarEvent calendarEvent;

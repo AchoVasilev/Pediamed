@@ -8,12 +8,12 @@ import server.DAL.models.Parent;
 import server.DAL.models.enums.RoleEnum;
 import server.DAL.repositories.RoleRepository;
 import server.DAL.repositories.UserRepository;
+import server.DAL.valueObjects.Email;
+import server.DAL.valueObjects.MobilePhone;
 import server.config.exceptions.models.EntityAlreadyExistsException;
 import server.config.exceptions.models.EntityNotFoundException;
 import server.features.auth.model.RegistrationRequest;
 import server.features.auth.model.UserDto;
-
-import java.util.UUID;
 
 import static server.constants.ErrorMessages.EMAIL_ALREADY_EXISTS;
 import static server.constants.ErrorMessages.ENTITY_NOT_FOUND;
@@ -31,28 +31,29 @@ public class AuthService {
     }
 
     @Transactional
-    public UUID register(RegistrationRequest registrationRequest) {
+    public void register(RegistrationRequest registrationRequest) {
         var user = this.userRepository.findByEmail(registrationRequest.email());
         if (user.isPresent()) {
             throw new EntityAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS,registrationRequest.email()));
         }
 
-        var newUser = new ApplicationUser();
-        newUser.setEmail(registrationRequest.email());
-        newUser.setPassword(this.passwordEncoder.encode(registrationRequest.password()));
-
-        var patient = new Parent();
-        newUser.setFirstName(registrationRequest.firstName());
-        newUser.setMiddleName(registrationRequest.middleName());
-        newUser.setLastName(registrationRequest.lastName());
-        newUser.setPhoneNumber(registrationRequest.phoneNumber());
-
         var role = this.roleRepository.findByName(RoleEnum.ROLE_PARENT)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
-        newUser.setRole(role);
+
+        var newUser = new ApplicationUser(
+                new Email(registrationRequest.email()),
+                this.passwordEncoder.encode(registrationRequest.password()),
+                registrationRequest.firstName(),
+                registrationRequest.middleName(),
+                registrationRequest.lastName(),
+                new MobilePhone(registrationRequest.phoneNumber()),
+                role
+        );
+
+        var patient = new Parent();
         newUser.setParent(patient);
 
-        return this.userRepository.save(newUser).getId();
+        this.userRepository.save(newUser);
     }
 
     public UserDto findByEmail(String email) {
@@ -61,7 +62,7 @@ public class AuthService {
                         u.getId(),
                         u.getFirstName(),
                         u.getLastName(),
-                        u.getEmail()))
+                        u.getEmail().getEmail()))
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
     }
 }
