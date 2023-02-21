@@ -6,17 +6,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import server.utils.DateTimeUtility;
+import server.utils.guards.Guard;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "appointments")
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class Appointment extends BaseEntity<UUID> {
@@ -41,4 +41,11 @@ public class Appointment extends BaseEntity<UUID> {
     @OneToOne
     @JoinColumn(name = "calendar_event_id")
     private CalendarEvent calendarEvent;
+
+    public Appointment(LocalDateTime startDate, LocalDateTime endDate, String title, CalendarEvent calendarEvent) {
+        this.startDate = DateTimeUtility.validateStartDate(startDate, endDate);
+        this.endDate = DateTimeUtility.validateEndDate(startDate, endDate);
+        this.title = Guard.Against.EmptyOrBlank(title);
+        this.calendarEvent = Guard.Against.Null(calendarEvent);
+    }
 }

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import server.DAL.valueObjects.Email;
 import server.DAL.valueObjects.MobilePhone;
+import server.utils.guards.Guard;
 
 import java.util.UUID;
 
@@ -44,10 +45,10 @@ public class ApplicationUser extends BaseEntity<UUID> {
     public ApplicationUser(Email email, String password, String firstName, String middleName, String lastName, MobilePhone phoneNumber, Role role) {
         this.id = UUID.randomUUID();
         this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
+        this.password = Guard.Against.EmptyOrBlank(password);
+        this.firstName = Guard.Against.EmptyOrBlank(firstName);
+        this.middleName = Guard.Against.EmptyOrBlank(middleName);
+        this.lastName = Guard.Against.EmptyOrBlank(lastName);
         this.phoneNumber = phoneNumber;
         this.role = role;
     }

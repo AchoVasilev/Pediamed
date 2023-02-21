@@ -26,6 +26,6 @@ public class PediamedUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(INVALID_CREDENTIALS));
 
         var authorities = Set.of(new SimpleGrantedAuthority(user.getRole().getName().name()));
-        return new User(user.getEmail(), user.getPassword(), authorities);
+        return new User(user.getEmail().getEmail(), user.getPassword(), authorities);
     }
 }

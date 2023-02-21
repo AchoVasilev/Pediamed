@@ -5,6 +5,7 @@ import java.util.UUID;
 public abstract class Guard {
     public static class Against {
         public static String EmptyOrBlank(String parameter, String message) {
+            Guard.Against.Null(parameter, message);
             if (parameter.isEmpty() || parameter.isBlank()) {
                 throw new IllegalArgumentException(message);
             }
@@ -13,6 +14,7 @@ public abstract class Guard {
         }
 
         public static String EmptyOrBlank(String parameter) {
+            Guard.Against.Null(parameter);
             if (parameter.isEmpty() || parameter.isBlank()) {
                 throw new IllegalArgumentException(String.format("Parameter %s cannot be empty or blank", parameter));
             }

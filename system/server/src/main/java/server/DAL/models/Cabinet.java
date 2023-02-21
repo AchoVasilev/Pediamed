@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import server.DAL.valueObjects.MobilePhone;
 
 @Entity
 @AllArgsConstructor
@@ -17,7 +18,8 @@ public class Cabinet extends BaseEntity<Integer> {
     private String city;
     private String address;
     private String postCode;
-    private String phoneNumber;
+    @Embedded
+    private MobilePhone mobilePhone;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "schedule_id", referencedColumnName = "id")
     private Schedule schedule;
