@@ -45,7 +45,6 @@ public class ScheduleService {
     public String generateEvents(EventDataInputRequest data) {
         var startDate = DateTimeUtility.parseDate(data.startDateTime());
         var endDate = DateTimeUtility.parseDate(data.endDateTime());
-        DateTimeUtility.validateDate(startDate, endDate);
 
         var cabinet = this.cabinetService.getCabinetByCity(data.cabinetName());
         String EVENT_TITLE = "Свободен час";

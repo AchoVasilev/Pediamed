@@ -2,15 +2,17 @@ package server.DAL.valueObjects;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import server.utils.guards.Guard;
 
 import java.util.regex.Pattern;
 
 @Embeddable
 @Getter
+@NoArgsConstructor
 public class MobilePhone implements ValueObject{
     private static final String PHONE_REGEX = "^([+]?359)|0?(|-| )[7-9][789]\\d(|-| )\\d{3}(|-| )\\d{3}$";
-    private final String mobilePhone;
+    private String mobilePhone;
     public MobilePhone(String mobilePhone) {
         this.mobilePhone = this.validate(mobilePhone);
     }

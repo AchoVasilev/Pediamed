@@ -34,6 +34,7 @@ import localeBg from '@angular/common/locales/bg';
 import { ScheduleDialogComponent } from './reusableComponents/schedule-dialog/schedule-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
+import { SchedulingDialogComponent } from './reusableComponents/scheduling-dialog/scheduling-dialog.component';
 registerLocaleData(localeBg);
 
 @NgModule({
@@ -44,6 +45,7 @@ registerLocaleData(localeBg);
     HomeComponent,
     PrivacyComponent,
     ScheduleDialogComponent,
+    SchedulingDialogComponent,
   ],
   imports: [
     BrowserModule,

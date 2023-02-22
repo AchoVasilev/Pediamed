@@ -2,6 +2,7 @@ package server.DAL.valueObjects;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import server.utils.guards.Guard;
 
 import java.io.Serializable;
@@ -9,9 +10,10 @@ import java.util.regex.Pattern;
 
 @Embeddable
 @Getter
+@NoArgsConstructor
 public class Email implements Serializable {
     private static final String MAIL_REGEX = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-    private final String email;
+    private String email;
 
     public Email(String email) {
         this.email = this.validate(email);

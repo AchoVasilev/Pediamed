@@ -12,6 +12,8 @@ import static server.constants.ErrorMessages.DATE_IS_BEFORE;
 
 public class DateTimeUtility {
     private static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm";
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter
+            .ofPattern(DATE_TIME_FORMAT, new Locale("bg", "BG"));
 
     public static LocalDateTime parseDate(String dateTime) {
         var formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
@@ -19,19 +21,17 @@ public class DateTimeUtility {
     }
 
     public static void validateDate(LocalDateTime startDate, LocalDateTime endDate) {
-        var formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT, new Locale("bg", "BG"));
-        var currentDate = LocalDateTime.now().format(formatter);
+        var currentDate = LocalDateTime.now().format(dateTimeFormatter);
 
         Guard.Against.Null(startDate);
         Guard.Against.Null(endDate);
-        if (startDate.isBefore(LocalDateTime.parse(currentDate, formatter))) {
+        if (startDate.isBefore(LocalDateTime.parse(currentDate, dateTimeFormatter))) {
             throw new DateTimeException(DATE_IS_BEFORE);
-        }
-        else if (startDate.isBefore(endDate)) {
+        } else if (startDate.isAfter(endDate)) {
             throw new DateTimeException(DATE_IS_BEFORE);
         }
 
-        if (endDate.isAfter(startDate)) {
+        if (endDate.isBefore(startDate)) {
             throw new DateTimeException(DATE_IS_AFTER);
         }
     }
@@ -39,18 +39,27 @@ public class DateTimeUtility {
     public static LocalDateTime validateStartDate(LocalDateTime startDate, LocalDateTime endDate) {
         Guard.Against.Null(startDate);
         if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("Start date cannot be after end date");
+            throw new DateTimeException(DATE_IS_AFTER);
         }
 
-        return startDate;
+        return validateForCurrentDate(startDate);
     }
 
     public static LocalDateTime validateEndDate(LocalDateTime startDate, LocalDateTime endDate) {
         Guard.Against.Null(endDate);
         if (endDate.isBefore(startDate)) {
-            throw new IllegalArgumentException("End date cannot be before start date");
+            throw new DateTimeException(DATE_IS_BEFORE);
         }
 
-        return startDate;
+        return validateForCurrentDate(endDate);
+    }
+
+    private static LocalDateTime validateForCurrentDate(LocalDateTime dateTime) {
+        var currentDate = LocalDateTime.now().format(dateTimeFormatter);
+        if (dateTime.isBefore(LocalDateTime.parse(currentDate, dateTimeFormatter))) {
+            throw new DateTimeException(DATE_IS_BEFORE);
+        }
+
+        return dateTime;
     }
 }
