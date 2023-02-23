@@ -38,11 +38,7 @@ export class ScheduleDialogComponent {
   ) {
     this.data = data;
   }
-
-  cancel() {
-    this.dialogRef.close(false);
-  }
-
+  
   close() {
     const date = this.data.date;
     const { hours, endHour, intervals } = this.form.value;
