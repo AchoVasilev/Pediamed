@@ -1,3 +1,4 @@
+import { AppointmentCause } from './../../../models/events/appointment';
 import { CabinetService } from './../../../services/cabinet/cabinet.service';
 import {
   CabinetResponse,
@@ -46,6 +47,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   cabinetScheduleId: string | undefined;
   eventData: EventData[] = [];
   cabinetResponse: CabinetResponse[] = [];
+  appointmentCauses: AppointmentCause[] = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,

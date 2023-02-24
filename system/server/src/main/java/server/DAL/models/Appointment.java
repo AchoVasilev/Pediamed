@@ -27,25 +27,31 @@ public class Appointment extends BaseEntity<UUID> {
     @OneToOne
     @JoinColumn(name = "appointment_cause_id", referencedColumnName = "id")
     private AppointmentCause appointmentCause;
-    @ManyToOne
-    private Cabinet cabinet;
     @ManyToOne(fetch = FetchType.LAZY)
     private Schedule schedule;
+    @Setter
     @OneToOne
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private Parent parent;
+    @Setter
     @OneToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
-    @Setter
     @OneToOne
     @JoinColumn(name = "calendar_event_id")
     private CalendarEvent calendarEvent;
 
-    public Appointment(LocalDateTime startDate, LocalDateTime endDate, String title, CalendarEvent calendarEvent) {
+    public Appointment(LocalDateTime startDate,
+                       LocalDateTime endDate,
+                       String title,
+                       CalendarEvent calendarEvent,
+                       AppointmentCause appointmentCause,
+                       Schedule schedule) {
         this.startDate = DateTimeUtility.validateStartDate(startDate, endDate);
         this.endDate = DateTimeUtility.validateEndDate(startDate, endDate);
         this.title = Guard.Against.EmptyOrBlank(title);
         this.calendarEvent = Guard.Against.Null(calendarEvent);
+        this.appointmentCause = Guard.Against.Null(appointmentCause);
+        this.schedule = Guard.Against.Null(schedule);
     }
 }

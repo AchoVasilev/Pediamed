@@ -1,7 +1,7 @@
 import { CalendarEvent } from 'angular-calendar';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
 
 @Component({
@@ -11,7 +11,9 @@ import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/form
 })
 export class SchedulingDialogComponent {
 
-  form = this.fb.group({});
+  form = this.fb.group({
+    start: new FormControl('', [Validators.required])
+  });
   data: CalendarEvent;
   constructor(
     @Inject(MAT_DIALOG_DATA) data: CalendarEvent,

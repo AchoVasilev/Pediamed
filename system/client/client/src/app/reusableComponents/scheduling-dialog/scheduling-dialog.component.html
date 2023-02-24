@@ -2,30 +2,27 @@
 <div mat-dialog-content>
   <p>Изберете часове и продължителност</p>
   <form action="" [formGroup]="form">
-  <mat-form-field appearance="fill">
-    <mat-label>Начален час</mat-label>
-    <mat-select formControlName="hours">
-      <mat-option></mat-option>
-      <mat-option [value]="data.hours" *ngFor="let data of data.eventData">{{ data.hours }}</mat-option>
-    </mat-select>
-    <mat-error *ngIf="validateForm('hours')">{{ getErrorMessage('required') }}</mat-error>
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Краен час</mat-label>
-    <mat-select formControlName="endHour">
-      <mat-option></mat-option>
-      <mat-option [value]="data.hours" *ngFor="let data of data.eventData">{{ data.hours }}</mat-option>
-    </mat-select>
-    <mat-error *ngIf="validateForm('endHour')">{{ getErrorMessage('required') }}</mat-error>
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Продължителност</mat-label>
-    <mat-select formControlName="intervals">
-      <mat-option></mat-option>
-      <mat-option [value]="data.intervals" *ngFor="let data of data.eventData">{{ data.intervals }}</mat-option>
-    </mat-select>
-    <mat-error *ngIf="validateForm('intervals')">{{ getErrorMessage('required') }}</mat-error>
-  </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Начален час</mat-label>
+        <input matInput placeholder="Начален час" formControlName="start" [value]="this.data.start" [disabled]="true" />
+        <mat-icon matSuffix>calendar_month</mat-icon>
+        <mat-error
+            *ngIf="validateForm('start')">{{getErrorMessage('required')}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>И-мейл</mat-label>
+        <input matInput placeholder="Въведете своя и-мейл" formControlName="email" />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error
+            *ngIf="validateForm('email')">{{getErrorMessage('email')}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>И-мейл</mat-label>
+        <input matInput placeholder="Въведете своя и-мейл" formControlName="email" />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error
+            *ngIf="validateForm('email')">{{getErrorMessage('email')}}</mat-error>
+    </mat-form-field>
 </form>
 </div>
 <div mat-dialog-actions>
