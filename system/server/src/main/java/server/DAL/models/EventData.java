@@ -2,18 +2,20 @@ package server.DAL.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import server.utils.guards.Guard;
 
 @Entity
 @Table(name = "event_data")
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class EventData extends BaseEntity<Integer>{
     private String hours;
     private Integer intervals;
+
+    public EventData(String hours, Integer intervals) {
+        this.hours = Guard.Against.EmptyOrBlank(hours);
+        this.intervals = Guard.Against.Zero(intervals);
+    }
 }

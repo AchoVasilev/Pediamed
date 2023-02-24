@@ -50,7 +50,7 @@ public class ScheduleService {
         String EVENT_TITLE = "Свободен час";
         for (var slotStart = startDate; slotStart.isBefore(endDate); slotStart = slotStart.plusMinutes(data.intervals())) {
             var slotEnd = slotStart.plusMinutes(data.intervals());
-            var event = new CalendarEvent(slotStart, slotEnd, EVENT_TITLE);
+            var event = new CalendarEvent(slotStart, slotEnd, EVENT_TITLE, cabinet.getSchedule());
 
             cabinet.getSchedule().addCalendarEvent(event);
         }

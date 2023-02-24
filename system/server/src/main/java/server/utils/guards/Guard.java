@@ -1,5 +1,6 @@
 package server.utils.guards;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public abstract class Guard {
@@ -67,6 +68,42 @@ public abstract class Guard {
             Guard.Against.Null(input);
             if (!input.iterator().hasNext()) {
                 throw new IllegalArgumentException(message);
+            }
+
+            return input;
+        }
+
+        public static Integer Zero(Integer input, String message) {
+            Guard.Against.Null(input, message);
+            if (input <= 0) {
+                throw new IllegalArgumentException(message);
+            }
+
+            return input;
+        }
+
+        public static Integer Zero(Integer input) {
+            Guard.Against.Null(input);
+            if (input <= 0) {
+                throw new IllegalArgumentException(String.format("%s cannot be less or equal to zero", input));
+            }
+
+            return input;
+        }
+
+        public static BigDecimal Zero(BigDecimal input, String message) {
+            Guard.Against.Null(input, message);
+            if (input.compareTo(new BigDecimal(0)) <= 0) {
+                throw new IllegalArgumentException(message);
+            }
+
+            return input;
+        }
+
+        public static BigDecimal Zero(BigDecimal input) {
+            Guard.Against.Null(input);
+            if (input.compareTo(new BigDecimal(0)) <= 0) {
+                throw new IllegalArgumentException(String.format("%s cannot be less or equal to zero", input));
             }
 
             return input;

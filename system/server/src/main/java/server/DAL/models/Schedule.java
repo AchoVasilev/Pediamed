@@ -38,8 +38,6 @@ public class Schedule extends BaseEntity<UUID> {
             return;
         }
 
-        calendarEvent.setSchedule(this);
-
         this.calendarEvents.add(calendarEvent);
     }
 

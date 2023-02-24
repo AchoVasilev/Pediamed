@@ -16,20 +16,21 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "calendar_events")
 @Getter
-@Setter
 @NoArgsConstructor
 public class CalendarEvent extends BaseEntity<Integer> {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String title;
+    @Setter
     @OneToOne
     private Appointment appointment;
     @ManyToOne(fetch = FetchType.LAZY)
     private Schedule schedule;
 
-    public CalendarEvent(LocalDateTime startDate, LocalDateTime endDate, String title) {
+    public CalendarEvent(LocalDateTime startDate, LocalDateTime endDate, String title, Schedule schedule) {
         this.startDate = DateTimeUtility.validateStartDate(startDate, endDate);
         this.endDate = DateTimeUtility.validateEndDate(startDate, endDate);
         this.title = Guard.Against.EmptyOrBlank(title);
+        this.schedule = Guard.Against.Null(schedule);
     }
 }

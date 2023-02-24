@@ -3,21 +3,23 @@ package server.DAL.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import server.utils.guards.Guard;
 
 @Entity
 @Table(name = "specializations")
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 public class Specialization extends BaseEntity<Integer> {
     private String name;
     private String description;
     @ManyToOne
     private Doctor doctor;
-    private boolean deleted = false;
+
+    public Specialization(String name, String description, Doctor doctor) {
+        this.name = Guard.Against.EmptyOrBlank(name);
+        this.description = Guard.Against.EmptyOrBlank(description);
+        this.doctor = Guard.Against.Null(doctor);
+    }
 }

@@ -1,17 +1,22 @@
 package server.DAL.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import server.DAL.valueObjects.MobilePhone;
+import server.utils.guards.Guard;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Table(name = "cabinets")
 public class Cabinet extends BaseEntity<Integer> {
     private String name;
@@ -25,4 +30,14 @@ public class Cabinet extends BaseEntity<Integer> {
     private Schedule schedule;
     @ManyToOne
     private Doctor doctor;
+
+    public Cabinet(String name, String city, String address, String postCode, MobilePhone mobilePhone, Schedule schedule, Doctor doctor) {
+        this.name = Guard.Against.EmptyOrBlank(name);
+        this.city = Guard.Against.EmptyOrBlank(city);
+        this.address = Guard.Against.EmptyOrBlank(address);
+        this.postCode = Guard.Against.EmptyOrBlank(postCode);
+        this.mobilePhone = mobilePhone;
+        this.schedule = Guard.Against.Null(schedule);
+        this.doctor = Guard.Against.Null(doctor);
+    }
 }
