@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Запазване на час за {{ this.data.start }}</h1>
 <div mat-dialog-content>
   <p>Изберете часове и продължителност</p>
-  <form action="" [formGroup]="form">
+  <form action="post" [formGroup]="form">
     <mat-form-field appearance="outline">
         <mat-label>Начален час</mat-label>
         <input matInput placeholder="Начален час" formControlName="start" [value]="this.data.start" [disabled]="true" />
@@ -29,3 +29,73 @@
   <button mat-button mat-dialog-close>Затвори</button>
   <button mat-button [mat-dialog-close]="true" (click)="close()" cdkFocusInitial>Създаване</button>
 </div>
+
+<ng-container #notLoggedIn>
+  <form method="post" [formGroup]="form">
+    <div class="row mb-3">
+        <div class="form-outline col">
+            <mat-form-field appearance="outline">
+                <mat-label>И-мейл</mat-label>
+                <input matInput placeholder="Въведете своя и-мейл"
+                    formControlName="email" />
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-error *ngIf="validateForm('email')">{{getErrorMessage('email')}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-outline col">
+            <mat-form-field appearance="outline">
+                <mat-label>Телефон</mat-label>
+                <input matInput placeholder="Въведете своя и-мейл"
+                    formControlName="phoneNumber" />
+                <mat-icon matSuffix>phone</mat-icon>
+                <mat-error
+                    *ngIf="validateForm('phoneNumber') && checkForMinLength('phoneNumber')">{{getErrorMessage('minLength', phoneMinLength)}}
+                </mat-error>
+                <mat-error
+                    *ngIf="validateForm('phoneNumber') && checkForMaxLength('phoneNumber')">{{getErrorMessage('maxLength', phoneMaxLength)}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="form-outline col">
+            <mat-form-field appearance="outline">
+                <mat-label>Име</mat-label>
+                <input matInput placeholder="Въведете своето име"
+                    formControlName="firstName" />
+                <mat-icon matSuffix>account_circle</mat-icon>
+                <mat-error
+                    *ngIf="validateForm('firstName')">{{getErrorMessage('minLength', fieldMinLength)}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-outline col">
+            <mat-form-field appearance="outline">
+                <mat-label>Презиме</mat-label>
+                <input matInput placeholder="Въведете своето презиме"
+                    formControlName="middleName" />
+                <mat-icon matSuffix>account_circle</mat-icon>
+                <mat-error
+                    *ngIf="validateForm('middleName')">{{getErrorMessage('minLength', fieldMinLength)}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="form-outline mb-2">
+        <mat-form-field appearance="outline">
+            <mat-label>Фамилия</mat-label>
+            <input matInput placeholder="Въведете своята фамилия"
+                formControlName="lastName" />
+            <mat-icon matSuffix>account_circle</mat-icon>
+            <mat-error
+                *ngIf="validateForm('lastName')">{{getErrorMessage('minLength', fieldMinLength)}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    
+</form>
+</ng-container>

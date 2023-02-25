@@ -1,3 +1,4 @@
+import { Constants } from './../../../utils/constants';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -15,9 +16,9 @@ import { passwordMatch } from 'src/app/utils/passwordValidator';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  fieldMinLength: number = 4;
-  phoneMinLength: number = 10;
-  phoneMaxLength: number = 13;
+  fieldMinLength: number = Constants.fieldMinLength;
+  phoneMinLength: number = Constants.phoneMinLength;
+  phoneMaxLength: number = Constants.phoneMaxLength;
   private passwordControl = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
   hide: boolean = true;
   loading: boolean = false;

@@ -3,11 +3,9 @@ package server.domain.entities;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import server.infrastructure.utils.DateTimeUtility;
 import server.infrastructure.utils.guards.Guard;
 
@@ -21,9 +19,6 @@ public class CalendarEvent extends BaseEntity<Integer> {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String title;
-    @Setter
-    @OneToOne
-    private Appointment appointment;
     @ManyToOne(fetch = FetchType.LAZY)
     private Schedule schedule;
 

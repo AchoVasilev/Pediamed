@@ -26,6 +26,10 @@ export class UserDataService {
     return this.currentUserSource.getValue();
   }
 
+  isLoggedIn(): boolean {
+    return this.getUser().id !== '';
+  }
+
   setUser(user: UserModel): void {
     this.currentUserSource.next(user);
   }

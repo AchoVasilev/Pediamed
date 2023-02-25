@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Създаване на свободни часове за {{ this.data.date }}</h1>
 <div mat-dialog-content>
   <p>Изберете часове и продължителност</p>
-  <form action="" [formGroup]="form">
+  <form action="post" [formGroup]="form">
   <mat-form-field appearance="fill">
     <mat-label>Начален час</mat-label>
     <mat-select formControlName="hours">

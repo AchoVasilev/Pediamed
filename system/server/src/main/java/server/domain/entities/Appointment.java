@@ -37,20 +37,18 @@ public class Appointment extends BaseEntity<UUID> {
     @OneToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
-    @OneToOne
-    @JoinColumn(name = "calendar_event_id")
-    private CalendarEvent calendarEvent;
+    private Integer calendarEventId;
 
     public Appointment(LocalDateTime startDate,
                        LocalDateTime endDate,
                        String title,
-                       CalendarEvent calendarEvent,
+                       Integer calendarEventId,
                        AppointmentCause appointmentCause,
                        Schedule schedule) {
         this.startDate = DateTimeUtility.validateStartDate(startDate, endDate);
         this.endDate = DateTimeUtility.validateEndDate(startDate, endDate);
         this.title = Guard.Against.EmptyOrBlank(title);
-        this.calendarEvent = Guard.Against.Null(calendarEvent);
+        this.calendarEventId = Guard.Against.Zero(calendarEventId);
         this.appointmentCause = Guard.Against.Null(appointmentCause);
         this.schedule = Guard.Against.Null(schedule);
     }
