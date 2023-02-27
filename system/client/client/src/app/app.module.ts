@@ -35,6 +35,7 @@ import { ScheduleDialogComponent } from './reusableComponents/schedule-dialog/sc
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { SchedulingDialogComponent } from './reusableComponents/scheduling-dialog/scheduling-dialog.component';
+import { PhoneInputComponent } from './reusableComponents/phone-input/phone-input.component';
 registerLocaleData(localeBg);
 
 @NgModule({
@@ -46,6 +47,7 @@ registerLocaleData(localeBg);
     PrivacyComponent,
     ScheduleDialogComponent,
     SchedulingDialogComponent,
+    PhoneInputComponent,
   ],
   imports: [
     BrowserModule,

@@ -47,14 +47,6 @@ export class SchedulingDialogComponent implements OnInit {
     this.getUser();
   }
 
-  validateForm(control: string, form: FormGroup = this.form) {
-    return shouldShowErrorForControl(control, form);
-  }
-
-  getErrorMessage(errorType: string, numberOfSymbols?: number) {
-    return parseErrorMessage(errorType, numberOfSymbols);
-  }
-
   getUser() {
     this.isLoggedIn = this.userService.isLoggedIn();
     if (this.isLoggedIn) {
@@ -88,5 +80,13 @@ export class SchedulingDialogComponent implements OnInit {
 
   checkForMaxLength(property: string, form: FormGroup = this.form): any {
     checkForMaxLength(property, form);
+  }
+
+  validateForm(control: string, form: FormGroup = this.form) {
+    return shouldShowErrorForControl(control, form);
+  }
+
+  getErrorMessage(errorType: string, numberOfSymbols?: number) {
+    return parseErrorMessage(errorType, numberOfSymbols);
   }
 }
