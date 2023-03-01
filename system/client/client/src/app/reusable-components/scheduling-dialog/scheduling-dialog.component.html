@@ -45,18 +45,7 @@
         </div>
 
         <div class="form-outline col">
-            <mat-form-field appearance="outline">
-                <mat-label>Телефон</mat-label>
-                <input matInput placeholder="Въведете своя и-мейл"
-                    formControlName="phoneNumber" />
-                <mat-icon matSuffix>phone</mat-icon>
-                <mat-error
-                    *ngIf="validateForm('phoneNumber') && checkForMinLength('phoneNumber')">{{getErrorMessage('minLength', phoneMinLength)}}
-                </mat-error>
-                <mat-error
-                    *ngIf="validateForm('phoneNumber') && checkForMaxLength('phoneNumber')">{{getErrorMessage('maxLength', phoneMaxLength)}}
-                </mat-error>
-            </mat-form-field>
+            <app-phone-input [phoneNumber]="form.controls['phoneNumber']" [form]="form"></app-phone-input>
         </div>
     </div>
     <div class="row mb-3">

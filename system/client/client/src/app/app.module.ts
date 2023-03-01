@@ -31,11 +31,9 @@ import { DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { registerLocaleData } from '@angular/common';
 import localeBg from '@angular/common/locales/bg';
-import { ScheduleDialogComponent } from './reusableComponents/schedule-dialog/schedule-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
-import { SchedulingDialogComponent } from './reusableComponents/scheduling-dialog/scheduling-dialog.component';
-import { PhoneInputComponent } from './reusableComponents/phone-input/phone-input.component';
+import { ReusableComponentsModule } from './reusable-components/reusable-components.module';
 registerLocaleData(localeBg);
 
 @NgModule({
@@ -45,9 +43,6 @@ registerLocaleData(localeBg);
     FooterComponent,
     HomeComponent,
     PrivacyComponent,
-    ScheduleDialogComponent,
-    SchedulingDialogComponent,
-    PhoneInputComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,6 +69,7 @@ registerLocaleData(localeBg);
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
+    ReusableComponentsModule
   ],
   providers: [AuthService, OfferedServiceService, AuthInterceptorProviders],
   bootstrap: [AppComponent],

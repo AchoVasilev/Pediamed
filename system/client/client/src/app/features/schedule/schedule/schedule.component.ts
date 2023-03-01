@@ -1,3 +1,4 @@
+import { SchedulingDialogComponent } from './../../../reusableComponents/scheduling-dialog/scheduling-dialog.component';
 import { AppointmentCause } from './../../../models/events/appointment';
 import { CabinetService } from './../../../services/cabinet/cabinet.service';
 import {
@@ -183,6 +184,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   eventClicked({event}: {event:CalendarEvent}) {
-    console.log(event);
+    this.dialog.open(SchedulingDialogComponent, {
+      data: event
+    });
   }
 }

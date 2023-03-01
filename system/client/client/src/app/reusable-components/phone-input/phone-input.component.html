@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline">
     <mat-label>Телефон</mat-label>
-    <input matInput placeholder="Въведете своя и-мейл"
-        formControlName="phoneNumber" [value]="{{phoneNumber}}" />
+    <input matInput placeholder="Въведете своя телефон"
+        formControlName="phoneNumber" [value]="phoneNumber" />
     <mat-icon matSuffix>phone</mat-icon>
     <mat-error
         *ngIf="validateForm('phoneNumber') && checkForMinLength('phoneNumber')">{{getErrorMessage('minLength', phoneMinLength)}}

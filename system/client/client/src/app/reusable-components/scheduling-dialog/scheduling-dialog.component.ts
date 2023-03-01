@@ -25,13 +25,13 @@ import {
 export class SchedulingDialogComponent implements OnInit {
   form = this.fb.group({
     start: new FormControl('', [Validators.required]),
+    phoneNumber: ['']
   });
 
   isLoggedIn: boolean = false;
   data: CalendarEvent;
   currentUser: UserModel | undefined;
-  phoneMinLength = Constants.phoneMinLength;
-  phoneMaxLength = Constants.phoneMaxLength;
+
   fieldMinLength = Constants.fieldMinLength;
 
   constructor(
@@ -55,21 +55,21 @@ export class SchedulingDialogComponent implements OnInit {
   }
 
   close() {
-    const date = this.data.date;
-    const { hours, endHour, intervals } = this.form.value;
+    // const date = this.data.date;
+    // const { hours, endHour, intervals } = this.form.value;
 
-    const eventData: EventDataCreate = {
-      startDateTime: `${date} ${hours}`,
-      endDateTime: `${date} ${endHour}`,
-      intervals,
-      cabinetName: this.data.cabinetName,
-    };
+    // const eventData: EventDataCreate = {
+    //   startDateTime: `${date} ${hours}`,
+    //   endDateTime: `${date} ${endHour}`,
+    //   intervals,
+    //   cabinetName: this.data.cabinetName,
+    // };
 
-    this.scheduleService.postEventData(eventData).subscribe({
-      next: (res) => {
-        openSnackBar(this.snackBar, res.message);
-      },
-    });
+    // this.scheduleService.postEventData(eventData).subscribe({
+    //   next: (res) => {
+    //     openSnackBar(this.snackBar, res.message);
+    //   },
+    // });
 
     this.dialogRef.close(true);
   }

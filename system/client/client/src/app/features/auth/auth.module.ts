@@ -1,3 +1,4 @@
+import { ReusableComponentsModule } from './../../reusable-components/reusable-components.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -26,7 +27,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ReusableComponentsModule
   ]
 })
 export class AuthModule { }
