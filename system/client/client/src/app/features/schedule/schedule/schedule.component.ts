@@ -1,11 +1,11 @@
-import { SchedulingDialogComponent } from './../../../reusableComponents/scheduling-dialog/scheduling-dialog.component';
+import { SchedulingDialogComponent } from '../../../reusable-components/scheduling-dialog/scheduling-dialog.component';
 import { AppointmentCause } from './../../../models/events/appointment';
 import { CabinetService } from './../../../services/cabinet/cabinet.service';
 import {
   CabinetResponse,
   ScheduleData,
 } from './../../../models/events/schedule';
-import { ScheduleDialogComponent } from './../../../reusableComponents/schedule-dialog/schedule-dialog.component';
+import { ScheduleDialogComponent } from '../../../reusable-components/schedule-dialog/schedule-dialog.component';
 import { EventData, EventDataInput } from '../../../models/events/schedule';
 import { ScheduleService } from '../../../services/schedule/schedule.service';
 import { MatDialog } from '@angular/material/dialog';
