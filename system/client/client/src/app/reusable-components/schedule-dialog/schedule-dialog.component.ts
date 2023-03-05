@@ -59,8 +59,8 @@ export class ScheduleDialogComponent {
     this.dialogRef.close(true);
   }
 
-  validateForm(control: string, form: FormGroup = this.form) {
-    return shouldShowErrorForControl(control, form);
+  validateForm(control: string, formGroup: FormGroup = this.form) {
+    return shouldShowErrorForControl(formGroup.controls[control]);
   }
 
   getErrorMessage(errorType: string, numberOfSymbols?: number) {

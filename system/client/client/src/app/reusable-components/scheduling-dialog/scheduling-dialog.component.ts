@@ -74,16 +74,16 @@ export class SchedulingDialogComponent implements OnInit {
     this.dialogRef.close(true);
   }
 
-  checkForMinLength(property: string, form: FormGroup = this.form): any {
-    checkForMinLength(property, form);
+  checkForMinLength(control: string, formGroup: FormGroup = this.form): any {
+    checkForMinLength(formGroup.controls[control]);
   }
 
-  checkForMaxLength(property: string, form: FormGroup = this.form): any {
-    checkForMaxLength(property, form);
+  checkForMaxLength(control: string, formGroup: FormGroup = this.form): any {
+    checkForMaxLength(formGroup.controls[control]);
   }
 
-  validateForm(control: string, form: FormGroup = this.form) {
-    return shouldShowErrorForControl(control, form);
+  validateForm(control: string, formGroup: FormGroup = this.form) {
+    return shouldShowErrorForControl(formGroup.controls[control]);
   }
 
   getErrorMessage(errorType: string, numberOfSymbols?: number) {

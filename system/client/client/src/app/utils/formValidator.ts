@@ -1,19 +1,23 @@
-import { FormGroup } from "@angular/forms";
+import { AbstractControl } from "@angular/forms";
 
-export function shouldShowErrorForControl(control: string, formGroup: FormGroup) {
-    return formGroup.controls[control].touched && formGroup.controls[control].invalid;
+export function shouldShowErrorForControl(control: AbstractControl) {
+    return control.touched && control.invalid;
 }
 
 export function parseErrorMessage(validation: string, numberOfSymbols?: number) {
     return formatString(ERROR_MESSAGES[validation], numberOfSymbols);
 }
 
-export function checkForMinLength(control: string, formGroup: FormGroup) {
-    return formGroup.controls[control].errors?.['minlength'];
+export function checkForMinLength(control: AbstractControl) {
+    return control.errors?.['minlength'];
 }
 
-export function checkForMaxLength(control: string, formGroup: FormGroup) {
-    return formGroup.controls[control].errors?.['maxlength'];
+export function checkForMaxLength(control: AbstractControl) {
+    return control.errors?.['maxlength'];
+}
+
+export function checkForRegEx(control: AbstractControl) {
+    return control.errors?.['pattern'];
 }
 
 export const ERROR_MESSAGES: any = {
@@ -22,7 +26,8 @@ export const ERROR_MESSAGES: any = {
     maxLength: 'Полето не трябва да е повече от %d символа!',
     email: 'Въведете валиден и-мейл!',
     passwordMatch: 'Паролите не съвпадат',
-    terms: 'Трябва да се съгласите с условията!'
+    terms: 'Трябва да се съгласите с условията!',
+    phoneRegEx: 'Въведете валиден номер!'
 }
 
 function formatString(str: string, num?: number) {

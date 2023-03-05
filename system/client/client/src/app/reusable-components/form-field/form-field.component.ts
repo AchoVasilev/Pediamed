@@ -1,30 +1,30 @@
 import { FormControl } from '@angular/forms';
 import { Constants } from './../../utils/constants';
 import { Component, Input } from '@angular/core';
+import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
 
 @Component({
   selector: 'app-form-field',
   templateUrl: './form-field.component.html',
-  styleUrls: ['./form-field.component.css']
+  styleUrls: ['./form-field.component.css'],
 })
 export class FormFieldComponent {
-fieldMinLength: any = Constants.fieldMinLength;
+  fieldMinLength: any = Constants.fieldMinLength;
 
-@Input()
-label!: string;
+  @Input()
+  label!: string;
 
-@Input()
-control!: FormControl;
+  @Input()
+  control!: FormControl;
 
-@Input()
-matSuffix: string = '';
+  @Input()
+  matSuffix: string = '';
 
-getErrorMessage(arg0: string,arg1: any) {
-  throw new Error('Method not implemented.');
-}
+  validateForm() {
+    return shouldShowErrorForControl(this.control);
+  }
 
-validateForm(arg0: string): any {
-  throw new Error('Method not implemented.');
-}
-
+  getErrorMessage(errorType: string, numberOfSymbols?: number) {
+    return parseErrorMessage(errorType, numberOfSymbols);
+  }
 }

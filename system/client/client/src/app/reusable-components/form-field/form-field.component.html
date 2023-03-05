@@ -4,6 +4,6 @@
         [formControl]="control" />
     <mat-icon matSuffix>{{matSuffix}}</mat-icon>
     <mat-error
-        *ngIf="validateForm('lastName')">{{getErrorMessage('minLength', fieldMinLength)}}
+        *ngIf="validateForm()">{{getErrorMessage('minLength', fieldMinLength)}}
     </mat-error>
 </mat-form-field>

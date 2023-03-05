@@ -25,8 +25,8 @@ export class LoginComponent {
     });
   }
 
-  validateForm(control: string, form: FormGroup = this.form) {
-    return shouldShowErrorForControl(control, form);
+  validateForm(control: string, formGroup: FormGroup = this.form) {
+    return shouldShowErrorForControl(formGroup.controls[control]);
   }
 
   getErrorMessage(control: string, numberOfSymbols?: number) {

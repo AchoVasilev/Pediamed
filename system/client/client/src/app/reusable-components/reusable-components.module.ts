@@ -1,3 +1,4 @@
+import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,6 +8,8 @@ import { PhoneInputComponent } from './phone-input/phone-input.component';
 import { ScheduleDialogComponent } from './schedule-dialog/schedule-dialog.component';
 import { SchedulingDialogComponent } from './scheduling-dialog/scheduling-dialog.component';
 import { FormFieldComponent } from './form-field/form-field.component';
+import { MatOptionModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
 
 
 
@@ -20,8 +23,11 @@ import { FormFieldComponent } from './form-field/form-field.component';
   imports: [
     CommonModule,
     MatFormFieldModule,
+    MatInputModule,
     ReactiveFormsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatOptionModule,
+    MatIconModule
   ],
   exports: [ScheduleDialogComponent, SchedulingDialogComponent, PhoneInputComponent]
 })

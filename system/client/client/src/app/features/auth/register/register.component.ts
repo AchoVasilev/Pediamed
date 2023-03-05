@@ -1,7 +1,7 @@
 import { Constants } from './../../../utils/constants';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { RegisterParent } from 'src/app/models/user/registerParent';
@@ -24,9 +24,9 @@ export class RegisterComponent {
   loading: boolean = false;
   form: FormGroup;
 
-  constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar) {
+  constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar, private fb: FormBuilder) {
 
-    this.form = new FormGroup({
+    this.form = this.fb.group({
       email: new FormControl('', [Validators.required, Validators.email]),
       passwords: new FormGroup({
         password: this.passwordControl,
@@ -35,7 +35,7 @@ export class RegisterComponent {
       firstName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
       middleName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
       lastName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      phoneNumber: new FormControl('', [Validators.required, Validators.minLength(this.phoneMinLength), Validators.maxLength(this.phoneMaxLength)]),
+      phoneNumber: ['', Validators.required],
       terms: new FormControl(false, [Validators.requiredTrue])
     });
   }
@@ -44,16 +44,16 @@ export class RegisterComponent {
     return this.form.controls['passwords'] as FormGroup;
   }
 
-  validateForm(control: string, form: FormGroup = this.form) {
-    return shouldShowErrorForControl(control, form);
+  validateForm(control: string, formGroup: FormGroup = this.form) {
+    return shouldShowErrorForControl(formGroup.controls[control]);
   }
 
   checkForMinLength(control: string, formGroup: FormGroup = this.form) {
-    return checkForMinLength(control, formGroup);
+    return checkForMinLength(formGroup.controls[control]);
   }
 
   checkForMaxLength(control: string, formGroup: FormGroup = this.form) {
-    return checkForMaxLength(control, formGroup);
+    return checkForMaxLength(formGroup.controls[control]);
   }
 
   getErrorMessage(control: string, numberOfSymbols?: number) {
