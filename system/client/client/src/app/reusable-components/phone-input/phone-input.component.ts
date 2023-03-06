@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { Constants } from 'src/app/utils/constants';
 import {
   checkForMaxLength,

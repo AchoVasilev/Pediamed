@@ -10,8 +10,7 @@ import { SchedulingDialogComponent } from './scheduling-dialog/scheduling-dialog
 import { FormFieldComponent } from './form-field/form-field.component';
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-
-
+import { EmailComponent } from './email/email.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
     SchedulingDialogComponent,
     PhoneInputComponent,
     FormFieldComponent,
+    EmailComponent,
   ],
   imports: [
     CommonModule,
@@ -27,8 +27,14 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     MatDialogModule,
     MatOptionModule,
-    MatIconModule
+    MatIconModule,
   ],
-  exports: [ScheduleDialogComponent, SchedulingDialogComponent, PhoneInputComponent]
+  exports: [
+    ScheduleDialogComponent,
+    SchedulingDialogComponent,
+    PhoneInputComponent,
+    FormFieldComponent,
+    EmailComponent
+  ],
 })
-export class ReusableComponentsModule { }
+export class ReusableComponentsModule {}

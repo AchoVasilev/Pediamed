@@ -1,8 +1,8 @@
 <mat-form-field appearance="outline">
     <mat-label>{{label}}</mat-label>
-    <input matInput placeholder="Въведете своята фамилия"
+    <input matInput placeholder="{{placeholder}}"
         [formControl]="control" />
-    <mat-icon matSuffix>{{matSuffix}}</mat-icon>
+    <mat-icon matSuffix>{{materialSuffix}}</mat-icon>
     <mat-error
         *ngIf="validateForm()">{{getErrorMessage('minLength', fieldMinLength)}}
     </mat-error>

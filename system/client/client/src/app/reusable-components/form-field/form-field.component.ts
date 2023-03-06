@@ -1,3 +1,4 @@
+import { AbstractControl } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Constants } from './../../utils/constants';
 import { Component, Input } from '@angular/core';
@@ -12,13 +13,15 @@ export class FormFieldComponent {
   fieldMinLength: any = Constants.fieldMinLength;
 
   @Input()
-  label!: string;
+  label: string = '';
+
+  control = new FormControl();
 
   @Input()
-  control!: FormControl;
+  materialSuffix: string = '';
 
   @Input()
-  matSuffix: string = '';
+  placeholder: string = '';
 
   validateForm() {
     return shouldShowErrorForControl(this.control);

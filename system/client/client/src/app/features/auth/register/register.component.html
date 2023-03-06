@@ -11,14 +11,7 @@
                             <form method="post" [formGroup]="form" (ngSubmit)="submitRegisterForm()">
                                 <div class="row mb-3">
                                     <div class="form-outline col">
-                                        <mat-form-field appearance="outline">
-                                            <mat-label>И-мейл</mat-label>
-                                            <input matInput placeholder="Въведете своя и-мейл"
-                                                formControlName="email" />
-                                            <mat-icon matSuffix>email</mat-icon>
-                                            <mat-error *ngIf="validateForm('email')">{{getErrorMessage('email')}}
-                                            </mat-error>
-                                        </mat-form-field>
+                                        <app-email formControlName="email" ngDefaultControl></app-email>
                                     </div>
 
                                     <div class="form-outline col">

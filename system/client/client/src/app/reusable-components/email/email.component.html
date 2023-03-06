@@ -1,0 +1,8 @@
+<mat-form-field appearance="outline">
+    <mat-label>И-мейл</mat-label>
+    <input matInput placeholder="Въведете своя и-мейл"
+        [formControl]="emailControl" />
+    <mat-icon matSuffix>email</mat-icon>
+    <mat-error *ngIf="validateForm()">{{getErrorMessage('email')}}
+    </mat-error>
+</mat-form-field>

@@ -27,7 +27,7 @@ export class RegisterComponent {
   constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar, private fb: FormBuilder) {
 
     this.form = this.fb.group({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: ['', Validators.required],
       passwords: new FormGroup({
         password: this.passwordControl,
         repeatPassword: new FormControl('', [passwordMatch(this.passwordControl)])
