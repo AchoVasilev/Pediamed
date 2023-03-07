@@ -27,15 +27,15 @@ export class RegisterComponent {
   constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar, private fb: FormBuilder) {
 
     this.form = this.fb.group({
-      email: ['', Validators.required],
+      email: [''],
       passwords: new FormGroup({
         password: this.passwordControl,
         repeatPassword: new FormControl('', [passwordMatch(this.passwordControl)])
       }),
-      firstName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      middleName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      lastName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      phoneNumber: ['', Validators.required],
+      firstName: [''],
+      middleName: [''],
+      lastName: [''],
+      phoneNumber: [''],
       terms: new FormControl(false, [Validators.requiredTrue])
     });
   }

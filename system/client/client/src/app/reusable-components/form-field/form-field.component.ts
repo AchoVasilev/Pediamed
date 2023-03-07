@@ -1,4 +1,4 @@
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, Validators } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Constants } from './../../utils/constants';
 import { Component, Input } from '@angular/core';
@@ -15,7 +15,7 @@ export class FormFieldComponent {
   @Input()
   label: string = '';
 
-  control = new FormControl();
+  control = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
 
   @Input()
   materialSuffix: string = '';

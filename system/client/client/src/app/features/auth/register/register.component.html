@@ -20,39 +20,24 @@
                                 </div>
                                 <div class="row mb-3">
                                     <div class="form-outline col">
-                                        <mat-form-field appearance="outline">
-                                            <mat-label>Име</mat-label>
-                                            <input matInput placeholder="Въведете своето име"
-                                                formControlName="firstName" />
-                                            <mat-icon matSuffix>account_circle</mat-icon>
-                                            <mat-error
-                                                *ngIf="validateForm('firstName')">{{getErrorMessage('minLength', fieldMinLength)}}
-                                            </mat-error>
-                                        </mat-form-field>
+                                        <app-form-field formControlName="firstName" ngDefaultControl
+                                        label="Име"
+                                        placeholder="Въведете своето име"
+                                        materialSuffix="account_circle"></app-form-field>
                                     </div>
 
                                     <div class="form-outline col">
-                                        <mat-form-field appearance="outline">
-                                            <mat-label>Презиме</mat-label>
-                                            <input matInput placeholder="Въведете своето презиме"
-                                                formControlName="middleName" />
-                                            <mat-icon matSuffix>account_circle</mat-icon>
-                                            <mat-error
-                                                *ngIf="validateForm('middleName')">{{getErrorMessage('minLength', fieldMinLength)}}
-                                            </mat-error>
-                                        </mat-form-field>
+                                        <app-form-field formControlName="middleName" ngDefaultControl
+                                        label="Презиме"
+                                        placeholder="Въведете своето презиме"
+                                        materialSuffix="account_circle"></app-form-field>
                                     </div>
                                 </div>
                                 <div class="form-outline mb-2">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Фамилия</mat-label>
-                                        <input matInput placeholder="Въведете своята фамилия"
-                                            formControlName="lastName" />
-                                        <mat-icon matSuffix>account_circle</mat-icon>
-                                        <mat-error
-                                            *ngIf="validateForm('lastName')">{{getErrorMessage('minLength', fieldMinLength)}}
-                                        </mat-error>
-                                    </mat-form-field>
+                                    <app-form-field formControlName="lastName" ngDefaultControl
+                                        label="Фамилия"
+                                        placeholder="Въведете своята фамилия"
+                                        materialSuffix="account_circle"></app-form-field>
                                 </div>
 
                                 <div class="row mb-3">

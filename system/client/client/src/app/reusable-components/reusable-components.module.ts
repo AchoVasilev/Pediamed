@@ -11,6 +11,7 @@ import { FormFieldComponent } from './form-field/form-field.component';
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { EmailComponent } from './email/email.component';
+import { PasswordComponent } from './password/password.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { EmailComponent } from './email/email.component';
     PhoneInputComponent,
     FormFieldComponent,
     EmailComponent,
+    PasswordComponent,
   ],
   imports: [
     CommonModule,
