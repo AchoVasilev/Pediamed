@@ -20,12 +20,16 @@ export function checkForRegEx(control: AbstractControl) {
     return control.errors?.['pattern'];
 }
 
+export function checkPasswordsMatch(control: AbstractControl) {
+    return control.errors?.['passwordMissmatch'];
+}
+
 export const ERROR_MESSAGES: any = {
     required: 'Това поле е задължително!',
     minLength: 'Полето трябва да е дълго поне %d символа!',
     maxLength: 'Полето не трябва да е повече от %d символа!',
     email: 'Въведете валиден и-мейл!',
-    passwordMatch: 'Паролите не съвпадат',
+    passwordsMissmatch: 'Паролите не съвпадат',
     terms: 'Трябва да се съгласите с условията!',
     phoneRegEx: 'Въведете валиден номер!'
 }

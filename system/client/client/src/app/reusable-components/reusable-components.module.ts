@@ -36,7 +36,8 @@ import { PasswordComponent } from './password/password.component';
     SchedulingDialogComponent,
     PhoneInputComponent,
     FormFieldComponent,
-    EmailComponent
+    EmailComponent,
+    PasswordComponent
   ],
 })
 export class ReusableComponentsModule {}

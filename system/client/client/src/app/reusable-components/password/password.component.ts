@@ -1,6 +1,7 @@
 import { ValidatorFn, FormControl } from '@angular/forms';
 import { Component, Input } from '@angular/core';
-import { checkForMinLength, parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
+import { checkForMinLength, checkPasswordsMatch, parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
+import { Constants } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-password',
@@ -10,11 +11,15 @@ import { checkForMinLength, parseErrorMessage, shouldShowErrorForControl } from 
 export class PasswordComponent {
 
   @Input()
-  validators: ValidatorFn[] = [];
+  validators!: ValidatorFn[];
+  @Input()
+  label: string = '';
   formControl: FormControl = new FormControl('', this.validators);
+  fieldMinLength: number = Constants.fieldMinLength;
   hide: boolean = true;
 
   checkForMinLength() {
+    debugger;
     return checkForMinLength(this.formControl);
   }
 
@@ -24,6 +29,10 @@ export class PasswordComponent {
 
   getErrorMessage(errorType: string, numberOfSymbols?: number) {
     return parseErrorMessage(errorType, numberOfSymbols);
+  }
+
+  checkPasswordsMatch() {
+    return checkPasswordsMatch(this.formControl);
   }
 
 

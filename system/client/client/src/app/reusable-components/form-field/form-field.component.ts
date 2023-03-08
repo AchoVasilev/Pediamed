@@ -10,7 +10,7 @@ import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/form
   styleUrls: ['./form-field.component.css'],
 })
 export class FormFieldComponent {
-  fieldMinLength: any = Constants.fieldMinLength;
+  fieldMinLength: number = Constants.fieldMinLength;
 
   @Input()
   label: string = '';

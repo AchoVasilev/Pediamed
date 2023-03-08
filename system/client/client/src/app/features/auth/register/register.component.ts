@@ -1,3 +1,4 @@
+import { ValidatorFn } from '@angular/forms';
 import { Constants } from './../../../utils/constants';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
@@ -6,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { RegisterParent } from 'src/app/models/user/registerParent';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { checkForMaxLength, checkForMinLength, parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
+import { checkForMaxLength, checkForMinLength, checkPasswordsMatch, parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
 import { openSnackBar } from 'src/app/utils/matSnackBarUtil';
 import { passwordMatch } from 'src/app/utils/passwordValidator';
 
@@ -19,18 +20,20 @@ export class RegisterComponent {
   fieldMinLength: number = Constants.fieldMinLength;
   phoneMinLength: number = Constants.phoneMinLength;
   phoneMaxLength: number = Constants.phoneMaxLength;
-  private passwordControl = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
+  //private passwordControl = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
   hide: boolean = true;
   loading: boolean = false;
   form: FormGroup;
+  passwordValidators = [Validators.required, Validators.minLength(this.fieldMinLength)];
+  repeatPasswordValidators: ValidatorFn[];
 
   constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar, private fb: FormBuilder) {
 
     this.form = this.fb.group({
       email: [''],
-      passwords: new FormGroup({
-        password: this.passwordControl,
-        repeatPassword: new FormControl('', [passwordMatch(this.passwordControl)])
+      passwords: this.fb.group({
+        password: [''],
+        repeatPassword: ['']
       }),
       firstName: [''],
       middleName: [''],
@@ -38,6 +41,8 @@ export class RegisterComponent {
       phoneNumber: [''],
       terms: new FormControl(false, [Validators.requiredTrue])
     });
+
+    this.repeatPasswordValidators = [passwordMatch(this.passwordsGroup.controls['password'])];
   }
 
   get passwordsGroup(): FormGroup {
