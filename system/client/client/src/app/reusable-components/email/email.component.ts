@@ -1,5 +1,5 @@
 import { FormControl, Validators } from '@angular/forms';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
 
 @Component({
@@ -9,7 +9,8 @@ import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/form
 })
 export class EmailComponent {
 
-  emailControl: FormControl = new FormControl('', [Validators.required, Validators.email]);
+  @Input()
+  emailControl!: FormControl;
 
   validateForm() {
     return shouldShowErrorForControl(this.emailControl);
