@@ -8,5 +8,5 @@
     <mat-error
         *ngIf="validateForm() && checkForMaxLength()">{{getErrorMessage('maxLength', phoneMaxLength)}}
     </mat-error>
-    <mat-error *ngIf="validateForm() && checkForRegExp()">{{getErrorMessage('phoneRegEx')}}</mat-error>
+    <mat-error *ngIf="validateForm() && checkForRegExp() && !(checkForMinLength() || checkForMaxLength())">{{getErrorMessage('phoneRegEx')}}</mat-error>
 </mat-form-field>

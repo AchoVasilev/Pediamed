@@ -1,7 +1,7 @@
 import { AbstractControl } from "@angular/forms";
 
 export function shouldShowErrorForControl(control: AbstractControl) {
-    return control.touched && control.invalid;
+    return (control.touched || control.dirty) && control.invalid;
 }
 
 export function parseErrorMessage(validation: string, numberOfSymbols?: number) {

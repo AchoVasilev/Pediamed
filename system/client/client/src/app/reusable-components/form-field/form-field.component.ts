@@ -15,7 +15,8 @@ export class FormFieldComponent {
   @Input()
   label: string = '';
 
-  control = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
+  @Input()
+  control!: FormControl;
 
   @Input()
   materialSuffix: string = '';

@@ -11,45 +11,44 @@
                             <form method="post" [formGroup]="form" (ngSubmit)="submitRegisterForm()">
                                 <div class="row mb-3">
                                     <div class="form-outline col">
-                                        <app-email formControlName="email" ngDefaultControl></app-email>
+                                        <app-email [emailControl]="emailControl"></app-email>
                                     </div>
 
                                     <div class="form-outline col">
-                                        <app-phone-input formControlName="phoneNumber" ngDefaultControl></app-phone-input>
+                                        <app-phone-input [phoneNumberControl]="phoneNumber"></app-phone-input>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="form-outline col">
-                                        <app-form-field formControlName="firstName" ngDefaultControl
+                                        <app-form-field [control]="firstName"
                                         label="Име"
                                         placeholder="Въведете своето име"
                                         materialSuffix="account_circle"></app-form-field>
                                     </div>
 
                                     <div class="form-outline col">
-                                        <app-form-field formControlName="middleName" ngDefaultControl
+                                        <app-form-field [control]="middleName"
                                         label="Презиме"
                                         placeholder="Въведете своето презиме"
                                         materialSuffix="account_circle"></app-form-field>
                                     </div>
                                 </div>
                                 <div class="form-outline mb-2">
-                                    <app-form-field formControlName="lastName" ngDefaultControl
+                                    <app-form-field [control]="lastName"
                                         label="Фамилия"
                                         placeholder="Въведете своята фамилия"
                                         materialSuffix="account_circle"></app-form-field>
                                 </div>
 
                                 <div class="row mb-3">
-                                    <div class="form-outline col" formGroupName="passwords">
-                                        <app-password formControlName="password" ngDefaultControl
-                                        [validators]="passwordValidators"
+                                    <div class="form-outline col">
+                                        <app-password [control]="password"
+                                        
                                         label="Въведете парола"></app-password>
                                     </div>
 
-                                    <div class="form-outline col" formGroupName="passwords">
-                                        <app-password formControlName="repeatPassword" ngDefaultControl
-                                        [validators]="repeatPasswordValidators"
+                                    <div class="form-outline col">
+                                        <app-password [control]="repeatPassword"
                                         label="Повторете паролата"></app-password>
                                     </div>
                                 </div>

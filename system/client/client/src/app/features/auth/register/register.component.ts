@@ -20,7 +20,7 @@ export class RegisterComponent {
   fieldMinLength: number = Constants.fieldMinLength;
   phoneMinLength: number = Constants.phoneMinLength;
   phoneMaxLength: number = Constants.phoneMaxLength;
-  //private passwordControl = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
+  private passwordControl = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
   hide: boolean = true;
   loading: boolean = false;
   form: FormGroup;
@@ -30,15 +30,20 @@ export class RegisterComponent {
   constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar, private fb: FormBuilder) {
 
     this.form = this.fb.group({
-      email: [''],
+      email: new FormControl('', [Validators.required, Validators.email]),
       passwords: this.fb.group({
-        password: [''],
-        repeatPassword: ['']
+        password: this.passwordControl,
+        repeatPassword: new FormGroup('', passwordMatch(this.passwordControl))
       }),
-      firstName: [''],
-      middleName: [''],
-      lastName: [''],
-      phoneNumber: [''],
+      firstName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
+      middleName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
+      lastName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
+      phoneNumber: new FormControl('', [
+        Validators.required,
+        Validators.minLength(this.phoneMinLength),
+        Validators.maxLength(this.phoneMaxLength),
+        Validators.pattern(Constants.phoneRegExp),
+      ]),
       terms: new FormControl(false, [Validators.requiredTrue])
     });
 
@@ -47,6 +52,34 @@ export class RegisterComponent {
 
   get passwordsGroup(): FormGroup {
     return this.form.controls['passwords'] as FormGroup;
+  }
+
+  get emailControl(): FormControl {
+    return this.form.get('email') as FormControl;
+  }
+
+  get firstName(): FormControl {
+    return this.form.get('firstName') as FormControl;
+  }
+
+  get middleName(): FormControl {
+    return this.form.get('middleName') as FormControl;
+  }
+
+  get lastName(): FormControl {
+    return this.form.get('lastName') as FormControl;
+  }
+
+  get phoneNumber(): FormControl {
+    return this.form.get('phoneNumber') as FormControl;
+  }
+
+  get password(): FormControl {
+    return (this.form.get('passwords') as FormGroup).get('password') as FormControl;
+  }
+
+  get repeatPassword(): FormControl {
+    return (this.form.get('passwords') as FormGroup).get('repeatPassword') as FormControl;
   }
 
   validateForm(control: string, formGroup: FormGroup = this.form) {

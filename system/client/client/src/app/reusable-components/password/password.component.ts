@@ -11,20 +11,20 @@ import { Constants } from 'src/app/utils/constants';
 export class PasswordComponent {
 
   @Input()
-  validators!: ValidatorFn[];
-  @Input()
   label: string = '';
-  formControl: FormControl = new FormControl('', this.validators);
+  @Input()
+  control!: FormControl;
+
   fieldMinLength: number = Constants.fieldMinLength;
   hide: boolean = true;
 
   checkForMinLength() {
     debugger;
-    return checkForMinLength(this.formControl);
+    return checkForMinLength(this.control);
   }
 
   validateForm() {
-    return shouldShowErrorForControl(this.formControl);
+    return shouldShowErrorForControl(this.control);
   }
 
   getErrorMessage(errorType: string, numberOfSymbols?: number) {
@@ -32,7 +32,7 @@ export class PasswordComponent {
   }
 
   checkPasswordsMatch() {
-    return checkPasswordsMatch(this.formControl);
+    return checkPasswordsMatch(this.control);
   }
 
 

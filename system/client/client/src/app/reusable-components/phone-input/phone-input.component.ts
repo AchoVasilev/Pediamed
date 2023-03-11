@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Constants } from 'src/app/utils/constants';
 import {
@@ -18,12 +18,8 @@ export class PhoneInputComponent {
   phoneMinLength = Constants.phoneMinLength;
   phoneMaxLength = Constants.phoneMaxLength;
 
-  phoneNumberControl: FormControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(this.phoneMinLength),
-    Validators.maxLength(this.phoneMaxLength),
-    Validators.pattern(Constants.phoneRegExp),
-  ]);
+  @Input()
+  phoneNumberControl!: FormControl;
 
   checkForMinLength() {
     return checkForMinLength(this.phoneNumberControl);
