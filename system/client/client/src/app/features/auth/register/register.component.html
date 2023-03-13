@@ -40,18 +40,8 @@
                                         materialSuffix="account_circle"></app-form-field>
                                 </div>
 
-                                <div class="row mb-3">
-                                    <div class="form-outline col">
-                                        <app-password [control]="password"
-                                        
-                                        label="Въведете парола"></app-password>
-                                    </div>
-
-                                    <div class="form-outline col">
-                                        <app-password [control]="repeatPassword"
-                                        label="Повторете паролата"></app-password>
-                                    </div>
-                                </div>
+                                
+                                    <app-passwords [passwordsGroup]="passwordsGroup"></app-passwords>
                                 <div class="form-check d-flex justify-content-center mb-5">
                                     <mat-checkbox color="primary" formControlName="terms">Съгласявам се с всички <a
                                             routerLink="/privacy" class="text-body"><u>условия за

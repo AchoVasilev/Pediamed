@@ -12,6 +12,7 @@ export class PasswordComponent {
 
   @Input()
   label: string = '';
+
   @Input()
   control!: FormControl;
 
@@ -19,7 +20,6 @@ export class PasswordComponent {
   hide: boolean = true;
 
   checkForMinLength() {
-    debugger;
     return checkForMinLength(this.control);
   }
 
@@ -31,13 +31,12 @@ export class PasswordComponent {
     return parseErrorMessage(errorType, numberOfSymbols);
   }
 
-  checkPasswordsMatch() {
-    return checkPasswordsMatch(this.control);
-  }
-
-
   toggleHide(event: Event) {
     event.preventDefault();
     this.hide = !this.hide;
+  }
+
+  checkPasswordsMatch() {
+    return checkPasswordsMatch(this.control);
   }
 }

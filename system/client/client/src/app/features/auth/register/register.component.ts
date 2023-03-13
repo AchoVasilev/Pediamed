@@ -30,10 +30,10 @@ export class RegisterComponent {
   constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar, private fb: FormBuilder) {
 
     this.form = this.fb.group({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: ['', [Validators.required, Validators.email]],
       passwords: this.fb.group({
         password: this.passwordControl,
-        repeatPassword: new FormGroup('', passwordMatch(this.passwordControl))
+        repeatPassword: ['', passwordMatch(this.passwordControl)]
       }),
       firstName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
       middleName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
@@ -72,14 +72,6 @@ export class RegisterComponent {
 
   get phoneNumber(): FormControl {
     return this.form.get('phoneNumber') as FormControl;
-  }
-
-  get password(): FormControl {
-    return (this.form.get('passwords') as FormGroup).get('password') as FormControl;
-  }
-
-  get repeatPassword(): FormControl {
-    return (this.form.get('passwords') as FormGroup).get('repeatPassword') as FormControl;
   }
 
   validateForm(control: string, formGroup: FormGroup = this.form) {

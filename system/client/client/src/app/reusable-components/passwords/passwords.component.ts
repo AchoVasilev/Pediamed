@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import { checkPasswordsMatch } from 'src/app/utils/formValidator';
 
 @Component({
   selector: 'app-passwords',
@@ -7,4 +9,14 @@ import { Component } from '@angular/core';
 })
 export class PasswordsComponent {
 
+  @Input()
+  passwordsGroup!: FormGroup;
+
+  get password(): FormControl {
+    return this.passwordsGroup.get('password') as FormControl;
+  }
+
+  get repeatPassword(): FormControl {
+    return this.passwordsGroup.get('repeatPassword') as FormControl;
+  }
 }

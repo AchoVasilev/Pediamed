@@ -39,7 +39,8 @@ import { PasswordsComponent } from './passwords/passwords.component';
     PhoneInputComponent,
     FormFieldComponent,
     EmailComponent,
-    PasswordComponent
+    PasswordComponent,
+    PasswordsComponent
   ],
 })
 export class ReusableComponentsModule {}
