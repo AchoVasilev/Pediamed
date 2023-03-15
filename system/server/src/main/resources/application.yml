@@ -8,7 +8,11 @@ micronaut:
         signatures:
           secret:
             generator:
-              secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}"'
+              secret: classpath:certs/private.pem
+              jws-algorithm: HS256
+rsa:
+  rsa-private-key: classpath:certs/private.pem
+  rsa-public-key: classpath:certs/public.pem
 
 max-http-request-header-size: 20KB
 
@@ -30,6 +34,3 @@ jpa:
       format_sql: true
   defer-datasource-initialization: true
   show-sql: true
-rsa:
-  rsa-private-key: classpath:certs/private.pem
-  rsa-public-key: classpath:certs/public.pem
