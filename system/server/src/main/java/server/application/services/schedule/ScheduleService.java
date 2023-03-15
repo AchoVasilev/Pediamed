@@ -1,6 +1,6 @@
 package server.application.services.schedule;
 
-import org.springframework.stereotype.Service;
+import jakarta.inject.Singleton;
 import server.domain.entities.CalendarEvent;
 import server.infrastructure.repositories.EventDataRepository;
 import server.infrastructure.repositories.ScheduleRepository;
@@ -22,7 +22,7 @@ import static server.application.constants.ErrorMessages.EVENTS_GENERATED;
 import static server.application.constants.ErrorMessages.EVENTS_NOT_GENERATED;
 import static server.application.constants.ErrorMessages.SCHEDULE_NOT_FOUND;
 
-@Service
+@Singleton
 public class ScheduleService {
     private final EventDataRepository eventDataRepository;
     private final CabinetService cabinetService;

@@ -1,3 +1,4 @@
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -32,6 +33,7 @@ import { PasswordsComponent } from './passwords/passwords.component';
     MatDialogModule,
     MatOptionModule,
     MatIconModule,
+    MatButtonModule
   ],
   exports: [
     ScheduleDialogComponent,

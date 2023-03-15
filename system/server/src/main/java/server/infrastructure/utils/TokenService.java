@@ -1,5 +1,6 @@
 package server.infrastructure.utils;
 
+import jakarta.inject.Singleton;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -11,7 +12,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
-@Service
+@Singleton
 public class TokenService {
     private final JwtEncoder jwtEncoder;
 

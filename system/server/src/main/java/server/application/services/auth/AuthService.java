@@ -1,24 +1,25 @@
 package server.application.services.auth;
 
-import jakarta.transaction.Transactional;
+import jakarta.inject.Singleton;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import server.application.services.auth.models.RegistrationRequest;
 import server.application.services.auth.models.UserDto;
 import server.domain.entities.ApplicationUser;
 import server.domain.entities.Parent;
 import server.domain.entities.enums.RoleEnum;
-import server.infrastructure.repositories.RoleRepository;
-import server.infrastructure.repositories.UserRepository;
 import server.domain.valueObjects.Email;
 import server.domain.valueObjects.MobilePhone;
 import server.infrastructure.config.exceptions.models.EntityAlreadyExistsException;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
+import server.infrastructure.repositories.RoleRepository;
+import server.infrastructure.repositories.UserRepository;
+
+import javax.transaction.Transactional;
 
 import static server.application.constants.ErrorMessages.EMAIL_ALREADY_EXISTS;
 import static server.application.constants.ErrorMessages.ENTITY_NOT_FOUND;
 
-@Service
+@Singleton
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -54,6 +55,13 @@ public class AuthService {
         newUser.setParent(patient);
 
         this.userRepository.save(newUser);
+    }
+
+    public boolean validateCredentials(String username, String password) {
+        var user = this.userRepository.findByEmail(username)
+                .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
+
+        return this.passwordEncoder.matches(password, user.getPassword());
     }
 
     public UserDto findByEmail(String email) {

@@ -1,6 +1,5 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component, Input } from '@angular/core';
-import { checkPasswordsMatch } from 'src/app/utils/formValidator';
 
 @Component({
   selector: 'app-passwords',

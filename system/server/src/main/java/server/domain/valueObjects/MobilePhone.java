@@ -1,6 +1,6 @@
 package server.domain.valueObjects;
 
-import jakarta.persistence.Embeddable;
+import io.micronaut.data.annotation.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.infrastructure.utils.guards.Guard;

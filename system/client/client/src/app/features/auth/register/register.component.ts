@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { RegisterParent } from 'src/app/models/user/registerParent';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { checkForMaxLength, checkForMinLength, checkPasswordsMatch, parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
+import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
 import { openSnackBar } from 'src/app/utils/matSnackBarUtil';
 import { passwordMatch } from 'src/app/utils/passwordValidator';
 
@@ -27,7 +27,11 @@ export class RegisterComponent {
   passwordValidators = [Validators.required, Validators.minLength(this.fieldMinLength)];
   repeatPasswordValidators: ValidatorFn[];
 
-  constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar, private fb: FormBuilder) {
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private matSnackBar: MatSnackBar, 
+    private fb: FormBuilder) {
 
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -35,16 +39,16 @@ export class RegisterComponent {
         password: this.passwordControl,
         repeatPassword: ['', passwordMatch(this.passwordControl)]
       }),
-      firstName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      middleName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      lastName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      phoneNumber: new FormControl('', [
+      firstName: ['', [Validators.required, Validators.minLength(this.fieldMinLength)]],
+      middleName: ['', [Validators.required, Validators.minLength(this.fieldMinLength)]],
+      lastName: ['', [Validators.required, Validators.minLength(this.fieldMinLength)]],
+      phoneNumber: ['', [
         Validators.required,
         Validators.minLength(this.phoneMinLength),
         Validators.maxLength(this.phoneMaxLength),
         Validators.pattern(Constants.phoneRegExp),
-      ]),
-      terms: new FormControl(false, [Validators.requiredTrue])
+      ]],
+      terms: [false, [Validators.requiredTrue]]
     });
 
     this.repeatPasswordValidators = [passwordMatch(this.passwordsGroup.controls['password'])];
@@ -76,14 +80,6 @@ export class RegisterComponent {
 
   validateForm(control: string, formGroup: FormGroup = this.form) {
     return shouldShowErrorForControl(formGroup.controls[control]);
-  }
-
-  checkForMinLength(control: string, formGroup: FormGroup = this.form) {
-    return checkForMinLength(formGroup.controls[control]);
-  }
-
-  checkForMaxLength(control: string, formGroup: FormGroup = this.form) {
-    return checkForMaxLength(formGroup.controls[control]);
   }
 
   getErrorMessage(control: string, numberOfSymbols?: number) {
@@ -119,10 +115,5 @@ export class RegisterComponent {
           }
         },
       });
-  }
-
-  toggleHide(event: Event) {
-    event.preventDefault();
-    this.hide = !this.hide;
   }
 }

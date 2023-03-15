@@ -1,7 +1,7 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { shouldShowErrorForControl, parseErrorMessage } from 'src/app/utils/formValidator';
 import { openSnackBar } from 'src/app/utils/matSnackBarUtil';
@@ -17,12 +17,24 @@ export class LoginComponent {
   loading = false;
   errorMsg: string = '';
 
-  constructor(private authService: AuthService, private router: Router, private snackBar: MatSnackBar) {
-    this.form = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required]),
-      persist: new FormControl(false)
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private snackBar: MatSnackBar,
+    private fb: FormBuilder) {
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+      persist: [false]
     });
+  }
+
+  get emailControl(): FormControl {
+    return this.form.get('email') as FormControl;
+  }
+
+  get passwordControl(): FormControl {
+    return this.form.get('password') as FormControl;
   }
 
   validateForm(control: string, formGroup: FormGroup = this.form) {
