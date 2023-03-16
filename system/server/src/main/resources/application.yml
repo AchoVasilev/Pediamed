@@ -13,6 +13,7 @@ micronaut:
 rsa:
   rsa-private-key: classpath:certs/private.pem
   rsa-public-key: classpath:certs/public.pem
+  rsa-key-pair: classpath:certs/rsa-2048bit-key-pair.pem
 
 max-http-request-header-size: 20KB
 

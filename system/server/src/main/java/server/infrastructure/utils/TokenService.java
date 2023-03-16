@@ -2,16 +2,10 @@ package server.infrastructure.utils;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
-import io.micronaut.context.annotation.Value;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.encryption.rsa.RSAEncryptionConfiguration;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.stereotype.Service;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -22,15 +16,6 @@ import java.util.stream.Collectors;
 @Named("generator")
 @Singleton
 public class TokenService implements RSAEncryptionConfiguration {
-    private RSAPrivateKey rsaPrivateKey;
-    private RSAPublicKey rsaPublicKey;
-    JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP_256;
-    EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM;
-
-    public TokenService(@Value("${rsa.rsa-public-key}") String rsaPublicKeyPath, @Value("${rsa.rsa-private-key}") String rsaPrivateKeyPath) {
-        var keyPair
-    }
-
     private final JwtEncoder jwtEncoder;
 
     public TokenService(JwtEncoder jwtEncoder) {
