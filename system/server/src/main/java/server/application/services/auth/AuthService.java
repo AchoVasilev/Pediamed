@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import server.application.services.auth.models.RegistrationRequest;
 import server.application.services.auth.models.UserDto;
 import server.domain.entities.ApplicationUser;
+import server.domain.entities.BaseEntity;
 import server.domain.entities.Parent;
 import server.domain.entities.enums.RoleEnum;
 import server.domain.valueObjects.Email;
@@ -48,8 +49,9 @@ public class AuthService {
                 registrationRequest.middleName(),
                 registrationRequest.lastName(),
                 new MobilePhone(registrationRequest.phoneNumber()),
-                role
         );
+
+        newUser.getRoles().add(role);
 
         var patient = new Parent();
         newUser.setParent(patient);
@@ -79,7 +81,7 @@ public class AuthService {
                         u.getFirstName(),
                         u.getLastName(),
                         u.getEmail().getEmail(),
-                        u.getRole().getId()))
+                        u.getRoles().stream().map(BaseEntity::getId).toList()))
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
     }
 }

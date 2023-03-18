@@ -4,6 +4,8 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import server.application.services.auth.AuthService;
 import server.application.services.auth.models.LoginRequest;
 import server.application.services.auth.models.RegistrationRequest;
@@ -25,6 +27,7 @@ public class AuthController {
         return HttpResponse.ok(user);
     }
 
+    @Secured(SecurityRule.IS_ANONYMOUS)
     @Post("/register")
     public HttpResponse<?> register(@Valid @Body RegistrationRequest registrationRequest) {
         this.authService.register(registrationRequest);

@@ -18,6 +18,7 @@ rsa:
 max-http-request-header-size: 20KB
 
 datasource:
+  dialect: postgres
   driver-class-name: org.postgresql.Driver
   url: jdbc:postgresql://localhost:5432/pediamed?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
   username: postgres
@@ -26,12 +27,15 @@ sql:
   init:
     mode: always
 jpa:
-  database-platform: org.hibernate.dialect.PostgreSQLDialect
-  generate-ddl: true
-  hibernate:
-    ddl-auto: create-drop
-  properties:
-    hibernate:
-      format_sql: true
-  defer-datasource-initialization: true
-  show-sql: true
+  default:
+    packages-to-scan:
+      - 'server'
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: none
+        show_sql: true
+flyway:
+  datasources:
+    default:
+      enabled: true

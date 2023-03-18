@@ -1,5 +1,6 @@
 package server.application.services.auth.models;
 
+import java.util.List;
 import java.util.UUID;
 
 public record UserDto(
@@ -7,5 +8,5 @@ public record UserDto(
         String firstName,
         String lastName,
         String email,
-        UUID roleId
+        List<UUID> roleIds
 ) { }
