@@ -48,7 +48,7 @@ public class AuthService {
                 registrationRequest.firstName(),
                 registrationRequest.middleName(),
                 registrationRequest.lastName(),
-                new MobilePhone(registrationRequest.phoneNumber()),
+                new MobilePhone(registrationRequest.phoneNumber())
         );
 
         newUser.getRoles().add(role);

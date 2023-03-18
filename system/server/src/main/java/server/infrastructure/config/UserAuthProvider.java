@@ -9,18 +9,15 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 import server.application.services.auth.AuthService;
-import server.infrastructure.config.encoding.AuthPasswordEncoderService;
 
 import java.util.List;
 
 @Singleton
 public class UserAuthProvider implements AuthenticationProvider {
     private final AuthService authService;
-    private final AuthPasswordEncoderService authPasswordEncoderService;
 
-    public UserAuthProvider(AuthService authService, AuthPasswordEncoderService authPasswordEncoderService) {
+    public UserAuthProvider(AuthService authService) {
         this.authService = authService;
-        this.authPasswordEncoderService = authPasswordEncoderService;
     }
 
     @Override
@@ -31,7 +28,7 @@ public class UserAuthProvider implements AuthenticationProvider {
 
             var user = this.authService.getValidatedUser(username, password);
             if (user != null) {
-                emitter.next(AuthenticationResponse.success(username, List.of(user.roleId().toString())));
+                emitter.next(AuthenticationResponse.success(username, List.of(user.roleIds().toString())));
                 emitter.complete();
             } else  {
                 emitter.error(AuthenticationResponse.exception());

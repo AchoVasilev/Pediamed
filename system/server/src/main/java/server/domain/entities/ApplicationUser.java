@@ -57,13 +57,7 @@ public class ApplicationUser extends BaseEntity<UUID> {
     }
 
     public ApplicationUser(Email email, String password, String firstName, String middleName, String lastName, MobilePhone phoneNumber, List<Role> roles) {
-        this.id = UUID.randomUUID();
-        this.email = email;
-        this.password = Guard.Against.EmptyOrBlank(password);
-        this.firstName = Guard.Against.EmptyOrBlank(firstName);
-        this.middleName = Guard.Against.EmptyOrBlank(middleName);
-        this.lastName = Guard.Against.EmptyOrBlank(lastName);
-        this.phoneNumber = phoneNumber;
+        this(email,  password,  firstName,  middleName,  lastName, phoneNumber);
         this.roles = roles;
     }
 }
