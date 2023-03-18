@@ -1,67 +1,51 @@
 package server.presentation.auth;
 
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Post;
 import server.application.services.auth.AuthService;
-import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 import server.application.services.auth.models.LoginRequest;
-import server.application.services.auth.models.LoginResponse;
 import server.application.services.auth.models.RegistrationRequest;
-import server.infrastructure.utils.TokenService;
+import server.application.services.auth.models.UserDto;
 
-import static server.application.constants.ErrorMessages.ENTITY_NOT_FOUND;
+import javax.validation.Valid;
 
-@RestController
-@RequestMapping("/auth")
+@Controller(value = "auth")
 public class AuthController {
-    private final TokenService tokenService;
-    private final AuthenticationManager authenticationManager;
     private final AuthService authService;
 
-    public AuthController(TokenService tokenService, AuthenticationManager authenticationManager, AuthService authService) {
-        this.tokenService = tokenService;
-        this.authenticationManager = authenticationManager;
+    public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        var authentication = this.authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
-        return ResponseEntity.ok(this.getLoginResponse(authentication, loginRequest.persist()));
+    @Post("/login")
+    public HttpResponse<UserDto> login(@Body LoginRequest loginRequest) {
+        var user = this.authService.findByEmail(loginRequest.email());
+        return HttpResponse.ok(user);
     }
 
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
+    @Post("/register")
+    public HttpResponse<?> register(@Valid @Body RegistrationRequest registrationRequest) {
         this.authService.register(registrationRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return HttpResponse.created("/auth/register");
     }
 
-    private LoginResponse getLoginResponse(Authentication authentication, boolean persist) {
-        var role = authentication.getAuthorities()
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND)).toString();
-
-        var user = this.authService.findByEmail(authentication.getName());
-
-        return new LoginResponse(
-                user.id(),
-                user.firstName(),
-                user.lastName(),
-                role,
-                user.email(),
-                this.tokenService.generateToken(authentication, persist)
-        );
-    }
+//    private LoginResponse getLoginResponse(Authentication authentication, boolean persist) {
+//        var role = authentication.getAuthorities()
+//                .stream()
+//                .findFirst()
+//                .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND)).toString();
+//
+//        var user = this.authService.findByEmail(authentication.getName());
+//
+//        return new LoginResponse(
+//                user.id(),
+//                user.firstName(),
+//                user.lastName(),
+//                role,
+//                user.email(),
+//                this.tokenService.generateToken(authentication, persist)
+//        );
+//    }
 }

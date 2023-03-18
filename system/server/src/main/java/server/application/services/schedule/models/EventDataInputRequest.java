@@ -1,6 +1,7 @@
 package server.application.services.schedule.models;
 
-import jakarta.validation.constraints.NotBlank;
+
+import javax.validation.constraints.NotBlank;
 
 import static server.application.constants.ErrorMessages.REQUIRED_FIELD;
 

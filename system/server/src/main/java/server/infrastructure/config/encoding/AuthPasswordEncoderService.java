@@ -5,8 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Singleton
-public class AuthPasswordEncoder implements PasswordEncoder {
-
+public class AuthPasswordEncoderService implements PasswordEncoder {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override

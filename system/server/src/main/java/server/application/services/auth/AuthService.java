@@ -33,7 +33,7 @@ public class AuthService {
 
     @Transactional
     public void register(RegistrationRequest registrationRequest) {
-        var user = this.userRepository.findByEmail(registrationRequest.email());
+        var user = this.userRepository.findByEmailEmail(registrationRequest.email());
         if (user.isPresent()) {
             throw new EntityAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS,registrationRequest.email()));
         }
@@ -57,20 +57,29 @@ public class AuthService {
         this.userRepository.save(newUser);
     }
 
+    public UserDto getValidatedUser(String username, String password) {
+        if (this.validateCredentials(username, password)) {
+            return this.findByEmail(username);
+        }
+
+        return null;
+    }
+
     public boolean validateCredentials(String username, String password) {
-        var user = this.userRepository.findByEmail(username)
+        var user = this.userRepository.findByEmailEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
 
         return this.passwordEncoder.matches(password, user.getPassword());
     }
 
     public UserDto findByEmail(String email) {
-        return this.userRepository.findByEmail(email)
+        return this.userRepository.findByEmailEmail(email)
                 .map(u -> new UserDto(
                         u.getId(),
                         u.getFirstName(),
                         u.getLastName(),
-                        u.getEmail().getEmail()))
+                        u.getEmail().getEmail(),
+                        u.getRole().getId()))
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
     }
 }

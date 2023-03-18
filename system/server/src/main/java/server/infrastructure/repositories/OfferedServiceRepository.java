@@ -1,6 +1,6 @@
 package server.infrastructure.repositories;
 
-import org.springframework.stereotype.Repository;
+import io.micronaut.data.annotation.Repository;
 import server.domain.entities.OfferedService;
 
 @Repository
