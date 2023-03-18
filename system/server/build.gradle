@@ -1,11 +1,9 @@
 plugins {
+	id 'java'
 	id 'groovy'
 	id 'com.github.johnrengelman.shadow' version "7.1.2"
 	id 'io.micronaut.application' version '3.7.5'
-}
-
-plugins {
-	id 'java'
+	id "org.flywaydb.flyway" version "9.8.1"
 }
 
 application {
@@ -58,6 +56,17 @@ dependencies {
 java {
 	sourceCompatibility = JavaVersion.toVersion("17")
 	targetCompatibility = JavaVersion.toVersion("17")
+}
+
+flyway {
+	placeholderPrefix = 'V1_'
+	placeholderSuffix = '${flyway:timestamp}'
+	sqlMigrationSeparator = '__'
+	driver = 'org.postgresql.Driver'
+	url = 'jdbc:postgresql://localhost:5432/pediamed?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8'
+	user = 'postgres'
+	password = 'postgres'
+	locations = ['classpath:db/migration', 'classpath:db/seed']
 }
 
 test {
