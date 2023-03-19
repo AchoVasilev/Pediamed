@@ -13,11 +13,17 @@ VALUES (1, 'Първичен преглед', 60, false, (now() at time zone 'ut
        (12, 'Инхалация на медикамент', 10.00, false, (now() at time zone 'utc')),
        (13, 'Първична обработка на рана и поставяне на тетанус', 25.00, false, (now() at time zone 'utc'));
 
-INSERT INTO roles (id, name, deleted, date_created)
-VALUES ('83f00c4a-3e7a-4f74-b8d7-04705dad0be1', 'ROLE_DOCTOR', false, (now() at time zone 'utc')),
-       ('e02fe4eb-a24b-4588-a48c-197bd00138a2', 'ROLE_PATIENT', false, (now() at time zone 'utc')),
-       ('e02fe4eb-a24b-4588-a48c-197bd00138a3', 'ROLE_PARENT', false, (now() at time zone 'utc')),
-       ('107d12ee-6469-42ae-9439-db1d377b61a5', 'ROLE_ADMINISTRATOR', false, (now() at time zone 'utc'));
+INSERT INTO application_users(id, email, password, first_name, middle_name, last_name, phone_number)
+VALUES ('e02fe4eb-a24b-4588-a48c-197bd00138a7', 'ASDASD', 'Павлина', 'Петрова', 'Михова', '0878787342')
+
+INSERT INTO doctors (id, application_user_id)
+VALUES ('83f00c4a-3e7a-4f74-b8d7-04705dad0ba2', 'e02fe4eb-a24b-4588-a48c-197bd00138a7')
+
+INSERT INTO roles (id, name, deleted, date_created, application_user_id)
+VALUES ('83f00c4a-3e7a-4f74-b8d7-04705dad0be1', 'ROLE_DOCTOR', false, (now() at time zone 'utc'), 'e02fe4eb-a24b-4588-a48c-197bd00138a7'),
+       ('e02fe4eb-a24b-4588-a48c-197bd00138a2', 'ROLE_PATIENT', false, (now() at time zone 'utc'), null),
+       ('e02fe4eb-a24b-4588-a48c-197bd00138a3', 'ROLE_PARENT', false, (now() at time zone 'utc'), null),
+       ('107d12ee-6469-42ae-9439-db1d377b61a5', 'ROLE_ADMINISTRATOR', false, (now() at time zone 'utc'), null);
 
 INSERT INTO event_data(id, hours, intervals)
 VALUES  (1, '08:00', 5),
