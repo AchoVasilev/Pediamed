@@ -1,10 +1,10 @@
 package server.domain.valueObjects;
 
-import io.micronaut.data.annotation.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.infrastructure.utils.guards.Guard;
 
+import javax.persistence.Embeddable;
 import java.util.regex.Pattern;
 
 @Embeddable

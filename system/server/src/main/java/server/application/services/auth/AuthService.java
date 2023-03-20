@@ -1,6 +1,7 @@
 package server.application.services.auth;
 
 import jakarta.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import server.application.services.auth.models.RegistrationRequest;
 import server.application.services.auth.models.UserDto;
@@ -21,6 +22,7 @@ import static server.application.constants.ErrorMessages.EMAIL_ALREADY_EXISTS;
 import static server.application.constants.ErrorMessages.ENTITY_NOT_FOUND;
 
 @Singleton
+@Slf4j
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -53,10 +55,12 @@ public class AuthService {
 
         newUser.getRoles().add(role);
 
-        var patient = new Parent();
-        newUser.setParent(patient);
+        var parent = new Parent();
+        newUser.setParent(parent);
 
         this.userRepository.save(newUser);
+
+        log.info(String.format("User with id=%s successfully registered", newUser.getId()));
     }
 
     public UserDto getValidatedUser(String username, String password) {

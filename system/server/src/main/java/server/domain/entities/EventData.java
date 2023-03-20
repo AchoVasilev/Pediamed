@@ -1,10 +1,11 @@
 package server.domain.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.infrastructure.utils.guards.Guard;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "event_data")

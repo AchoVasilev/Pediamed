@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'groovy'
 	id 'com.github.johnrengelman.shadow' version "7.1.2"
-	id 'io.micronaut.application' version '3.7.5'
+	id 'io.micronaut.application' version '3.7.6'
 	id "org.flywaydb.flyway" version "9.4.0"
 }
 
@@ -26,17 +26,17 @@ configurations {
 dependencies {
 	implementation 'io.micronaut:micronaut-http-client:3.8.7'
 	implementation 'io.micronaut:micronaut-jackson-databind:3.8.7'
-	implementation 'io.micronaut.data:micronaut-data-jdbc:3.9.6'
+	implementation 'io.micronaut.data:micronaut-data-hibernate-jpa:3.9.6'
+	implementation 'io.micronaut.sql:micronaut-jdbc-hikari:4.8.0'
 	implementation 'io.micronaut.reactor:micronaut-reactor:2.6.0'
 	implementation 'io.micronaut.reactor:micronaut-reactor-http-client:2.6.0'
 	implementation 'io.micronaut.security:micronaut-security-jwt:3.10.0'
 	implementation 'io.micronaut.security:micronaut-security:3.10.0'
 	implementation 'io.micronaut:micronaut-validation:3.8.7'
-	implementation 'io.micronaut.sql:micronaut-jdbc-hikari:4.8.0'
+	implementation 'io.micronaut.flyway:micronaut-flyway:5.5.0'
 	implementation 'jakarta.annotation:jakarta.annotation-api:2.1.0'
 	implementation 'org.springframework.security:spring-security-crypto:6.0.2'
 	implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
-	implementation 'io.micronaut.flyway:micronaut-flyway:5.5.0'
 	implementation 'org.slf4j:jcl-over-slf4j'
 
 	annotationProcessor 'org.projectlombok:lombok'
@@ -46,6 +46,7 @@ dependencies {
 
 	runtimeOnly 'ch.qos.logback:logback-classic'
 	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'io.micronaut.data:micronaut-data-jdbc:3.9.6'
 
 	compileOnly 'org.projectlombok:lombok'
 
@@ -79,7 +80,6 @@ micronaut {
 	runtime("netty")
 	testRuntime("spock2")
 	processing {
-		incremental(true)
 		annotations("server.*")
 	}
 }

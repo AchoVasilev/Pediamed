@@ -20,6 +20,7 @@ max-http-request-header-size: 20KB
 datasources:
   default:
     dialect: postgres
+    db-type: postgres
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/pediamed?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
     username: postgres
@@ -27,14 +28,13 @@ datasources:
 
 jpa:
   default:
+    entity-scan:
+      packages: 'server.domain.entities'
     properties:
-      hibernate:
-        bytecode:
-          provider: none
-        hbm2ddl:
-          auto: validate
-        show_sql: true
+      hbm2ddl:
+        auto: update
+      show_sql: true
 flyway:
   datasources:
     default:
-      locations: [classpath:db/migration, classpath:db/seed]
+      locations: [ classpath:db/migration, classpath:db/seed ]

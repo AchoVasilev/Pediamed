@@ -1,21 +1,19 @@
 package server.domain.entities;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "parents")
@@ -25,4 +23,8 @@ public class Parent extends BaseEntity<UUID>{
     private ApplicationUser applicationUser;
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Patient> patients = new ArrayList<>();
+
+    public Parent() {
+        this.id = UUID.randomUUID();
+    }
 }

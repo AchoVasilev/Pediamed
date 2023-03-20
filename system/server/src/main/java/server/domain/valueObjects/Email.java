@@ -1,10 +1,10 @@
 package server.domain.valueObjects;
 
-import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.infrastructure.utils.guards.Guard;
 
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 

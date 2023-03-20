@@ -1,12 +1,5 @@
 package server.domain.entities;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +8,13 @@ import server.domain.valueObjects.Email;
 import server.domain.valueObjects.MobilePhone;
 import server.infrastructure.utils.guards.Guard;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
