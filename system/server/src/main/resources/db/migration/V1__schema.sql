@@ -48,6 +48,10 @@ CREATE TABLE roles (
 
 CREATE TABLE doctors (
     id UUID PRIMARY KEY,
+    biography VARCHAR,
+    years_of_experience INT,
+    age INT,
+    birth_date VARCHAR,
     application_user_id UUID REFERENCES application_users(id),
     date_created TIMESTAMP NOT NULL DEFAULT (now() at time zone 'utc'),
     date_modified TIMESTAMP,

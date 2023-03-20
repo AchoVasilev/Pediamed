@@ -22,6 +22,10 @@ import java.util.UUID;
 @Setter
 @Table(name = "doctors")
 public class Doctor extends BaseEntity<UUID>{
+    private String biography;
+    private int yearsOfExperience;
+    private int age;
+    private String birthDate;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_user_id", referencedColumnName = "id")
     private ApplicationUser applicationUser;

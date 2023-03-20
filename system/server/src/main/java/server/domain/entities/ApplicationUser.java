@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,9 +20,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@NoArgsConstructor
 @Getter
 @Table(name = "application_users")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApplicationUser extends BaseEntity<UUID> {
     @Embedded
     private Email email;

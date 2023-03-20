@@ -3,7 +3,7 @@ plugins {
 	id 'groovy'
 	id 'com.github.johnrengelman.shadow' version "7.1.2"
 	id 'io.micronaut.application' version '3.7.5'
-	id "org.flywaydb.flyway" version "9.8.1"
+	id "org.flywaydb.flyway" version "9.4.0"
 }
 
 application {
@@ -24,20 +24,20 @@ configurations {
 }
 
 dependencies {
-	implementation 'io.micronaut:micronaut-http-client'
-	implementation 'io.micronaut:micronaut-jackson-databind'
-	implementation 'io.micronaut.data:micronaut-data-jdbc'
-	implementation 'io.micronaut.reactor:micronaut-reactor'
-	implementation 'io.micronaut.reactor:micronaut-reactor-http-client'
-	implementation 'io.micronaut.security:micronaut-security-jwt'
-	implementation 'io.micronaut.security:micronaut-security'
-	implementation 'io.micronaut:micronaut-validation'
-	implementation 'io.micronaut.sql:micronaut-jdbc-hikari'
-	implementation 'jakarta.annotation:jakarta.annotation-api'
-	implementation 'org.springframework.security:spring-security-crypto:5.7.2'
+	implementation 'io.micronaut:micronaut-http-client:3.8.7'
+	implementation 'io.micronaut:micronaut-jackson-databind:3.8.7'
+	implementation 'io.micronaut.data:micronaut-data-jdbc:3.9.6'
+	implementation 'io.micronaut.reactor:micronaut-reactor:2.6.0'
+	implementation 'io.micronaut.reactor:micronaut-reactor-http-client:2.6.0'
+	implementation 'io.micronaut.security:micronaut-security-jwt:3.10.0'
+	implementation 'io.micronaut.security:micronaut-security:3.10.0'
+	implementation 'io.micronaut:micronaut-validation:3.8.7'
+	implementation 'io.micronaut.sql:micronaut-jdbc-hikari:4.8.0'
+	implementation 'jakarta.annotation:jakarta.annotation-api:2.1.0'
+	implementation 'org.springframework.security:spring-security-crypto:6.0.2'
 	implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
+	implementation 'io.micronaut.flyway:micronaut-flyway:5.5.0'
 	implementation 'org.slf4j:jcl-over-slf4j'
-	implementation 'io.micronaut.flyway:micronaut-flyway'
 
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor 'io.micronaut:micronaut-http-validation'
