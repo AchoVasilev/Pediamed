@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import server.domain.valueObjects.Email;
-import server.domain.valueObjects.MobilePhone;
+import server.domain.valueObjects.PhoneNumber;
 import server.infrastructure.utils.guards.Guard;
 
 import javax.persistence.CascadeType;
@@ -31,7 +31,7 @@ public class ApplicationUser extends BaseEntity<UUID> {
     private String middleName;
     private String lastName;
     @Embedded
-    private MobilePhone phoneNumber;
+    private PhoneNumber phoneNumber;
     @Setter
     @OneToOne(mappedBy = "applicationUser",
      cascade = CascadeType.ALL,
@@ -46,7 +46,7 @@ public class ApplicationUser extends BaseEntity<UUID> {
     @OneToMany(mappedBy = "applicationUser")
     private List<Role> roles;
 
-    public ApplicationUser(Email email, String password, String firstName, String middleName, String lastName, MobilePhone phoneNumber) {
+    public ApplicationUser(Email email, String password, String firstName, String middleName, String lastName, PhoneNumber phoneNumber) {
         this.id = UUID.randomUUID();
         this.email = email;
         this.password = Guard.Against.EmptyOrBlank(password);
@@ -57,7 +57,7 @@ public class ApplicationUser extends BaseEntity<UUID> {
         this.roles = new ArrayList<>();
     }
 
-    public ApplicationUser(Email email, String password, String firstName, String middleName, String lastName, MobilePhone phoneNumber, List<Role> roles) {
+    public ApplicationUser(Email email, String password, String firstName, String middleName, String lastName, PhoneNumber phoneNumber, List<Role> roles) {
         this(email,  password,  firstName,  middleName,  lastName, phoneNumber);
         this.roles = roles;
     }

@@ -22,7 +22,7 @@ datasources:
     dialect: postgres
     db-type: postgres
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/pediamed?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    url: jdbc:postgresql://localhost:5432/pediamed?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
     username: postgres
     password: postgres
 
@@ -32,7 +32,7 @@ jpa:
       packages: 'server.domain.entities'
     properties:
       hbm2ddl:
-        auto: update
+        auto: create-drop
       show_sql: true
 flyway:
   datasources:

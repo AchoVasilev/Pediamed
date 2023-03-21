@@ -31,7 +31,7 @@ CREATE TABLE application_users (
     first_name VARCHAR NOT NULL,
     middle_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
-    mobile_phone VARCHAR NOT NULL,
+    phone_number VARCHAR NOT NULL,
     date_created TIMESTAMP NOT NULL DEFAULT (now() at time zone 'utc'),
     date_modified TIMESTAMP,
     deleted BOOLEAN DEFAULT FALSE
@@ -91,7 +91,7 @@ CREATE TABLE cabinets (
     city VARCHAR NOT NULL,
     address VARCHAR NOT NULL,
     post_code VARCHAR NOT NULL,
-    mobile_phone VARCHAR NOT NULL,
+    phone_number VARCHAR NOT NULL,
     doctor_id UUID REFERENCES doctors(id),
     date_created TIMESTAMP NOT NULL DEFAULT (now() at time zone 'utc'),
     date_modified TIMESTAMP,

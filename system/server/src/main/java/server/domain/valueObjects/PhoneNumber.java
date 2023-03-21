@@ -10,10 +10,10 @@ import java.util.regex.Pattern;
 @Embeddable
 @Getter
 @NoArgsConstructor
-public class MobilePhone implements ValueObject{
+public class PhoneNumber implements ValueObject{
     private static final String PHONE_REGEX = "^([+]?359)|0?(|-| )[7-9][789]\\d(|-| )\\d{3}(|-| )\\d{3}$";
     private String mobilePhone;
-    public MobilePhone(String mobilePhone) {
+    public PhoneNumber(String mobilePhone) {
         this.mobilePhone = this.validate(mobilePhone);
     }
 
@@ -23,7 +23,7 @@ public class MobilePhone implements ValueObject{
             return true;
         if (obj == null || this.getClass() != obj.getClass())
             return false;
-        var that = (MobilePhone) obj;
+        var that = (PhoneNumber) obj;
         return this.mobilePhone.equals(that.mobilePhone);
     }
 

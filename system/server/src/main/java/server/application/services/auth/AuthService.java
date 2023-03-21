@@ -10,7 +10,7 @@ import server.domain.entities.BaseEntity;
 import server.domain.entities.Parent;
 import server.domain.entities.enums.RoleEnum;
 import server.domain.valueObjects.Email;
-import server.domain.valueObjects.MobilePhone;
+import server.domain.valueObjects.PhoneNumber;
 import server.infrastructure.config.exceptions.models.EntityAlreadyExistsException;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 import server.infrastructure.repositories.RoleRepository;
@@ -50,7 +50,7 @@ public class AuthService {
                 registrationRequest.firstName(),
                 registrationRequest.middleName(),
                 registrationRequest.lastName(),
-                new MobilePhone(registrationRequest.phoneNumber())
+                new PhoneNumber(registrationRequest.phoneNumber())
         );
 
         newUser.getRoles().add(role);
