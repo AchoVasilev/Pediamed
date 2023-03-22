@@ -6,6 +6,8 @@ plugins {
 	id "org.flywaydb.flyway" version "9.16.1"
 }
 
+apply from: 'gradle/migration.gradle'
+
 application {
 	mainClass.set('server.ServerApplication')
 }

@@ -1,0 +1,38 @@
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
+class GenerateMigration extends DefaultTask {
+
+    @TaskAction
+    void createMigration() {
+        def now = ZonedDateTime.now(ZoneOffset.UTC)
+        def timeFormatter = DateTimeFormatter.ofPattern("uuuuMMddhhmmss")
+        def timePart = now.format(timeFormatter)
+
+        def namePart = new StringBuilder()
+        getProject().property('desc').eachWithIndex {
+            c, i -> if(c.toUpperCase() == c) {
+                if (i != 0) { namePart.append("_") }
+                namePart.append("${c.toLowerCase()}")
+            } else {
+                namePart.append(c)
+            }
+        }
+
+        def filename = "V${timePart}__$namePart"
+        def migrationDir = 'src/main/resources/db/migration'
+
+        def file = "${getProject().getProjectDir()}/$migrationDir/${filename}.sql"
+        println()
+        print("Creating $file : ")
+        def success = new File(file).createNewFile()
+        print(success ? "Success" : "Failed")
+
+    }
+}
+
+task addMigration (type: GenerateMigration) {
+    group 'project'
+    description 'Creates a flyway db migration file'
+}
