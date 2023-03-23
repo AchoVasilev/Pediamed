@@ -1,26 +1,15 @@
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-
 class GenerateMigration extends DefaultTask {
 
     @TaskAction
-    void createMigration() {
-        def now = ZonedDateTime.now(ZoneOffset.UTC)
-        def timeFormatter = DateTimeFormatter.ofPattern("uuuuMMddhhmmss")
-        def timePart = now.format(timeFormatter)
+    void addMigration() {
+        System.out.println("Migration name:")
+        def migrationName = System.in.newReader()
+            .readLine()
+            .replaceAll(" ", "_")
 
-        def namePart = new StringBuilder()
-        getProject().property('desc').eachWithIndex {
-            c, i -> if(c.toUpperCase() == c) {
-                if (i != 0) { namePart.append("_") }
-                namePart.append("${c.toLowerCase()}")
-            } else {
-                namePart.append(c)
-            }
-        }
+        def timePart = new Date().getTime()
 
-        def filename = "V${timePart}__$namePart"
+        def filename = "V1_${timePart}__$migrationName"
         def migrationDir = 'src/main/resources/db/migration'
 
         def file = "${getProject().getProjectDir()}/$migrationDir/${filename}.sql"

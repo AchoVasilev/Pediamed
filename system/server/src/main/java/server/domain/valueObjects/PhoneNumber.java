@@ -12,9 +12,9 @@ import java.util.regex.Pattern;
 @NoArgsConstructor
 public class PhoneNumber implements ValueObject{
     private static final String PHONE_REGEX = "^([+]?359)|0?(|-| )[7-9][789]\\d(|-| )\\d{3}(|-| )\\d{3}$";
-    private String mobilePhone;
-    public PhoneNumber(String mobilePhone) {
-        this.mobilePhone = this.validate(mobilePhone);
+    private String phoneNumber;
+    public PhoneNumber(String phoneNumber) {
+        this.phoneNumber = this.validate(phoneNumber);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class PhoneNumber implements ValueObject{
         if (obj == null || this.getClass() != obj.getClass())
             return false;
         var that = (PhoneNumber) obj;
-        return this.mobilePhone.equals(that.mobilePhone);
+        return this.phoneNumber.equals(that.phoneNumber);
     }
 
     private String validate(String mobilePhone) {
