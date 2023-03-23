@@ -43,7 +43,7 @@ public class ApplicationUser extends BaseEntity<UUID> {
     fetch = FetchType.LAZY)
     private Doctor doctor;
 
-    @OneToMany(mappedBy = "applicationUser")
+    @OneToMany(mappedBy = "applicationUser", fetch = FetchType.EAGER)
     private List<Role> roles;
 
     public ApplicationUser(Email email, String password, String firstName, String middleName, String lastName, PhoneNumber phoneNumber) {
