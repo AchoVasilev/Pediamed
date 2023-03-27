@@ -6,8 +6,7 @@ import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Mono;
 import server.application.services.auth.AuthService;
 
 import java.util.List;
@@ -22,17 +21,16 @@ public class UserAuthProvider implements AuthenticationProvider {
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        return Flux.create(emitter -> {
+        return Mono.create(emitter -> {
             var username = authenticationRequest.getIdentity().toString();
             var password = authenticationRequest.getSecret().toString();
 
             var user = this.authService.getValidatedUser(username, password);
             if (user != null) {
-                emitter.next(AuthenticationResponse.success(username, List.of(user.roleIds().toString())));
-                emitter.complete();
+                emitter.success(AuthenticationResponse.success(username, List.of(user.roleNames().toString())));
             } else  {
                 emitter.error(AuthenticationResponse.exception());
             }
-        }, FluxSink.OverflowStrategy.ERROR);
+        });
     }
 }

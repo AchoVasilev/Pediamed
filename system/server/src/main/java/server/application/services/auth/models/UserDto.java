@@ -8,5 +8,5 @@ public record UserDto(
         String firstName,
         String lastName,
         String email,
-        List<UUID> roleIds
+        List<String> roleNames
 ) { }

@@ -26,13 +26,11 @@ import java.security.spec.X509EncodedKeySpec;
 @Singleton
 public class RSAOAEPEncryptionConfiguration implements RSAEncryptionConfiguration {
 
-    @Value("{rsa.public-key}")
-    private String PUBLIC_KEY_PATH;
-    private String PRIVATE_KEY_PATH;
+    private final String PUBLIC_KEY_PATH;
+    private final String PRIVATE_KEY_PATH;
 
     private final RSAPublicKey publicKey;
     private final RSAPrivateKey privateKey;
-
 
     public RSAOAEPEncryptionConfiguration(@Value("${rsa.public-key}") String publicKey, @Value("${rsa.private-key}") String privateKey) throws IOException, GeneralSecurityException {
         this.PUBLIC_KEY_PATH = publicKey;

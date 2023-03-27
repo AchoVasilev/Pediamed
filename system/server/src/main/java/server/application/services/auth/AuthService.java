@@ -3,10 +3,11 @@ package server.application.services.auth;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import server.application.services.auth.models.LoginRequest;
+import server.application.services.auth.models.LoginResponse;
 import server.application.services.auth.models.RegistrationRequest;
 import server.application.services.auth.models.UserDto;
 import server.domain.entities.ApplicationUser;
-import server.domain.entities.BaseEntity;
 import server.domain.entities.Parent;
 import server.domain.entities.enums.RoleEnum;
 import server.domain.valueObjects.Email;
@@ -63,6 +64,10 @@ public class AuthService {
         log.info(String.format("User with id=%s successfully registered", newUser.getId()));
     }
 
+    public LoginResponse login(LoginRequest loginRequest) {
+
+    }
+
     public UserDto getValidatedUser(String username, String password) {
         if (this.validateCredentials(username, password)) {
             return this.findByEmail(username);
@@ -85,7 +90,7 @@ public class AuthService {
                         u.getFirstName(),
                         u.getLastName(),
                         u.getEmail().getEmail(),
-                        u.getRoles().stream().map(BaseEntity::getId).toList()))
+                        u.getRoles().stream().map(r -> r.getName().name()).toList()))
                 .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
     }
 }
