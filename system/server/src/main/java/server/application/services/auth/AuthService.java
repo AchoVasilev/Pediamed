@@ -3,8 +3,6 @@ package server.application.services.auth;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import server.application.services.auth.models.LoginRequest;
-import server.application.services.auth.models.LoginResponse;
 import server.application.services.auth.models.RegistrationRequest;
 import server.application.services.auth.models.UserDto;
 import server.domain.entities.ApplicationUser;
@@ -62,10 +60,6 @@ public class AuthService {
         this.userRepository.save(newUser);
 
         log.info(String.format("User with id=%s successfully registered", newUser.getId()));
-    }
-
-    public LoginResponse login(LoginRequest loginRequest) {
-
     }
 
     public UserDto getValidatedUser(String username, String password) {

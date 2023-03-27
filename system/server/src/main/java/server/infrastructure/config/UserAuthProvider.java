@@ -8,6 +8,7 @@ import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 import server.application.services.auth.AuthService;
+import server.application.services.auth.models.LoginRequest;
 
 import java.util.List;
 
@@ -22,9 +23,9 @@ public class UserAuthProvider implements AuthenticationProvider {
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Mono.create(emitter -> {
+            var req = httpRequest.getBody(LoginRequest.class);
             var username = authenticationRequest.getIdentity().toString();
             var password = authenticationRequest.getSecret().toString();
-
             var user = this.authService.getValidatedUser(username, password);
             if (user != null) {
                 emitter.success(AuthenticationResponse.success(username, List.of(user.roleNames().toString())));
