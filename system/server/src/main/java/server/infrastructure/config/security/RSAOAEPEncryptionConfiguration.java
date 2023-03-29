@@ -1,4 +1,4 @@
-package server.infrastructure.config.encoding;
+package server.infrastructure.config.security;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;

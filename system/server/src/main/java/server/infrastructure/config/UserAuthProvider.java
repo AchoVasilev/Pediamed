@@ -1,5 +1,6 @@
 package server.infrastructure.config;
 
+import io.micronaut.context.annotation.Value;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
@@ -11,24 +12,32 @@ import server.application.services.auth.AuthService;
 import server.application.services.auth.models.LoginRequest;
 
 import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class UserAuthProvider implements AuthenticationProvider {
     private final AuthService authService;
-
-    public UserAuthProvider(AuthService authService) {
+    private final int shortTokenExpiration;
+    private final int longTokenExpiration;
+    public UserAuthProvider(
+            AuthService authService,
+            @Value("${micronaut.security.token.jwt.signatures.secret.generator.access-token.expiration}") int shortTokenExpiration,
+            @Value("${micronaut.security.token.jwt.signatures.secret.generator.access-token.long-expiration}") int longTokenExpiration) {
         this.authService = authService;
+        this.shortTokenExpiration = shortTokenExpiration;
+        this.longTokenExpiration = longTokenExpiration;
     }
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         return Mono.create(emitter -> {
-            var req = httpRequest.getBody(LoginRequest.class);
             var username = authenticationRequest.getIdentity().toString();
             var password = authenticationRequest.getSecret().toString();
             var user = this.authService.getValidatedUser(username, password);
             if (user != null) {
-                emitter.success(AuthenticationResponse.success(username, List.of(user.roleNames().toString())));
+                var body = httpRequest.getBody(LoginRequest.class);
+                var expiration = body.isPresent() && body.get().persist() ? this.longTokenExpiration : this.shortTokenExpiration;
+                emitter.success(AuthenticationResponse.success(username, List.of(user.roleNames().toString()), Map.of("expiration", expiration)));
             } else  {
                 emitter.error(AuthenticationResponse.exception());
             }
