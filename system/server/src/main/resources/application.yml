@@ -14,7 +14,7 @@ micronaut:
               jws-algorithm: HS256
               access-token:
                 expiration: 86400
-                long-expiration: 86400 * 20
+                long-expiration: 2592000
 
 rsa:
   private-key: certs/private.pem
