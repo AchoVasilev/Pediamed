@@ -40,10 +40,15 @@ CREATE TABLE application_users (
 CREATE TABLE roles (
     id UUID PRIMARY KEY,
     name VARCHAR NOT NULL,
-    application_user_id UUID REFERENCES application_users(id),
     date_created TIMESTAMP NOT NULL DEFAULT (now() at time zone 'utc'),
     date_modified TIMESTAMP,
     deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE application_users_roles (
+    application_user_id UUID REFERENCES application_users(id),
+    roles_id UUID REFERENCES roles(id),
+    PRIMARY KEY(application_user_id, roles_id)
 );
 
 CREATE TABLE doctors (

@@ -6,6 +6,7 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.Authenticator;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.handlers.LoginHandler;
@@ -35,7 +36,15 @@ public class AuthController {
     public HttpResponse<UserDto> login(@Body LoginRequest loginRequest, HttpRequest<?> httpRequest) {
         var credentials = new UsernamePasswordCredentials(loginRequest.email(), loginRequest.password());
         var result = Flux.from(authenticator.authenticate(httpRequest, credentials));
-        var s = result.map(authenticationResponse -> authenticationResponse.getAuthentication().orElseThrow());
+        var s =  result
+                .map(authenticationResponse -> {
+                    if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
+                        Authentication authentication = authenticationResponse.getAuthentication().get();
+                        return loginHandler.loginSuccess(authentication, httpRequest).body();
+                    } else {
+                        return loginHandler.loginFailed(authenticationResponse, httpRequest).body();
+                    }
+                });
 
         var user = this.authService.findByEmail(loginRequest.email());
         return HttpResponse.ok(user);
