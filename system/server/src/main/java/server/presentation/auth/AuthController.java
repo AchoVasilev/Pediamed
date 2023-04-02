@@ -2,6 +2,8 @@ package server.presentation.auth;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
@@ -9,13 +11,15 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.Authenticator;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
-import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import server.application.services.auth.AuthService;
 import server.application.services.auth.models.LoginRequest;
+import server.application.services.auth.models.LoginResponse;
 import server.application.services.auth.models.RegistrationRequest;
-import server.application.services.auth.models.UserDto;
+import server.infrastructure.utils.TokenService;
 
 import javax.validation.Valid;
 
@@ -24,30 +28,26 @@ import javax.validation.Valid;
 public class AuthController {
     private final AuthService authService;
     private final Authenticator authenticator;
-    private final LoginHandler loginHandler;
+    private final TokenService tokenService;
 
-    public AuthController(AuthService authService, Authenticator authenticator, LoginHandler loginHandler) {
+    public AuthController(AuthService authService, Authenticator authenticator, TokenService tokenService) {
         this.authService = authService;
         this.authenticator = authenticator;
-        this.loginHandler = loginHandler;
+        this.tokenService = tokenService;
     }
 
     @Post("/login")
-    public HttpResponse<UserDto> login(@Body LoginRequest loginRequest, HttpRequest<?> httpRequest) {
+    public Publisher<MutableHttpResponse<?>> login(@Body LoginRequest loginRequest, HttpRequest<?> httpRequest) {
         var credentials = new UsernamePasswordCredentials(loginRequest.email(), loginRequest.password());
-        var result = Flux.from(authenticator.authenticate(httpRequest, credentials));
-        var s =  result
+        return Flux.from(authenticator.authenticate(httpRequest, credentials))
                 .map(authenticationResponse -> {
                     if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
                         Authentication authentication = authenticationResponse.getAuthentication().get();
-                        return loginHandler.loginSuccess(authentication, httpRequest).body();
+                        return HttpResponse.ok(this.getLoginResponse(authentication));
                     } else {
-                        return loginHandler.loginFailed(authenticationResponse, httpRequest).body();
+                        return HttpResponse.badRequest();
                     }
-                });
-
-        var user = this.authService.findByEmail(loginRequest.email());
-        return HttpResponse.ok(user);
+                }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));
     }
 
     @Secured(SecurityRule.IS_ANONYMOUS)
@@ -57,16 +57,15 @@ public class AuthController {
         return HttpResponse.created("/auth/register");
     }
 
-//    private LoginResponse getLoginResponse(Authentication authentication, boolean persist) {
-//        var user = this.authService.findByEmail(authentication.getName());
-//
-//        return new LoginResponse(
-//                user.id(),
-//                user.firstName(),
-//                user.lastName(),
-//                user.roleNames(),
-//                user.email(),
-//                this.tokenService.generateToken(authentication, persist)
-//        );
-//    }
+    private LoginResponse getLoginResponse(Authentication authentication) {
+        var user = this.authService.findByEmail(authentication.getName());
+        return new LoginResponse(
+                user.id(),
+                user.firstName(),
+                user.lastName(),
+                user.roleNames(),
+                user.email(),
+                this.tokenService.generateToken(authentication)
+        );
+    }
 }

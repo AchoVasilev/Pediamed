@@ -3,7 +3,7 @@ package server.infrastructure.config.security;
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.env.Environment;
-
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
@@ -11,7 +11,6 @@ import io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider;
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
 import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator;
-import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 

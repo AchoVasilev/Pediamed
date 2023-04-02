@@ -1,8 +1,8 @@
 package server.infrastructure.utils;
 
-import java.time.Instant;
+import java.util.Date;
 
 public record TokenModel (
     String token,
-    Instant expiresAt
+    Date expiresAt
 ) {}

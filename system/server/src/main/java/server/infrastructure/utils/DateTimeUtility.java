@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-import static server.application.constants.ErrorMessages.DATE_IS_AFTER;
-import static server.application.constants.ErrorMessages.DATE_IS_BEFORE;
+import static server.common.ErrorMessages.DATE_IS_AFTER;
+import static server.common.ErrorMessages.DATE_IS_BEFORE;
 
 public class DateTimeUtility {
     private static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm";

@@ -1,4 +1,4 @@
-package server.application.constants;
+package server.common;
 
 public class ErrorMessages {
     public static final String EMAIL_ALREADY_EXISTS = "Потребител с имейл %s съществува";

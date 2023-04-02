@@ -17,8 +17,9 @@ import server.infrastructure.repositories.UserRepository;
 
 import javax.transaction.Transactional;
 
-import static server.application.constants.ErrorMessages.EMAIL_ALREADY_EXISTS;
-import static server.application.constants.ErrorMessages.ENTITY_NOT_FOUND;
+import static server.common.ErrorMessages.EMAIL_ALREADY_EXISTS;
+import static server.common.ErrorMessages.ENTITY_NOT_FOUND;
+import static server.common.ErrorMessages.INVALID_CREDENTIALS;
 
 @Singleton
 @Slf4j
@@ -72,7 +73,7 @@ public class AuthService {
 
     public boolean validateCredentials(String username, String password) {
         var user = this.userRepository.findByEmailEmail(username)
-                .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
 
         return this.passwordEncoder.matches(password, user.getPassword());
     }
@@ -85,6 +86,6 @@ public class AuthService {
                         u.getLastName(),
                         u.getEmail().getEmail(),
                         u.getRoles().stream().map(r -> r.getName().name()).toList()))
-                .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
     }
 }

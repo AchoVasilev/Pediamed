@@ -1,4 +1,4 @@
-package server.infrastructure.config;
+package server.infrastructure.config.security;
 
 import io.micronaut.context.annotation.Value;
 import io.micronaut.http.HttpRequest;
@@ -13,6 +13,8 @@ import server.application.services.auth.models.LoginRequest;
 
 import java.util.List;
 import java.util.Map;
+
+import static server.common.ErrorMessages.INVALID_CREDENTIALS;
 
 @Singleton
 public class UserAuthProvider implements AuthenticationProvider {
@@ -39,7 +41,7 @@ public class UserAuthProvider implements AuthenticationProvider {
                 var expiration = body.isPresent() && body.get().persist() ? this.longTokenExpiration : this.shortTokenExpiration;
                 emitter.success(AuthenticationResponse.success(username, List.of(user.roleNames().toString()), Map.of("expiration", expiration)));
             } else  {
-                emitter.error(AuthenticationResponse.exception());
+                emitter.error(AuthenticationResponse.exception(INVALID_CREDENTIALS));
             }
         });
     }

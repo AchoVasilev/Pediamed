@@ -3,6 +3,12 @@ micronaut:
     name: server
   server:
     host: localhost
+    cors:
+      enabled: true
+      configurations:
+        web:
+          allowedOrigins:
+            - http://localhost:4200
   security:
     authentication: bearer
     token:
