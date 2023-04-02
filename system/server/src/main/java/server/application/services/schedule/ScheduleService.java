@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static server.common.ErrorMessages.EVENTS_GENERATED;
+import static server.common.SuccessMessages.EVENTS_GENERATED;
 import static server.common.ErrorMessages.EVENTS_NOT_GENERATED;
 import static server.common.ErrorMessages.SCHEDULE_NOT_FOUND;
 

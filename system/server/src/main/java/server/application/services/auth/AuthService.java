@@ -1,8 +1,17 @@
 package server.application.services.auth;
 
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.authentication.AuthenticationResponse;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import org.reactivestreams.Publisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import server.application.services.auth.models.LoginResponse;
 import server.application.services.auth.models.RegistrationRequest;
 import server.application.services.auth.models.UserDto;
 import server.domain.entities.ApplicationUser;
@@ -14,6 +23,7 @@ import server.infrastructure.config.exceptions.models.EntityAlreadyExistsExcepti
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 import server.infrastructure.repositories.RoleRepository;
 import server.infrastructure.repositories.UserRepository;
+import server.infrastructure.utils.TokenService;
 
 import javax.transaction.Transactional;
 
@@ -27,11 +37,13 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final TokenService tokenService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, TokenService tokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.tokenService = tokenService;
     }
 
     @Transactional
@@ -63,6 +75,21 @@ public class AuthService {
         log.info(String.format("User with id=%s successfully registered", newUser.getId()));
     }
 
+    public Publisher<MutableHttpResponse<?>> authenticate(Publisher<AuthenticationResponse> auth) {
+        return Flux.from(auth)
+                .map(authenticationResponse -> {
+                    if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
+                        Authentication authentication = authenticationResponse.getAuthentication().get();
+                        var loginResponse = this.getLoginResponse(authentication);
+                        log.info("User logged in. [username={}, id={}]", loginResponse.email(), loginResponse.id());
+
+                        return HttpResponse.ok(loginResponse);
+                    } else {
+                        return HttpResponse.badRequest(INVALID_CREDENTIALS);
+                    }
+                }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));
+    }
+
     public UserDto getValidatedUser(String username, String password) {
         if (this.validateCredentials(username, password)) {
             return this.findByEmail(username);
@@ -87,5 +114,17 @@ public class AuthService {
                         u.getEmail().getEmail(),
                         u.getRoles().stream().map(r -> r.getName().name()).toList()))
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
+    }
+
+    private LoginResponse getLoginResponse(Authentication authentication) {
+        var user = this.findByEmail(authentication.getName());
+        return new LoginResponse(
+                user.id(),
+                user.firstName(),
+                user.lastName(),
+                user.roleNames(),
+                user.email(),
+                this.tokenService.generateToken(authentication)
+        );
     }
 }

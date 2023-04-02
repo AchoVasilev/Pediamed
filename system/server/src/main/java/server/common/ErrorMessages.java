@@ -13,5 +13,4 @@ public class ErrorMessages {
     public static final String DATE_IS_BEFORE = "Не може да създавате часове с изминали дата/час";
     public static final String DATE_IS_AFTER = "Не може крайната дата/час да е преди началната";
     public static final String EVENTS_NOT_GENERATED = "Създаването на нови часове е неуспешно";
-    public static final String EVENTS_GENERATED = "Успешно генерирахте часове от %s до %s с интервал %s";
 }
