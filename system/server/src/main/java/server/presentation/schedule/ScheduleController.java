@@ -6,6 +6,8 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import server.application.services.schedule.ScheduleService;
 import server.application.services.schedule.models.CabinetSchedule;
 import server.application.services.schedule.models.EventDataInputRequest;
@@ -25,6 +27,7 @@ public class ScheduleController {
     }
 
     @Get("/event-data")
+    @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<List<EventDataResponse>> getEventData() {
         return HttpResponse.ok(this.scheduleService.getEventData());
     }

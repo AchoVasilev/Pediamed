@@ -1,26 +1,26 @@
 package server.application.services.schedule;
 
 import jakarta.inject.Singleton;
-import server.domain.entities.CalendarEvent;
-import server.infrastructure.repositories.EventDataRepository;
-import server.infrastructure.repositories.ScheduleRepository;
-import server.infrastructure.config.exceptions.models.CalendarEventException;
-import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 import server.application.services.cabinet.CabinetService;
 import server.application.services.schedule.models.CabinetSchedule;
 import server.application.services.schedule.models.EventDataInputRequest;
 import server.application.services.schedule.models.EventDataResponse;
 import server.application.services.schedule.models.ScheduleAppointment;
 import server.application.services.schedule.models.ScheduleEvent;
+import server.domain.entities.CalendarEvent;
+import server.infrastructure.config.exceptions.models.CalendarEventException;
+import server.infrastructure.config.exceptions.models.EntityNotFoundException;
+import server.infrastructure.repositories.EventDataRepository;
+import server.infrastructure.repositories.ScheduleRepository;
 import server.infrastructure.utils.DateTimeUtility;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import static server.common.SuccessMessages.EVENTS_GENERATED;
 import static server.common.ErrorMessages.EVENTS_NOT_GENERATED;
 import static server.common.ErrorMessages.SCHEDULE_NOT_FOUND;
+import static server.common.SuccessMessages.EVENTS_GENERATED;
 
 @Singleton
 public class ScheduleService {
@@ -63,18 +63,18 @@ public class ScheduleService {
         return String.format(EVENTS_GENERATED, data.startDateTime(), data.endDateTime(), data.intervals());
     }
 
+    @Transactional
     public CabinetSchedule findById(UUID scheduleId) {
-        var schedule = this.scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new EntityNotFoundException(SCHEDULE_NOT_FOUND));
-
-        return new CabinetSchedule(schedule.getId(),
-                schedule.getAppointments()
+       return this.scheduleRepository.findById(scheduleId)
+                .map(s -> new CabinetSchedule(s.getId(),
+                s.getAppointments()
                         .stream()
                         .map(ap -> new ScheduleAppointment(ap.getId(), ap.getStartDate(), ap.getEndDate(), ap.getTitle()))
-                        .collect(Collectors.toList()),
-                schedule.getCalendarEvents()
+                        .toList(),
+                s.getCalendarEvents()
                         .stream()
                         .map(e -> new ScheduleEvent(e.getId(), e.getStartDate(), e.getEndDate(), e.getTitle()))
-                        .collect(Collectors.toList()));
+                        .toList()))
+               .orElseThrow(() -> new EntityNotFoundException(SCHEDULE_NOT_FOUND));
     }
 }

@@ -8,7 +8,6 @@ import server.infrastructure.utils.guards.Guard;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -24,8 +23,7 @@ public class Cabinet extends BaseEntity<Integer> {
     private String postCode;
     @Embedded
     private PhoneNumber phoneNumber;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "schedule_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "cabinet")
     private Schedule schedule;
     @ManyToOne
     private Doctor doctor;

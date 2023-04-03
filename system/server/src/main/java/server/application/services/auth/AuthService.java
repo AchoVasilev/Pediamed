@@ -99,12 +99,14 @@ public class AuthService {
     }
 
     public boolean validateCredentials(String username, String password) {
-        var user = this.userRepository.findByEmailEmail(username)
+        var userPassword = this.userRepository.findByEmailEmail(username)
+                .map(ApplicationUser::getPassword)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
 
-        return this.passwordEncoder.matches(password, user.getPassword());
+        return this.passwordEncoder.matches(password, userPassword);
     }
 
+    @Transactional
     public UserDto findByEmail(String email) {
         return this.userRepository.findByEmailEmail(email)
                 .map(u -> new UserDto(
