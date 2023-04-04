@@ -12,7 +12,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class ApplicationUser extends BaseEntity<UUID> {
     fetch = FetchType.LAZY)
     private Doctor doctor;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "applicationUser")
     private List<Role> roles;
 
     public ApplicationUser(Email email, String password, String firstName, String middleName, String lastName, PhoneNumber phoneNumber) {

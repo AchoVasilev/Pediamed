@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -23,9 +22,11 @@ public class Schedule extends BaseEntity<UUID> {
     @OneToOne
     @JoinColumn(name = "cabinet_id", referencedColumnName = "id")
     private Cabinet cabinet;
-    @OneToMany(mappedBy = "schedule", fetch = FetchType.EAGER)
+    @OneToMany
+    @JoinColumn(name = "schedule_id", referencedColumnName = "id")
     private List<Appointment> appointments = new ArrayList<>();
-    @OneToMany(mappedBy = "schedule")
+    @OneToMany
+    @JoinColumn(name = "schedule_id", referencedColumnName = "id")
     private List<CalendarEvent> calendarEvents = new ArrayList<>();
 
     public void addCalendarEvent(CalendarEvent calendarEvent) {

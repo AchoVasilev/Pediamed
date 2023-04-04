@@ -3,16 +3,15 @@ package server.domain.entities;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import server.domain.entities.enums.RoleEnum;
 import server.infrastructure.utils.guards.Guard;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,11 +22,11 @@ public class Role extends BaseEntity<UUID> {
     @Enumerated(EnumType.STRING)
     private RoleEnum name;
 
-    @ManyToMany
-    private List<ApplicationUser> applicationUsers;
+    @ManyToOne
+    @Setter
+    private ApplicationUser applicationUser;
 
     public Role(String name) {
         this.name = RoleEnum.valueOf(Guard.Against.EmptyOrBlank(name));
-        this.applicationUsers = new ArrayList<>();
     }
 }

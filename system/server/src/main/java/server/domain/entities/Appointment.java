@@ -6,10 +6,9 @@ import lombok.Setter;
 import server.infrastructure.utils.DateTimeUtility;
 import server.infrastructure.utils.guards.Guard;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -27,8 +26,8 @@ public class Appointment extends BaseEntity<UUID> {
     @OneToOne
     @JoinColumn(name = "appointment_cause_id", referencedColumnName = "id")
     private AppointmentCause appointmentCause;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Schedule schedule;
+    @Column(name = "schedule_id")
+    private UUID scheduleId;
     private UUID parentId;
     private UUID patientId;
     private Integer calendarEventId;
@@ -38,7 +37,7 @@ public class Appointment extends BaseEntity<UUID> {
                        String title,
                        Integer calendarEventId,
                        AppointmentCause appointmentCause,
-                       Schedule schedule,
+                       UUID scheduleId,
                        UUID parentId,
                        UUID patientId) {
         this.startDate = DateTimeUtility.validateStartDate(startDate, endDate);
@@ -46,7 +45,7 @@ public class Appointment extends BaseEntity<UUID> {
         this.title = Guard.Against.EmptyOrBlank(title);
         this.calendarEventId = Guard.Against.Zero(calendarEventId);
         this.appointmentCause = Guard.Against.Null(appointmentCause);
-        this.schedule = Guard.Against.Null(schedule);
+        this.scheduleId = Guard.Against.Null(scheduleId);
         this.parentId = Guard.Against.NullOrEmpty(parentId);
         this.patientId = Guard.Against.NullOrEmpty(patientId);
     }

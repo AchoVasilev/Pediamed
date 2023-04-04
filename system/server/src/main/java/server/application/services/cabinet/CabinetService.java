@@ -8,6 +8,7 @@ import server.application.services.schedule.models.CabinetSchedule;
 import server.application.services.schedule.models.ScheduleAppointment;
 import server.application.services.schedule.models.ScheduleEvent;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class CabinetService {
         this.cabinetRepository = cabinetRepository;
     }
 
+    @Transactional
     public List<CabinetResponse> getCabinets() {
         return this.cabinetRepository
                 .findByDeletedFalse()

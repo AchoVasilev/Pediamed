@@ -75,6 +75,7 @@
       [events]="events"
       [locale]="locale"
       [weekStartsOn]="weekStartsOn"
+      [excludeDays]="excludedDays"
     >
     </mwl-calendar-month-view>
     <mwl-calendar-week-view
@@ -87,6 +88,7 @@
       [dayEndHour]="dayEndHour"
       (dayHeaderClicked)="generateDayEvents($event)"
       (eventClicked)="eventClicked($event)"
+      [excludeDays]="excludedDays"
     >
     </mwl-calendar-week-view>
     <mwl-calendar-day-view

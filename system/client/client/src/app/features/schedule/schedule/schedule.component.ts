@@ -49,6 +49,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   eventData: EventData[] = [];
   cabinetResponse: CabinetResponse[] = [];
   appointmentCauses: AppointmentCause[] = [];
+  excludedDays: number[] = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -64,6 +65,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.scheduleService
       .getEventData()
       .subscribe((data) => (this.eventData = data));
+
+      this.cabinetName = CabinetName[CabinetName.Плевен];
+      this.calculateExcludedDays();
   }
 
   ngOnInit(): void {
@@ -99,9 +103,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         this.cd.markForCheck();
       });
 
-    this.cabinetName = CabinetName[CabinetName.Плевен];
     this.getCabinets();
-    console.log(this.events$);
   }
 
   ngOnDestroy(): void {
@@ -135,6 +137,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   setView(view: CalendarView) {
     this.view = view;
+  }
+
+  calculateExcludedDays() {
+    if (this.cabinetName === CabinetName[CabinetName.Плевен]) {
+       this.excludedDays = [1, 2, 5, 6];
+    } else {
+      this.excludedDays = [0, 3, 4, 5, 6];
+    }
   }
 
   generateDayEvents(event: any) {

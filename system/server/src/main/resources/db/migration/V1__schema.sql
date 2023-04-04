@@ -113,6 +113,7 @@ CREATE TABLE schedules (
 
 CREATE TABLE calendar_events(
     id INT PRIMARY KEY,
+    title VARCHAR,
     start_date DATE,
     end_date DATE,
     schedule_id UUID REFERENCES schedules(id),
