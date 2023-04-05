@@ -20,7 +20,11 @@ export interface CabinetResponse {
     id: number,
     name: string,
     city: string
-    cabinetSchedule: CabinetSchedule
+    cabinetSchedule: CabinetScheduleResponse
+}
+
+export interface CabinetScheduleResponse {
+    id: string
 }
 
 export interface CabinetSchedule {

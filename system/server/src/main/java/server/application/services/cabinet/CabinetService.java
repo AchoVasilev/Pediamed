@@ -2,11 +2,8 @@ package server.application.services.cabinet;
 
 import jakarta.inject.Singleton;
 import server.domain.entities.Cabinet;
-import server.infrastructure.repositories.CabinetRepository;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
-import server.application.services.schedule.models.CabinetSchedule;
-import server.application.services.schedule.models.ScheduleAppointment;
-import server.application.services.schedule.models.ScheduleEvent;
+import server.infrastructure.repositories.CabinetRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -31,16 +28,8 @@ public class CabinetService {
                         c.getId(),
                         c.getName(),
                         c.getCity(),
-                        new CabinetSchedule(
-                                c.getSchedule().getId(),
-                                c.getSchedule().getAppointments()
-                                        .stream()
-                                        .map(a -> new ScheduleAppointment(a.getId(), a.getStartDate(), a.getEndDate(), a.getTitle()))
-                                        .collect(Collectors.toList()),
-                                c.getSchedule().getCalendarEvents()
-                                        .stream()
-                                        .map(e -> new ScheduleEvent(e.getId(), e.getStartDate(), e.getEndDate(), e.getTitle()))
-                                        .collect(Collectors.toList())
+                        new CabinetScheduleResponse(
+                                c.getSchedule().getId()
                         )
                 )).collect(Collectors.toList());
     }
@@ -52,5 +41,17 @@ public class CabinetService {
 
     public void saveCabinet(Cabinet cabinet) {
         this.cabinetRepository.save(cabinet);
+    }
+
+    public CabinetResponse getCabinetByName(String name) {
+        return this.cabinetRepository.findByName(name)
+                .map(c -> new CabinetResponse(
+                        c.getId(),
+                        c.getName(),
+                        c.getCity(),
+                        new CabinetScheduleResponse(
+                                c.getSchedule().getId()
+                        )
+                )).orElseThrow(() -> new EntityNotFoundException(CABINET_NOT_FOUND));
     }
 }

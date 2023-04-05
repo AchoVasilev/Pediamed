@@ -15,4 +15,12 @@ export class CabinetService {
   getCabinets(): Observable<CabinetResponse[]> {
     return this.httpClinet.get<CabinetResponse[]>(this.apiUrl);
   }
-}
+
+  getCabinet(name: string): Observable<CabinetResponse> {
+    return this.httpClinet.get<CabinetResponse>(this.apiUrl, {
+      params: {
+        name
+      }
+    })
+  }
+ }

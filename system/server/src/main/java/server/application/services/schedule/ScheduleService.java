@@ -65,16 +65,16 @@ public class ScheduleService {
 
     @Transactional
     public CabinetSchedule findById(UUID scheduleId) {
-       return this.scheduleRepository.findById(scheduleId)
+        return this.scheduleRepository.findById(scheduleId)
                 .map(s -> new CabinetSchedule(s.getId(),
-                s.getAppointments()
-                        .stream()
-                        .map(ap -> new ScheduleAppointment(ap.getId(), ap.getStartDate(), ap.getEndDate(), ap.getTitle()))
-                        .toList(),
-                s.getCalendarEvents()
-                        .stream()
-                        .map(e -> new ScheduleEvent(e.getId(), e.getStartDate(), e.getEndDate(), e.getTitle()))
-                        .toList()))
-               .orElseThrow(() -> new EntityNotFoundException(SCHEDULE_NOT_FOUND));
+                        s.getAppointments()
+                                .stream()
+                                .map(ap -> new ScheduleAppointment(ap.getId(), ap.getStartDate(), ap.getEndDate(), ap.getTitle()))
+                                .toList(),
+                        s.getCalendarEvents()
+                                .stream()
+                                .map(e -> new ScheduleEvent(e.getId(), e.getStartDate(), e.getEndDate(), e.getTitle()))
+                                .toList()))
+                .orElseThrow(() -> new EntityNotFoundException(SCHEDULE_NOT_FOUND));
     }
 }

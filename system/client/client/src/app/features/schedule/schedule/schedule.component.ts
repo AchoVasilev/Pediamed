@@ -44,7 +44,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   events$!: Observable<CalendarEvent<{ event: ScheduleData }>[]>;
   CalendarView = CalendarView;
   user: UserModel;
-  cabinetName: string = '';
+  cabinetName: string = CabinetName.Плевен.toString();
   cabinetScheduleId: string | undefined;
   eventData: EventData[] = [];
   cabinetResponse: CabinetResponse[] = [];
@@ -108,6 +108,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+  }
+
+  getCabinet() {
+    if (this.cabinetName === '') {
+      
+    }
   }
 
   getCabinets() {
