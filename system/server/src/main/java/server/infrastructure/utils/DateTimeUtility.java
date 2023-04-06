@@ -5,10 +5,12 @@ import server.infrastructure.utils.guards.Guard;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 
 import static server.common.ErrorMessages.DATE_IS_AFTER;
 import static server.common.ErrorMessages.DATE_IS_BEFORE;
+import static server.common.ErrorMessages.DATE_PASSED;
 
 public class DateTimeUtility {
     private static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm";
@@ -26,14 +28,18 @@ public class DateTimeUtility {
         Guard.Against.Null(startDate);
         Guard.Against.Null(endDate);
         if (startDate.isBefore(LocalDateTime.parse(currentDate, dateTimeFormatter))) {
-            throw new DateTimeException(DATE_IS_BEFORE);
+            throw new DateTimeException(DATE_PASSED);
         } else if (startDate.isAfter(endDate)) {
-            throw new DateTimeException(DATE_IS_BEFORE);
+            throw new DateTimeException(DATE_IS_AFTER);
         }
 
         if (endDate.isBefore(startDate)) {
-            throw new DateTimeException(DATE_IS_AFTER);
+            throw new DateTimeException(DATE_IS_BEFORE);
         }
+    }
+
+    public static void validateWorkDays(List<String> cabinetWorkDays, List<String> eventInputDays) {
+
     }
 
     public static LocalDateTime validateStartDate(LocalDateTime startDate, LocalDateTime endDate) {
@@ -57,7 +63,7 @@ public class DateTimeUtility {
     private static LocalDateTime validateForCurrentDate(LocalDateTime dateTime) {
         var currentDate = LocalDateTime.now().format(dateTimeFormatter);
         if (dateTime.isBefore(LocalDateTime.parse(currentDate, dateTimeFormatter))) {
-            throw new DateTimeException(DATE_IS_BEFORE);
+            throw new DateTimeException(DATE_PASSED);
         }
 
         return dateTime;

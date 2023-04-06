@@ -100,6 +100,7 @@ CREATE TABLE cabinets (
     doctor_id UUID REFERENCES doctors(id),
     date_created TIMESTAMP NOT NULL DEFAULT (now() at time zone 'utc'),
     date_modified TIMESTAMP,
+    work_days VARCHAR,
     deleted BOOLEAN DEFAULT FALSE
 );
 

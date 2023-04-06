@@ -15,6 +15,7 @@ import server.infrastructure.repositories.ScheduleRepository;
 import server.infrastructure.utils.DateTimeUtility;
 
 import javax.transaction.Transactional;
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,6 +48,8 @@ public class ScheduleService {
         var endDate = DateTimeUtility.parseDate(data.endDateTime());
 
         var cabinet = this.cabinetService.getCabinetByCity(data.cabinetName());
+
+        DateTimeUtility.validateWorkDays(cabinet.getWorkDays(), List.of(DayOfWeek.from(startDate).name(), DayOfWeek.from(endDate).name()));
         String EVENT_TITLE = "Свободен час";
         for (var slotStart = startDate; slotStart.isBefore(endDate); slotStart = slotStart.plusMinutes(data.intervals())) {
             var slotEnd = slotStart.plusMinutes(data.intervals());

@@ -10,7 +10,8 @@ public class ErrorMessages {
     public static final String SCHEDULE_NOT_FOUND = "Този график не съществува";
     public static final String MINIMUM_LENGTH_REQUIRED = "Полето трябва да е с минимална дължина от 4 символа";
     public static final String PHONE_FIELD_LENGTH = "Полето трябва да е с дължина между 10 и 13 символа";
-    public static final String DATE_IS_BEFORE = "Не може да създавате часове с изминали дата/час";
-    public static final String DATE_IS_AFTER = "Не може крайната дата/час да е преди началната";
+    public static final String DATE_PASSED = "Не може да създавате часове с изминали дата/час";
+    public static final String DATE_IS_BEFORE = "Не може крайната дата/час да е преди началната";
+    public static final String DATE_IS_AFTER = "Не може началната дата/час да е след крайната";
     public static final String EVENTS_NOT_GENERATED = "Създаването на нови часове е неуспешно";
 }
