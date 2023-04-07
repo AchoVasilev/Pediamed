@@ -16,8 +16,8 @@ import { UserDataService } from './../../../services/data/user/user-data.service
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
-import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
+import { map, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { CabinetName, CabinetWorkDays } from 'src/app/models/enums/cabinetNameEnum';
 import * as moment from 'moment';
 
 @Component({
@@ -47,9 +47,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   cabinetName: string = CabinetName.Плевен.toString();
   cabinetScheduleId: string | undefined;
   eventData: EventData[] = [];
-  cabinetResponse: CabinetResponse[] = [];
+  cabinetResponse?: CabinetResponse;
   appointmentCauses: AppointmentCause[] = [];
-  excludedDays: number[] = [];
+  excludedDays: number[] = [0, 1, 2, 3, 4, 5, 6];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -65,12 +65,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.scheduleService
       .getEventData()
       .subscribe((data) => (this.eventData = data));
-
-      this.cabinetName = CabinetName[CabinetName.Плевен];
-      this.calculateExcludedDays();
   }
 
   ngOnInit(): void {
+    this.getCabinet();
+
     const CALENDAR_RESPONSIVE = {
       small: {
         breakpoint: '(max-width: 576px)',
@@ -102,8 +101,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         }
         this.cd.markForCheck();
       });
-
-    this.getCabinets();
   }
 
   ngOnDestroy(): void {
@@ -111,32 +108,29 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   getCabinet() {
-    if (this.cabinetName === '') {
-      
-    }
-  }
+    this.cabinetService.getCabinet(this.cabinetName).pipe(
+      tap((cabinet => this.cabinetResponse = cabinet)),
+      switchMap(cabinet => {
+        this.calculateExcludedDays(cabinet.name, cabinet.workDays);
+        this.cabinetName = cabinet.name;
+        
+        return this.scheduleService.getSchedule(cabinet.cabinetSchedule.id).pipe(
+          map(schedule => {
+            const merged: ScheduleData[] = [
+              ...schedule.scheduleAppointments,
+              ...schedule.scheduleEvents,
+            ];
 
-  getCabinets() {
-    this.events$ = this.cabinetService.getCabinets().pipe(
-      map((result) => {
-        this.cabinetResponse = result;
-
-        const filteredCity = result.find((res) => res.name == this.cabinetName);
-        const merged: ScheduleData[] = [
-          ...filteredCity!.cabinetSchedule.scheduleAppointments,
-          ...filteredCity!.cabinetSchedule.scheduleEvents,
-        ];
-
-        this.cabinetScheduleId = filteredCity?.cabinetSchedule.id;
-
-        return [...merged].map((ev) => {
-          return {
-            start: new Date(ev?.startDate),
-            title: ev?.title,
-            end: new Date(ev?.endDate),
-            id: ev?.id,
-          };
-        });
+            return [...merged].map((ev) => {
+              return {
+                start: new Date(ev?.startDate),
+                title: ev?.title,
+                end: new Date(ev?.endDate),
+                id: ev?.id,
+              };
+            });
+          })
+        );
       })
     );
   }
@@ -145,7 +139,15 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.view = view;
   }
 
-  calculateExcludedDays() {
+  calculateExcludedDays(cabinetName: string, workDays: string[]) {
+    workDays.forEach(day => {
+      const enumValues = Object.values(CabinetWorkDays) as string[];
+      const includedDay = enumValues.findIndex(d => d === day);
+      if (includedDay) {
+        this.excludedDays = this.excludedDays.filter(d => d === includedDay);
+      }
+    });
+
     if (this.cabinetName === CabinetName[CabinetName.Плевен]) {
        this.excludedDays = [1, 2, 5, 6];
     } else {
