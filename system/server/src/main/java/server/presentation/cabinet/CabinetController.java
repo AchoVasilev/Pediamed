@@ -9,8 +9,6 @@ import io.micronaut.security.rules.SecurityRule;
 import server.application.services.cabinet.CabinetResponse;
 import server.application.services.cabinet.CabinetService;
 
-import java.util.List;
-
 @Controller("/cabinet")
 public class CabinetController {
     private final CabinetService cabinetService;
@@ -19,15 +17,9 @@ public class CabinetController {
         this.cabinetService = cabinetService;
     }
 
-    @Get
+    @Get("/{name}")
     @Secured(SecurityRule.IS_ANONYMOUS)
-    public HttpResponse<List<CabinetResponse>> getCabinets() {
-        return HttpResponse.ok(this.cabinetService.getCabinets());
-    }
-
-    @Get
-    @Secured(SecurityRule.IS_ANONYMOUS)
-    public HttpResponse<CabinetResponse> getCabinet(@PathVariable String name) {
+    public HttpResponse<CabinetResponse> getCabinet(@PathVariable("name") String name) {
         return HttpResponse.ok(this.cabinetService.getCabinetByName(name));
     }
 }

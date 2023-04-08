@@ -20,12 +20,12 @@ export interface CabinetResponse {
     id: number,
     name: string,
     city: string
-    cabinetSchedule: CabinetScheduleResponse,
-    workDays: string[]
+    cabinetSchedule: CabinetSchedule,
+    workDays: number[]
 }
 
 export interface CabinetScheduleResponse {
-    id: string
+    scheduleId: string
 }
 
 export interface CabinetSchedule {

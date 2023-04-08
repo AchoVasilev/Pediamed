@@ -38,6 +38,7 @@ public class ScheduleController {
     }
 
     @Get("/{id}")
+    @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<CabinetSchedule> getCabinetSchedule(@PathVariable("id") UUID scheduleId) {
         return HttpResponse.ok(this.scheduleService.findById(scheduleId));
     }

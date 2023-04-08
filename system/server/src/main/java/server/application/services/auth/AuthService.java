@@ -91,19 +91,23 @@ public class AuthService {
     }
 
     public UserDto getValidatedUser(String username, String password) {
-        if (this.validateCredentials(username, password)) {
-            return this.findByEmail(username);
+        var user = this.validateCredentials(username, password);
+        if (user.isValid()) {
+            return user.user();
         }
 
         return null;
     }
 
-    public boolean validateCredentials(String username, String password) {
-        var userPassword = this.userRepository.findByEmailEmail(username)
-                .map(ApplicationUser::getPassword)
+    public ValidationDto validateCredentials(String username, String password) {
+        var user = this.userRepository.findByEmailEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
 
-        return this.passwordEncoder.matches(password, userPassword);
+        return new ValidationDto(
+                new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail().getEmail(),
+                        user.getRoles().stream().map(r -> r.getName().name()).toList()),
+                this.passwordEncoder.matches(password, user.getPassword())
+        );
     }
 
     @Transactional

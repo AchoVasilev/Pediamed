@@ -1,6 +1,8 @@
 package server.application.services.schedule;
 
+import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import server.application.services.cabinet.CabinetService;
 import server.application.services.schedule.models.CabinetSchedule;
 import server.application.services.schedule.models.EventDataInputRequest;
@@ -24,6 +26,7 @@ import static server.common.ErrorMessages.SCHEDULE_NOT_FOUND;
 import static server.common.SuccessMessages.EVENTS_GENERATED;
 
 @Singleton
+@Slf4j
 public class ScheduleService {
     private final EventDataRepository eventDataRepository;
     private final CabinetService cabinetService;
@@ -35,6 +38,8 @@ public class ScheduleService {
         this.scheduleRepository = scheduleRepository;
     }
 
+    @Transactional
+    @ReadOnly
     public List<EventDataResponse> getEventData() {
         return this.eventDataRepository
                 .findByDeletedFalse()
@@ -43,13 +48,14 @@ public class ScheduleService {
                 .toList();
     }
 
+    @Transactional
     public String generateEvents(EventDataInputRequest data) {
         var startDate = DateTimeUtility.parseDate(data.startDateTime());
         var endDate = DateTimeUtility.parseDate(data.endDateTime());
 
         var cabinet = this.cabinetService.getCabinetByCity(data.cabinetName());
 
-        DateTimeUtility.validateWorkDays(cabinet.getWorkDays(), List.of(DayOfWeek.from(startDate).name(), DayOfWeek.from(endDate).name()));
+        DateTimeUtility.validateWorkDays(cabinet.getWorkDays(), DayOfWeek.from(startDate).name(), DayOfWeek.from(endDate).name());
         String EVENT_TITLE = "Свободен час";
         for (var slotStart = startDate; slotStart.isBefore(endDate); slotStart = slotStart.plusMinutes(data.intervals())) {
             var slotEnd = slotStart.plusMinutes(data.intervals());
@@ -63,10 +69,13 @@ public class ScheduleService {
         }
 
         this.cabinetService.saveCabinet(cabinet);
+        log.info("Successfully generated events. [startDate={}, endDate={}, intervals={}, cabinetId={}, scheduleId={}]",
+                data.startDateTime(), data.endDateTime(), data.intervals(), cabinet.getId(), cabinet.getSchedule().getId());
         return String.format(EVENTS_GENERATED, data.startDateTime(), data.endDateTime(), data.intervals());
     }
 
     @Transactional
+    @ReadOnly
     public CabinetSchedule findById(UUID scheduleId) {
         return this.scheduleRepository.findById(scheduleId)
                 .map(s -> new CabinetSchedule(s.getId(),

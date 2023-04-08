@@ -17,10 +17,6 @@ export class CabinetService {
   }
 
   getCabinet(name: string): Observable<CabinetResponse> {
-    return this.httpClinet.get<CabinetResponse>(this.apiUrl, {
-      params: {
-        name
-      }
-    })
+    return this.httpClinet.get<CabinetResponse>(`${this.apiUrl}/${name}`)
   }
  }

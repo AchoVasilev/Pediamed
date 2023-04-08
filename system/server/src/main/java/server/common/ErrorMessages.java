@@ -14,4 +14,6 @@ public class ErrorMessages {
     public static final String DATE_IS_BEFORE = "Не може крайната дата/час да е преди началната";
     public static final String DATE_IS_AFTER = "Не може началната дата/час да е след крайната";
     public static final String EVENTS_NOT_GENERATED = "Създаването на нови часове е неуспешно";
+    public static final String INVALID_WORKDAYS_FOR_CABINET = "Кабинетът няма %s като работен ден";
+    public static final String NOT_SUPPORTED_DAY = "Денят %s не се поддържа от платформата";
 }

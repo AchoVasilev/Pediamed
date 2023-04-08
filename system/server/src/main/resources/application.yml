@@ -45,6 +45,9 @@ jpa:
       hbm2ddl:
         auto: create-drop
       show_sql: true
+jackson:
+  serializationInclusion: ALWAYS
+
 flyway:
   datasources:
     default:
