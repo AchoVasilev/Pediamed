@@ -31,14 +31,15 @@ public class AuthController {
     }
 
     @Post("/login")
+    @Secured(SecurityRule.IS_ANONYMOUS)
     public Publisher<MutableHttpResponse<?>> login(@Body LoginRequest loginRequest, HttpRequest<?> httpRequest) {
         var credentials = new UsernamePasswordCredentials(loginRequest.email(), loginRequest.password());
         var authenticationResponse = this.authenticator.authenticate(httpRequest, credentials);
         return this.authService.authenticate(authenticationResponse);
     }
 
-    @Secured(SecurityRule.IS_ANONYMOUS)
     @Post("/register")
+    @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<?> register(@Valid @Body RegistrationRequest registrationRequest) {
         this.authService.register(registrationRequest);
         return HttpResponse.created("/auth/register");

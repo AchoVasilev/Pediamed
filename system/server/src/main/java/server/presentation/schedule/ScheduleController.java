@@ -21,6 +21,8 @@ import java.util.UUID;
 @Controller("/schedule")
 public class ScheduleController {
     private final ScheduleService scheduleService;
+    private final String DOCTOR_ROLE = "ROLE_DOCTOR";
+    private final String ADMIN_ROLE = "ROLE_ADMINISTRATOR";
 
     public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
@@ -33,6 +35,8 @@ public class ScheduleController {
     }
 
     @Post("/event-data")
+    // @Secured(value = {SecurityRule.IS_AUTHENTICATED, DOCTOR_ROLE, ADMIN_ROLE})
+    @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<?> createEvents(@Body @Valid EventDataInputRequest data) {
         return HttpResponse.ok(new EventResponse(this.scheduleService.generateEvents(data)));
     }

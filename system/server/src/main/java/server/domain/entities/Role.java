@@ -10,6 +10,8 @@ import server.infrastructure.utils.guards.Guard;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.UUID;
@@ -22,8 +24,11 @@ public class Role extends BaseEntity<UUID> {
     @Enumerated(EnumType.STRING)
     private RoleEnum name;
 
-    @ManyToOne
     @Setter
+    @ManyToOne
+    @JoinTable(name="application_users_roles",
+            joinColumns={@JoinColumn(name="roles_id", referencedColumnName="id")},
+            inverseJoinColumns={@JoinColumn(name="application_user_id", referencedColumnName="id")})
     private ApplicationUser applicationUser;
 
     public Role(String name) {

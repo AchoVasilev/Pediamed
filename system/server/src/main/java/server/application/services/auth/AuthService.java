@@ -90,7 +90,9 @@ public class AuthService {
                 }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));
     }
 
+    @Transactional
     public UserDto getValidatedUser(String username, String password) {
+        log.info("User trying to authenticate [username={}]", username);
         var user = this.validateCredentials(username, password);
         if (user.isValid()) {
             return user.user();
@@ -99,7 +101,7 @@ public class AuthService {
         return null;
     }
 
-    public ValidationDto validateCredentials(String username, String password) {
+    private ValidationDto validateCredentials(String username, String password) {
         var user = this.userRepository.findByEmailEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
 
