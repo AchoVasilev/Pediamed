@@ -39,7 +39,9 @@ public class UserAuthProvider implements AuthenticationProvider {
             if (user != null) {
                 var body = httpRequest.getBody(LoginRequest.class);
                 var expiration = body.isPresent() && body.get().persist() ? this.longTokenExpiration : this.shortTokenExpiration;
-                emitter.success(AuthenticationResponse.success(username, List.of(user.roleNames().toString()), Map.of("expiration", expiration)));
+                emitter.success(AuthenticationResponse.success(username,
+                        List.of(user.user().roleNames().toString()),
+                        Map.of("expiration", expiration, "salt", user.salt())));
             } else  {
                 emitter.error(AuthenticationResponse.exception(INVALID_CREDENTIALS));
             }

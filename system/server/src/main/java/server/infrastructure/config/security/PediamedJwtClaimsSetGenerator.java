@@ -8,9 +8,9 @@ import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
 import io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider;
+import io.micronaut.security.token.jwt.generator.claims.ClaimsGenerator;
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator;
 import io.micronaut.security.token.jwt.generator.claims.JwtClaims;
-import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +24,7 @@ import java.util.Map;
 @Slf4j
 @Replaces(JWTClaimsSetGenerator.class)
 @Singleton
-public class PediamedJwtClaimsSetGenerator extends JWTClaimsSetGenerator {
+public class PediamedJwtClaimsSetGenerator implements ClaimsGenerator {
     private static final String ROLES_KEY = "rolesKey";
     private final TokenConfiguration tokenConfiguration;
     private final JwtIdGenerator jwtIdGenerator;
@@ -41,7 +41,6 @@ public class PediamedJwtClaimsSetGenerator extends JWTClaimsSetGenerator {
                                          @Nullable JwtIdGenerator jwtIdGenerator,
                                          @Nullable ClaimsAudienceProvider claimsAudienceProvider,
                                          @Nullable ApplicationConfiguration applicationConfiguration) {
-        super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration);
         this.tokenConfiguration = tokenConfiguration;
         this.jwtIdGenerator = jwtIdGenerator;
         this.claimsAudienceProvider = claimsAudienceProvider;
@@ -59,7 +58,7 @@ public class PediamedJwtClaimsSetGenerator extends JWTClaimsSetGenerator {
         expiration = (int) authentication.getAttributes().getOrDefault("expiration", 86400);
         populateIat(builder);
         populateExp(builder, expiration);
-        populateJti(builder);
+        populateJti(builder, authentication);
         populateIss(builder);
         populateAud(builder);
         populateNbf(builder);
@@ -145,9 +144,9 @@ public class PediamedJwtClaimsSetGenerator extends JWTClaimsSetGenerator {
      * @param builder The Claims Builder
      * @see <a href="https://tools.ietf.org/html/rfc7519#section-4.1.7">jti (JWT ID) Claim</a>
      */
-    protected void populateJti(JWTClaimsSet.Builder builder) {
+    protected void populateJti(JWTClaimsSet.Builder builder, Authentication authentication) {
         if (jwtIdGenerator != null) {
-            builder.jwtID(jwtIdGenerator.generateJtiClaim()); // jti
+            builder.jwtID(jwtIdGenerator.generateJtiClaim(authentication)); // jti
         }
     }
 

@@ -7,6 +7,7 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.Authenticator;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
 import io.micronaut.security.rules.SecurityRule;
@@ -42,6 +43,13 @@ public class AuthController {
     @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<?> register(@Valid @Body RegistrationRequest registrationRequest) {
         this.authService.register(registrationRequest);
-        return HttpResponse.created("/auth/register");
+        return HttpResponse.ok();
+    }
+
+    @Post("/logout")
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    public HttpResponse<?> logout(Authentication authentication) {
+        this.authService.logOut(authentication);
+        return HttpResponse.ok();
     }
 }

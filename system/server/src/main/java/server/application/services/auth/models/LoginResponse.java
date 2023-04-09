@@ -9,7 +9,7 @@ public record LoginResponse (
     UUID id,
     String firstName,
     String lastName,
-    List<String> role,
+    List<String> roles,
     String email,
     TokenModel tokenModel
 ) {}

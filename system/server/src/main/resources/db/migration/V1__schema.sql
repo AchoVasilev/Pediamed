@@ -32,6 +32,7 @@ CREATE TABLE application_users (
     middle_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
     phone_number VARCHAR NOT NULL,
+    salt VARCHAR NOT NULL,
     date_created TIMESTAMP NOT NULL DEFAULT (now() at time zone 'utc'),
     date_modified TIMESTAMP,
     deleted BOOLEAN DEFAULT FALSE

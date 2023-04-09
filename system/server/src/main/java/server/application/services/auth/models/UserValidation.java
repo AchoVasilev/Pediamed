@@ -1,6 +1,4 @@
-package server.application.services.auth;
+package server.application.services.auth.models;
 
-import server.application.services.auth.models.UserDto;
-
-public record ValidationDto (UserDto user, boolean isValid) {
+public record UserValidation(UserDto user, boolean isValid, String salt) {
 }

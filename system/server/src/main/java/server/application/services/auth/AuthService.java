@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 import server.application.services.auth.models.LoginResponse;
 import server.application.services.auth.models.RegistrationRequest;
 import server.application.services.auth.models.UserDto;
+import server.application.services.auth.models.UserValidation;
 import server.domain.entities.ApplicationUser;
 import server.domain.entities.Parent;
 import server.domain.entities.enums.RoleEnum;
@@ -50,7 +51,7 @@ public class AuthService {
     public void register(RegistrationRequest registrationRequest) {
         var user = this.userRepository.findByEmailEmail(registrationRequest.email());
         if (user.isPresent()) {
-            throw new EntityAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS,registrationRequest.email()));
+            throw new EntityAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS, registrationRequest.email()));
         }
 
         var role = this.roleRepository.findByName(RoleEnum.ROLE_PARENT)
@@ -65,6 +66,7 @@ public class AuthService {
                 new PhoneNumber(registrationRequest.phoneNumber())
         );
 
+        role.setApplicationUser(newUser);
         newUser.getRoles().add(role);
 
         var parent = new Parent();
@@ -91,24 +93,25 @@ public class AuthService {
     }
 
     @Transactional
-    public UserDto getValidatedUser(String username, String password) {
+    public UserValidation getValidatedUser(String username, String password) {
         log.info("User trying to authenticate [username={}]", username);
         var user = this.validateCredentials(username, password);
         if (user.isValid()) {
-            return user.user();
+            return user;
         }
 
         return null;
     }
 
-    private ValidationDto validateCredentials(String username, String password) {
+    private UserValidation validateCredentials(String username, String password) {
         var user = this.userRepository.findByEmailEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
 
-        return new ValidationDto(
+        return new UserValidation(
                 new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail().getEmail(),
                         user.getRoles().stream().map(r -> r.getName().name()).toList()),
-                this.passwordEncoder.matches(password, user.getPassword())
+                this.passwordEncoder.matches(password, user.getPassword()),
+                user.getSalt()
         );
     }
 
@@ -122,6 +125,15 @@ public class AuthService {
                         u.getEmail().getEmail(),
                         u.getRoles().stream().map(r -> r.getName().name()).toList()))
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
+    }
+
+    public void logOut(Authentication authentication) {
+        var user = this.userRepository.findByEmailEmail(authentication.getName());
+        user.ifPresent(u -> {
+            u.invalidateSalt();
+            this.userRepository.update(u);
+            log.info("User logged out [user={}, userId={}]", u.getEmail(), u.getId());
+        });
     }
 
     private LoginResponse getLoginResponse(Authentication authentication) {

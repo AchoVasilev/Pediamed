@@ -36,7 +36,7 @@ public class ScheduleController {
 
     @Post("/event-data")
     // @Secured(value = {SecurityRule.IS_AUTHENTICATED, DOCTOR_ROLE, ADMIN_ROLE})
-    @Secured(SecurityRule.IS_ANONYMOUS)
+    @Secured(SecurityRule.IS_AUTHENTICATED)
     public HttpResponse<?> createEvents(@Body @Valid EventDataInputRequest data) {
         return HttpResponse.ok(new EventResponse(this.scheduleService.generateEvents(data)));
     }

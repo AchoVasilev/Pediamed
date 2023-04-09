@@ -27,16 +27,14 @@ import java.util.Optional;
 @Replaces(JwtTokenGenerator.class)
 @Slf4j
 public class TokenService implements TokenGenerator {
-    private final JwtTokenGenerator jwtEncoder;
     private final PediamedJwtClaimsSetGenerator pediamedJwtClaimsSetGenerator;
     protected final SignatureGeneratorConfiguration signatureConfiguration;
     protected final EncryptionConfiguration encryptionConfiguration;
 
-    public TokenService(JwtTokenGenerator jwtEncoder,
+    public TokenService(
                         PediamedJwtClaimsSetGenerator pediamedJwtClaimsSetGenerator,
                         @Nullable @Named("generator") SignatureGeneratorConfiguration signatureConfiguration,
                         @Nullable @Named("generator") EncryptionConfiguration encryptionConfiguration) {
-        this.jwtEncoder = jwtEncoder;
         this.pediamedJwtClaimsSetGenerator = pediamedJwtClaimsSetGenerator;
         this.signatureConfiguration = signatureConfiguration;
         this.encryptionConfiguration = encryptionConfiguration;
@@ -46,7 +44,7 @@ public class TokenService implements TokenGenerator {
         var expiration = (int)authentication.getAttributes().getOrDefault("expiration", 86400);
         var claims = pediamedJwtClaimsSetGenerator.generateClaims(authentication, expiration);
 
-        var encodedToken = this.jwtEncoder.generateToken(claims).orElseThrow();
+        var encodedToken = this.generateToken(claims).orElseThrow();
         return new TokenModel(encodedToken, Date.from(Instant.now().plus(expiration, ChronoUnit.SECONDS)));
     }
 
