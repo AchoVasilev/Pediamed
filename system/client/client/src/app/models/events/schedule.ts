@@ -36,7 +36,7 @@ export interface CabinetSchedule {
 
 export interface ScheduleData {
     id: string,
-    startDate: Date,
-    endDate: Date,
+    startDate: string,
+    endDate: string,
     title: string
 }

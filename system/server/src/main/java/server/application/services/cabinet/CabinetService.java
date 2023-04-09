@@ -9,6 +9,7 @@ import server.domain.entities.Cabinet;
 import server.domain.entities.enums.CabinetWorkDays;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 import server.infrastructure.repositories.CabinetRepository;
+import server.infrastructure.utils.DateTimeUtility;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -51,7 +52,8 @@ public class CabinetService {
                                         .toList(),
                                 c.getSchedule().getCalendarEvents()
                                         .stream()
-                                        .map(e -> new ScheduleEvent(e.getId(), e.getStartDate(), e.getEndDate(), e.getTitle()))
+                                        .map(e -> new ScheduleEvent(e.getId(), DateTimeUtility.parseToString(e.getStartDate()),
+                                                DateTimeUtility.parseToString(e.getEndDate()), e.getTitle()))
                                         .toList()),
                         this.calculateWorkDays(c.getWorkDays())
                 )).orElseThrow(() -> new EntityNotFoundException(CABINET_NOT_FOUND));

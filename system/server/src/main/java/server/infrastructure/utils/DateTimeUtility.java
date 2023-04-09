@@ -47,8 +47,8 @@ public class DateTimeUtility {
         Guard.Against.EmptyOrBlank(startInput);
         Guard.Against.EmptyOrBlank(endInput);
 
-        transformWorkDay(startInput);
-        transformWorkDay(endInput);
+        startInput = transformWorkDay(startInput);
+        endInput = transformWorkDay(endInput);
 
         if (!cabinetWorkDays.contains(startInput)) {
             throw new WorkDayException(String.format(INVALID_WORKDAYS_FOR_CABINET, startInput));
@@ -75,6 +75,10 @@ public class DateTimeUtility {
         return validateForCurrentDate(endDate);
     }
 
+    public static String parseToString(LocalDateTime dateTime) {
+        return dateTime.format(dateTimeFormatter);
+    }
+
     private static LocalDateTime validateForCurrentDate(LocalDateTime dateTime) {
         var currentDate = LocalDateTime.now().format(dateTimeFormatter);
         if (dateTime.isBefore(LocalDateTime.parse(currentDate, dateTimeFormatter))) {
@@ -84,7 +88,7 @@ public class DateTimeUtility {
         return dateTime;
     }
 
-    private static void transformWorkDay(String input) {
+    private static String transformWorkDay(String input) {
        if (DayOfWeek.MONDAY.name().equals(input)) {
            input = CabinetWorkDays.Понеделник.name();
        } else if (DayOfWeek.TUESDAY.name().equals(input)) {
@@ -102,5 +106,7 @@ public class DateTimeUtility {
        } else {
             throw new WorkDayException(NOT_SUPPORTED_DAY);
        }
+
+       return input;
     }
 }

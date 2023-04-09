@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -22,18 +23,18 @@ public class Schedule extends BaseEntity<UUID> {
     @OneToOne
     @JoinColumn(name = "cabinet_id", referencedColumnName = "id")
     private Cabinet cabinet;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "schedule_id", referencedColumnName = "id")
     private List<Appointment> appointments = new ArrayList<>();
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "schedule_id", referencedColumnName = "id")
     private List<CalendarEvent> calendarEvents = new ArrayList<>();
 
     public void addCalendarEvent(CalendarEvent calendarEvent) {
         var isEventPresent = this.calendarEvents
                 .stream()
-                .anyMatch(e -> e.getEndDate() == calendarEvent.getStartDate()
-                        && e.getStartDate() == calendarEvent.getStartDate());
+                .anyMatch(e -> e.getEndDate().equals(calendarEvent.getStartDate())
+                        && e.getStartDate().equals(calendarEvent.getStartDate()));
 
         if (isEventPresent) {
             return;

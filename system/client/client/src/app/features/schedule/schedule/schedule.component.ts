@@ -33,6 +33,7 @@ import * as moment from 'moment';
 })
 export class ScheduleComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+  private dateTimePattern = 'DD/MM/YYYY HH:mm';
 
   view: CalendarView = CalendarView.Week;
   daysInWeek = 7;
@@ -121,12 +122,24 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
         this.calculateExcludedDays(result.workDays);
         return [...merged].map((ev) => {
-          return {
-            start: new Date(ev?.startDate),
+          console.log(ev);
+          let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
+          let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
+
+          console.log({
+            start: startDate,
             title: ev?.title,
-            end: new Date(ev?.endDate),
+            end: endDate,
             id: ev?.id,
-          };
+          });
+          
+          
+          return {
+            start: startDate,
+            title: ev?.title,
+            end: endDate,
+            id: ev?.id,
+          };          
         });
       })
     );
@@ -175,11 +188,17 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           ...result.scheduleEvents,
         ];
 
+        console.log(result);
+        console.log(merged);
+        
         return [...merged].map((ev) => {
+          let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
+          let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
+
           return {
-            start: new Date(ev?.startDate),
+            start: startDate,
             title: ev?.title,
-            end: new Date(ev?.endDate),
+            end: endDate,
             id: ev?.id,
           };
         });

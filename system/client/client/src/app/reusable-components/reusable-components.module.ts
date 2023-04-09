@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { EmailComponent } from './email/email.component';
 import { PasswordComponent } from './password/password.component';
 import { PasswordsComponent } from './passwords/passwords.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { PasswordsComponent } from './passwords/passwords.component';
   imports: [
     CommonModule,
     MatFormFieldModule,
+    MatSelectModule,
     MatInputModule,
     ReactiveFormsModule,
     MatDialogModule,

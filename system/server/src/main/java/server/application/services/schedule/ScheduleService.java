@@ -85,7 +85,8 @@ public class ScheduleService {
                                 .toList(),
                         s.getCalendarEvents()
                                 .stream()
-                                .map(e -> new ScheduleEvent(e.getId(), e.getStartDate(), e.getEndDate(), e.getTitle()))
+                                .map(e -> new ScheduleEvent(e.getId(),DateTimeUtility.parseToString(e.getStartDate()),
+                                        DateTimeUtility.parseToString(e.getEndDate()), e.getTitle()))
                                 .toList()))
                 .orElseThrow(() -> new EntityNotFoundException(SCHEDULE_NOT_FOUND));
     }
