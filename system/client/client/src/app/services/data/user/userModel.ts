@@ -1,6 +1,6 @@
 export interface UserModel {
     id: string,
-    role: string,
+    roles: string[],
     firstName: string,
     lastName: string,
     email: string

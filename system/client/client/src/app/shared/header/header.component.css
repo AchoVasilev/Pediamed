@@ -15,6 +15,12 @@
     color: var(--primary);
 }
 
+button.nav-item.nav-link {
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
 @media (min-width: 992px) {
     .navbar-light .navbar-nav .nav-link::before {
         position: absolute;

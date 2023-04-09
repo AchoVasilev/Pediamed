@@ -24,8 +24,14 @@
                             <a href="search.html" class="dropdown-item">Search</a>
                         </div>
                     </div>
-                    <a routerLink="/auth/login" class="nav-item nav-link">Вход</a>
-                    <a routerLink="/auth/register" class="nav-item nav-link">Регистрация</a>
+                        <ng-container *ngIf="!isLoggedIn">
+                            <a routerLink="/auth/login" class="nav-item nav-link">Вход</a>
+                            <a routerLink="/auth/register" class="nav-item nav-link">Регистрация</a>
+                        </ng-container>
+                        <ng-container *ngIf="isLoggedIn">
+                            <a routerLink="/users/profile" class="nav-item nav-link">Профил</a>
+                            <button class="nav-item nav-link" (click)="onLogOut()">Излез</button>
+                        </ng-container>
                 </div>
             </div>
         </nav>

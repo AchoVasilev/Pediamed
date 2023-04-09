@@ -20,6 +20,7 @@ export class RegisterComponent {
   fieldMinLength: number = Constants.fieldMinLength;
   phoneMinLength: number = Constants.phoneMinLength;
   phoneMaxLength: number = Constants.phoneMaxLength;
+  phoneRegExp: string = Constants.phoneRegExp;
   private passwordControl = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
   hide: boolean = true;
   loading: boolean = false;
@@ -46,7 +47,7 @@ export class RegisterComponent {
         Validators.required,
         Validators.minLength(this.phoneMinLength),
         Validators.maxLength(this.phoneMaxLength),
-        Validators.pattern(Constants.phoneRegExp),
+        Validators.pattern(this.phoneRegExp),
       ]],
       terms: [false, [Validators.requiredTrue]]
     });
@@ -105,8 +106,8 @@ export class RegisterComponent {
     this.authService.register(registerParent)
       .subscribe({
         next: () => {
-            this.loading = false;
-            this.router.navigateByUrl('/auth/login');
+          this.loading = false;
+          this.router.navigateByUrl('/auth/login');
         },
         error: (err: HttpErrorResponse) => {
           if (err.status === HttpStatusCode.BadRequest) {

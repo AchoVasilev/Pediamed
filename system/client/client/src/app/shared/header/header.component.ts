@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { faClinicMedical } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +8,16 @@ import { faClinicMedical } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./header.component.css']
 })
 
-export class HeaderComponent {
+export class HeaderComponent{
   menu: HTMLElement | undefined;
   faClinic = faClinicMedical;
+
+  constructor(private authService: AuthService) {
+  }
+
+  get isLoggedIn():boolean {
+    return this.authService.isLoggedIn();
+  }
 
   onHover() {
     this.menu = document.getElementById('menu')!;
@@ -21,5 +29,9 @@ export class HeaderComponent {
     if (this.menu.style.display === 'block') {
       this.menu.style.display = 'none';
     }
+  }
+
+  onLogOut() {
+    this.authService.logout();
   }
 }

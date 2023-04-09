@@ -44,14 +44,14 @@ export class SchedulingDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUser();
+    // this.getUser();
   }
 
   getUser() {
-    this.isLoggedIn = this.userService.isLoggedIn();
-    if (this.isLoggedIn) {
-      this.currentUser = this.userService.getUser();
-    }
+    // this.isLoggedIn = this.userService.isLoggedIn();
+    // if (this.isLoggedIn) {
+    //   this.currentUser = this.userService.getUser();
+    // }
   }
 
   close() {

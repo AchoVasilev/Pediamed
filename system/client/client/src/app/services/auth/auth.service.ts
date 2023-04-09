@@ -36,9 +36,9 @@ export class AuthService {
             email: data.email,
             firstName: data.firstName,
             lastName: data.lastName,
-            role: data.role
+            roles: data.roles
           };
-
+          
           this.userDataService.setUser(user);
         }),
         shareReplay());
@@ -49,9 +49,12 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('expiresAt');
-    this.userDataService.removeUser();
+    this.httpClient.post(this.apiUrl + '/logout', {})
+      .subscribe(r => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expiresAt');
+        this.userDataService.removeUser();
+      })
   }
 
   isLoggedIn() {
@@ -73,8 +76,8 @@ export class AuthService {
   }
 
   private setSession(authResult: AuthResult) {
-    const expiresAt = moment().add(authResult.expiresAt);
-    localStorage.setItem('token', authResult.token);
+    const expiresAt = moment().add(authResult.tokenModel.expiresAt);
+    localStorage.setItem('token', authResult.tokenModel.token);
     localStorage.setItem('expiresAt', JSON.stringify(expiresAt.valueOf()))
   }
 }

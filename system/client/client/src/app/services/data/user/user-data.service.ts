@@ -11,7 +11,7 @@ export class UserDataService {
     firstName: '',
     lastName: '',
     email: '',
-    role: '',
+    roles: [],
   };
 
   private readonly currentUserSource = new BehaviorSubject<UserModel>(
@@ -24,10 +24,6 @@ export class UserDataService {
 
   getUser(): UserModel {
     return this.currentUserSource.getValue();
-  }
-
-  isLoggedIn(): boolean {
-    return this.getUser().id !== '';
   }
 
   setUser(user: UserModel): void {
