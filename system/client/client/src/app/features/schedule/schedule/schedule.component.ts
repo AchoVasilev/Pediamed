@@ -122,18 +122,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
         this.calculateExcludedDays(result.workDays);
         return [...merged].map((ev) => {
-          console.log(ev);
           let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
           let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
 
-          console.log({
-            start: startDate,
-            title: ev?.title,
-            end: endDate,
-            id: ev?.id,
-          });
-          
-          
           return {
             start: startDate,
             title: ev?.title,

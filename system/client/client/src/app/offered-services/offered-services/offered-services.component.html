@@ -1,0 +1,19 @@
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="text-center mx-auto mb-5" style="max-width: 500px;">
+            <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5">Medical Packages</h5>
+            <h1 class="display-4">Awesome Medical Programs</h1>
+        </div>
+        <owl-carousel-o [options]="customOptions">
+            <ng-container *ngFor="let service of services">
+                <ng-template carouselSlide [id]="service.id.toString()">
+                  <img src="assets/img/price-2.jpg" alt="slide.alt" title="slide.title">
+                  <div class="carousel-caption">
+                    <h3>{{service.name}}</h3>
+                    <p>{{service.price}}</p>
+                  </div>
+                </ng-template>
+              </ng-container>
+        </owl-carousel-o>
+    </div>
+</div>
