@@ -29,7 +29,6 @@
     "date-fns": "^2.29.3",
     "jquery": "^3.6.2",
     "moment": "^2.29.4",
-    "ngx-owl-carousel-o": "^15.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.4.1",
     "zone.js": "~0.12.0"
