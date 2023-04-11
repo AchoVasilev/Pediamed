@@ -17,15 +17,11 @@ import { passwordMatch } from 'src/app/utils/passwordValidator';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  fieldMinLength: number = Constants.fieldMinLength;
-  phoneMinLength: number = Constants.phoneMinLength;
-  phoneMaxLength: number = Constants.phoneMaxLength;
-  phoneRegExp: string = Constants.phoneRegExp;
-  private passwordControl = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
+  private passwordControl = new FormControl('', [Validators.required, Validators.minLength(Constants.fieldMinLength)]);
   hide: boolean = true;
   loading: boolean = false;
   form: FormGroup;
-  passwordValidators = [Validators.required, Validators.minLength(this.fieldMinLength)];
+  passwordValidators = [Validators.required, Validators.minLength(Constants.fieldMinLength)];
   repeatPasswordValidators: ValidatorFn[];
 
   constructor(
@@ -40,14 +36,14 @@ export class RegisterComponent {
         password: this.passwordControl,
         repeatPassword: ['', passwordMatch(this.passwordControl)]
       }),
-      firstName: ['', [Validators.required, Validators.minLength(this.fieldMinLength)]],
-      middleName: ['', [Validators.required, Validators.minLength(this.fieldMinLength)]],
-      lastName: ['', [Validators.required, Validators.minLength(this.fieldMinLength)]],
+      firstName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+      middleName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+      lastName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
       phoneNumber: ['', [
         Validators.required,
-        Validators.minLength(this.phoneMinLength),
-        Validators.maxLength(this.phoneMaxLength),
-        Validators.pattern(this.phoneRegExp),
+        Validators.minLength(Constants.phoneMinLength),
+        Validators.maxLength(Constants.phoneMaxLength),
+        Validators.pattern(Constants.phoneRegExp),
       ]],
       terms: [false, [Validators.requiredTrue]]
     });

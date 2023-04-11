@@ -16,6 +16,7 @@ import {
   parseErrorMessage,
   shouldShowErrorForControl,
 } from 'src/app/utils/formValidator';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-scheduling-dialog',
@@ -25,7 +26,16 @@ import {
 export class SchedulingDialogComponent implements OnInit {
   form = this.fb.group({
     start: new FormControl('', [Validators.required]),
-    phoneNumber: ['']
+    email: ['', [Validators.required, Validators.email]],
+    firstName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+    middleName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+    lastName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+    phoneNumber: ['', [
+      Validators.required,
+      Validators.minLength(Constants.phoneMinLength),
+      Validators.maxLength(Constants.phoneMaxLength),
+      Validators.pattern(Constants.phoneRegExp),
+    ]],
   });
 
   isLoggedIn: boolean = false;
@@ -38,20 +48,41 @@ export class SchedulingDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) data: CalendarEvent,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<SchedulingDialogComponent>,
-    private userService: UserDataService
+    private userService: UserDataService,
+    private authService: AuthService
   ) {
     this.data = data;
   }
 
   ngOnInit(): void {
-    // this.getUser();
+    this.getUser();
+  }
+
+  get emailControl(): FormControl {
+    return this.form.get('email') as FormControl;
+  }
+
+  get firstName(): FormControl {
+    return this.form.get('firstName') as FormControl;
+  }
+
+  get middleName(): FormControl {
+    return this.form.get('middleName') as FormControl;
+  }
+
+  get lastName(): FormControl {
+    return this.form.get('lastName') as FormControl;
+  }
+
+  get phoneNumber(): FormControl {
+    return this.form.get('phoneNumber') as FormControl;
   }
 
   getUser() {
-    // this.isLoggedIn = this.userService.isLoggedIn();
-    // if (this.isLoggedIn) {
-    //   this.currentUser = this.userService.getUser();
-    // }
+    this.isLoggedIn = this.authService.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.currentUser = this.userService.getUser();
+    }
   }
 
   close() {
