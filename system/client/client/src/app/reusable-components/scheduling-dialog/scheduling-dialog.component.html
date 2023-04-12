@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Запазване на час за {{ this.data.start }}</h1>
+<h1 mat-dialog-title>Запазване на час за {{ this.date[0] }} год. от {{ this.date[1] }} часа</h1>
 <div mat-dialog-content>
   <p>Изберете часове и продължителност</p>
   <ng-container *ngIf="isLoggedIn; then loggedIn; else notLoggedIn"></ng-container>
@@ -12,7 +12,7 @@
     <form action="post" [formGroup]="form">
         <mat-form-field appearance="outline">
             <mat-label>Начален час</mat-label>
-            <input matInput placeholder="Начален час" formControlName="start" [value]="this.data.start" [disabled]="true" />
+            <input matInput placeholder="Начален час" formControlName="start" [disabled]="true" />
             <mat-icon matSuffix>calendar_month</mat-icon>
             <mat-error
                 *ngIf="validateForm('start')">{{getErrorMessage('required')}}</mat-error>

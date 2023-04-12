@@ -1,11 +1,9 @@
-import { UserModel } from './../data/user/userModel';
-import { UserDataService } from './../data/user/user-data.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
 import { RegisterParent } from 'src/app/models/user/registerParent';
 import { environment } from 'src/environments/environment';
-import { AuthResult } from './authResult';
+import { AuthResult, UserModel } from './authResult';
 import * as moment from 'moment';
 
 @Injectable({
@@ -19,7 +17,10 @@ export class AuthService {
     })
   };
 
-  constructor(private httpClient: HttpClient, private userDataService: UserDataService) { }
+  private readonly currentUserSource = new BehaviorSubject<any>(null);
+  readonly currentUser$ = this.currentUserSource.asObservable();
+  
+  constructor(private httpClient: HttpClient) { }
 
   login(email: string, password: string, persist: boolean): Observable<AuthResult> {
     return this.httpClient.post<AuthResult>(this.apiUrl + '/login', {
@@ -30,16 +31,6 @@ export class AuthService {
       .pipe(
         tap(data => {
           this.setSession(data);
-
-          const user: UserModel = {
-            id: data.id,
-            email: data.email,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            roles: data.roles
-          };
-          
-          this.userDataService.setUser(user);
         }),
         shareReplay());
   }
@@ -53,7 +44,6 @@ export class AuthService {
       .subscribe(r => {
         localStorage.removeItem('token');
         localStorage.removeItem('expiresAt');
-        this.userDataService.removeUser();
       })
   }
 
@@ -69,6 +59,10 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  getUser() {
+
+  }
+
   getExpiration() {
     const expiration = localStorage.getItem("expiresAt");
     const expiresAt = JSON.parse(expiration!);
@@ -79,5 +73,6 @@ export class AuthService {
     const expiresAt = moment().add(authResult.tokenModel.expiresAt);
     localStorage.setItem('token', authResult.tokenModel.token);
     localStorage.setItem('expiresAt', JSON.stringify(expiresAt.valueOf()))
+    localStorage.setItem('userId', authResult.id);
   }
 }

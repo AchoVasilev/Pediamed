@@ -6,7 +6,9 @@ import java.util.UUID;
 public record UserDto(
         UUID id,
         String firstName,
+        String middleName,
         String lastName,
         String email,
+        String phoneNumber,
         List<String> roleNames
 ) { }

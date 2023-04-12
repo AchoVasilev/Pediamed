@@ -1,6 +1,4 @@
 import { Constants } from './../../utils/constants';
-import { UserModel } from './../../services/data/user/userModel';
-import { UserDataService } from './../../services/data/user/user-data.service';
 import { CalendarEvent } from 'angular-calendar';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
@@ -17,6 +15,7 @@ import {
   shouldShowErrorForControl,
 } from 'src/app/utils/formValidator';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-scheduling-dialog',
@@ -24,19 +23,11 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   styleUrls: ['./scheduling-dialog.component.css'],
 })
 export class SchedulingDialogComponent implements OnInit {
-  form = this.fb.group({
-    start: new FormControl('', [Validators.required]),
-    email: ['', [Validators.required, Validators.email]],
-    firstName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
-    middleName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
-    lastName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
-    phoneNumber: ['', [
-      Validators.required,
-      Validators.minLength(Constants.phoneMinLength),
-      Validators.maxLength(Constants.phoneMaxLength),
-      Validators.pattern(Constants.phoneRegExp),
-    ]],
-  });
+  private dateTimePattern = 'DD/MM/YYYY HH:mm';
+
+  date: string[] = [];
+
+  form!:FormGroup;
 
   isLoggedIn: boolean = false;
   data: CalendarEvent;
@@ -48,15 +39,28 @@ export class SchedulingDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) data: CalendarEvent,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<SchedulingDialogComponent>,
-    private userService: UserDataService,
     private authService: AuthService
   ) {
     this.data = data;
+    this.getUser();
   }
 
   ngOnInit(): void {
-    this.getUser();
-    console.log(this.data);
+    this.parseDate();
+    console.log(this.currentUser);
+    this.form = this.fb.group({
+      start: new FormControl(this.date, [Validators.required]),
+      email: [this.currentUser?.email, [Validators.required, Validators.email]],
+      firstName: [this.currentUser?.firstName, [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+      middleName: [this.currentUser?.middleName, [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+      lastName: [this.currentUser?.phoneNUmber, [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+      phoneNumber: [this.currentUser?.phoneNUmber, [
+        Validators.required,
+        Validators.minLength(Constants.phoneMinLength),
+        Validators.maxLength(Constants.phoneMaxLength),
+        Validators.pattern(Constants.phoneRegExp),
+      ]],
+    });
     
   }
 
@@ -83,8 +87,12 @@ export class SchedulingDialogComponent implements OnInit {
   getUser() {
     this.isLoggedIn = this.authService.isLoggedIn();
     if (this.isLoggedIn) {
-      this.currentUser = this.userService.getUser();
+      this.currentUser = this.authService.getUser();
     }
+  }
+
+  private parseDate() {
+    this.date = moment(this.data.start).format(this.dateTimePattern).split(' ');
   }
 
   close() {

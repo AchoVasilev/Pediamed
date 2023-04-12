@@ -11,14 +11,14 @@ import { ScheduleService } from '../../../services/schedule/schedule.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DateFormatter } from './../../../utils/dateFormatter';
 import { CalendarDateFormatter } from 'angular-calendar';
-import { UserModel } from './../../../services/data/user/userModel';
-import { UserDataService } from './../../../services/data/user/user-data.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
 import * as moment from 'moment';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { UserModel } from 'src/app/services/auth/authResult';
 
 @Component({
   selector: 'app-schedule',
@@ -55,12 +55,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private cd: ChangeDetectorRef,
-    private userDataService: UserDataService,
+    private authService: AuthService,
     private scheduleService: ScheduleService,
     private cabinetService: CabinetService,
     private dialog: MatDialog
   ) {
-    this.user = this.userDataService.getUser();
+    this.user = this.authService.getUser();
 
     // could be cached
     this.scheduleService
