@@ -5,6 +5,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
@@ -14,8 +15,8 @@ import io.micronaut.security.rules.SecurityRule;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import server.application.services.auth.AuthService;
-import server.application.services.auth.models.LoginRequest;
-import server.application.services.auth.models.RegistrationRequest;
+import server.application.services.auth.models.request.LoginRequest;
+import server.application.services.auth.models.request.RegistrationRequest;
 
 import javax.validation.Valid;
 
@@ -32,7 +33,6 @@ public class AuthController {
     }
 
     @Post("/login")
-    @Secured(SecurityRule.IS_ANONYMOUS)
     public Publisher<MutableHttpResponse<?>> login(@Body LoginRequest loginRequest, HttpRequest<?> httpRequest) {
         var credentials = new UsernamePasswordCredentials(loginRequest.email(), loginRequest.password());
         var authenticationResponse = this.authenticator.authenticate(httpRequest, credentials);
@@ -40,16 +40,21 @@ public class AuthController {
     }
 
     @Post("/register")
-    @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<?> register(@Valid @Body RegistrationRequest registrationRequest) {
         this.authService.register(registrationRequest);
         return HttpResponse.ok();
     }
 
     @Post("/logout")
-    @Secured(SecurityRule.IS_AUTHENTICATED)
     public HttpResponse<?> logout(Authentication authentication) {
         this.authService.logOut(authentication);
+        return HttpResponse.ok();
+    }
+
+    @Get
+    @Secured(SecurityRule.IS_AUTHENTICATED)
+    public HttpResponse<?> getUser(Authentication authentication) {
+        var user = this.authService.getUser(authentication.getName());
         return HttpResponse.ok();
     }
 }

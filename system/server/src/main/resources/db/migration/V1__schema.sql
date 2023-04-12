@@ -79,7 +79,7 @@ CREATE TABLE patients (
     first_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
     age INT,
-    birth_date DATE NOT NULL,
+    birth_date VARCHAR NOT NULL,
     parent_id UUID REFERENCES parents(id),
     date_created TIMESTAMP NOT NULL DEFAULT (now() at time zone 'utc'),
     date_modified TIMESTAMP,

@@ -5,16 +5,21 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.AuthenticationResponse;
+import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import server.application.services.auth.models.LoginResponse;
-import server.application.services.auth.models.RegistrationRequest;
-import server.application.services.auth.models.UserDto;
-import server.application.services.auth.models.UserValidation;
+import server.application.services.auth.models.response.DoctorResponse;
+import server.application.services.auth.models.response.LoginResponse;
+import server.application.services.auth.models.request.RegistrationRequest;
+import server.application.services.auth.models.dto.UserDto;
+import server.application.services.auth.models.response.ParentResponse;
+import server.application.services.auth.models.response.PatientResponse;
+import server.application.services.auth.models.response.UserResponse;
+import server.application.services.auth.models.dto.UserValidation;
 import server.domain.entities.ApplicationUser;
 import server.domain.entities.Parent;
 import server.domain.entities.enums.RoleEnum;
@@ -31,6 +36,7 @@ import javax.transaction.Transactional;
 import static server.common.ErrorMessages.EMAIL_ALREADY_EXISTS;
 import static server.common.ErrorMessages.ENTITY_NOT_FOUND;
 import static server.common.ErrorMessages.INVALID_CREDENTIALS;
+import static server.common.ErrorMessages.INVALID_EMAIL;
 
 @Singleton
 @Slf4j
@@ -77,13 +83,14 @@ public class AuthService {
         log.info(String.format("User with id=%s successfully registered", newUser.getId()));
     }
 
+    @Transactional
     public Publisher<MutableHttpResponse<?>> authenticate(Publisher<AuthenticationResponse> auth) {
         return Flux.from(auth)
                 .map(authenticationResponse -> {
                     if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
-                        Authentication authentication = authenticationResponse.getAuthentication().get();
+                        var authentication = authenticationResponse.getAuthentication().get();
                         var loginResponse = this.getLoginResponse(authentication);
-                        log.info("User logged in. [username={}, id={}]", loginResponse.email(), loginResponse.id());
+                        log.info("User logged in. [username={}, id={}]", authentication.getName(), loginResponse.id());
 
                         return HttpResponse.ok(loginResponse);
                     } else {
@@ -93,6 +100,7 @@ public class AuthService {
     }
 
     @Transactional
+    @ReadOnly
     public UserValidation getValidatedUser(String username, String password) {
         log.info("User trying to authenticate [username={}]", username);
         var user = this.validateCredentials(username, password);
@@ -108,7 +116,8 @@ public class AuthService {
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
 
         return new UserValidation(
-                new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail().getEmail(),
+                new UserDto(user.getId(), user.getFirstName(), user.getMiddleName(), user.getLastName(), user.getEmail().getEmail(),
+                        user.getPhoneNumber().getPhoneNumber(),
                         user.getRoles().stream().map(r -> r.getName().name()).toList()),
                 this.passwordEncoder.matches(password, user.getPassword()),
                 user.getSalt()
@@ -116,35 +125,61 @@ public class AuthService {
     }
 
     @Transactional
+    @ReadOnly
     public UserDto findByEmail(String email) {
         return this.userRepository.findByEmailEmail(email)
                 .map(u -> new UserDto(
                         u.getId(),
                         u.getFirstName(),
+                        u.getMiddleName(),
                         u.getLastName(),
                         u.getEmail().getEmail(),
+                        u.getPhoneNumber().getPhoneNumber(),
                         u.getRoles().stream().map(r -> r.getName().name()).toList()))
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
     }
 
+    @Transactional
     public void logOut(Authentication authentication) {
-        var user = this.userRepository.findByEmailEmail(authentication.getName());
-        user.ifPresent(u -> {
-            u.invalidateSalt();
-            this.userRepository.update(u);
-            log.info("User logged out [user={}, userId={}]", u.getEmail(), u.getId());
-        });
+        var user = this.getUserByEmail(authentication.getName());
+        user.invalidateSalt();
+        this.userRepository.update(user);
+        log.info("User logged out [user={}, userId={}]", user.getEmail().getEmail(), user.getId());
     }
 
     private LoginResponse getLoginResponse(Authentication authentication) {
         var user = this.findByEmail(authentication.getName());
         return new LoginResponse(
                 user.id(),
-                user.firstName(),
-                user.lastName(),
-                user.roleNames(),
-                user.email(),
                 this.tokenService.generateToken(authentication)
         );
+    }
+
+    @Transactional
+    @ReadOnly
+    public UserResponse getUser(String name) {
+        var user = this.getUserByEmail(name);
+        if (user.getRoles().stream().anyMatch(r -> r.getName() == RoleEnum.ROLE_PARENT)) {
+            return new ParentResponse(
+                    user.getFirstName(),
+                    user.getMiddleName(),
+                    user.getLastName(),
+                    user.getEmail().getEmail(),
+                    user.getPhoneNumber().getPhoneNumber(),
+                    user.getRoles().stream().map(r -> r.getName().name()).toList(),
+                    user.getParent().getPatients().stream().map(p -> new PatientResponse(p.getFirstName(), p.getLastName(), p.getAge(), p.getBirthDate())).toList());
+        }
+
+        return new DoctorResponse(user.getFirstName(),
+                user.getMiddleName(),
+                user.getLastName(),
+                user.getEmail().getEmail(),
+                user.getPhoneNumber().getPhoneNumber(),
+                user.getRoles().stream().map(r -> r.getName().name()).toList());
+    }
+
+    private ApplicationUser getUserByEmail(String email) {
+        return this.userRepository.findByEmailEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(INVALID_EMAIL));
     }
 }

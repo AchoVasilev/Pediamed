@@ -1,4 +1,4 @@
 package server.application.services.auth.models.response;
 
-public class PatientResponse {
+public record PatientResponse(String firstName, String lastName, int age, String birthDate) {
 }

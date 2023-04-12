@@ -1,4 +1,4 @@
-package server.application.services.auth.models;
+package server.application.services.auth.models.request;
 
 import io.micronaut.core.annotation.Introspected;
 

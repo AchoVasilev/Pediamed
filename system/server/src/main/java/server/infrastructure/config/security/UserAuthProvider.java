@@ -9,7 +9,7 @@ import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 import server.application.services.auth.AuthService;
-import server.application.services.auth.models.LoginRequest;
+import server.application.services.auth.models.request.LoginRequest;
 
 import java.util.List;
 import java.util.Map;

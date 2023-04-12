@@ -1,4 +1,4 @@
-package server.application.services.auth.models;
+package server.application.services.auth.models.dto;
 
 import java.util.List;
 import java.util.UUID;

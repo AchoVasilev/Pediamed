@@ -5,10 +5,11 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public record PatientResponse(String firstName,
-                              String middleName,
-                              String lastName,
-                              String email,
-                              String phoneNumber,
-                              List<String> roles) implements UserResponse {
+public record ParentResponse(String firstName,
+                             String middleName,
+                             String lastName,
+                             String email,
+                             String phoneNumber,
+                             List<String> roles,
+                             List<PatientResponse> patients) implements UserResponse {
 }
