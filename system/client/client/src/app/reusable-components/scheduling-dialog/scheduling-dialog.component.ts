@@ -56,6 +56,8 @@ export class SchedulingDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUser();
+    console.log(this.data);
+    
   }
 
   get emailControl(): FormControl {

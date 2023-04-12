@@ -9,11 +9,11 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav ms-auto py-0">
+                <div class="navbar-nav ms-auto py-0" id="navigation" (click)="onClick($event)">
                     <a routerLink="/" class="nav-item nav-link active">Начало</a>
                     <a routerLink="/schedule/calendar" class="nav-item nav-link">Календар</a>
                     <a routerLink="/services" class="nav-item nav-link">Услуги</a>
-                    <div class="nav-item dropdown" (mouseout)="onMouseLeave()" (mouseover)="onHover()">
+                    <div class="nav-item dropdown">
                         <a href="javascript:void(0)" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Меню</a>
                         <div class="dropdown-menu m-0" id="menu">
                             <a routerLink="/about" class="dropdown-item">За нас</a>

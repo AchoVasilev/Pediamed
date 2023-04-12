@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { faClinicMedical } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
@@ -9,7 +9,8 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 })
 
 export class HeaderComponent{
-  menu: HTMLElement | undefined;
+  @ViewChild('#menu')
+  menu: ElementRef | undefined;
   faClinic = faClinicMedical;
 
   constructor(private authService: AuthService) {
@@ -19,16 +20,9 @@ export class HeaderComponent{
     return this.authService.isLoggedIn();
   }
 
-  onHover() {
-    this.menu = document.getElementById('menu')!;
-    this.menu.style.display = 'block';
-  }
-
-  onMouseLeave() {
-    this.menu = document.getElementById('menu')!;
-    if (this.menu.style.display === 'block') {
-      this.menu.style.display = 'none';
-    }
+  onClick(event: any) {
+    document.querySelectorAll('a.nav-item.nav-link.active').forEach(el => el.classList.remove('active'));
+    event.target.classList.add('active');
   }
 
   onLogOut() {
