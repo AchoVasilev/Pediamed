@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, shareReplay, tap } from 'rxjs';
 import { RegisterParent } from 'src/app/models/user/registerParent';
 import { environment } from 'src/environments/environment';
 import { AuthResult, UserModel } from './authResult';
@@ -40,18 +40,18 @@ export class AuthService {
   }
 
   logout() {
-    this.httpClient.post(this.apiUrl + '/logout', {})
+    this.httpClient.post(this.apiUrl + '/logout', this.httpOptions)
       .subscribe(r => {
         localStorage.removeItem('token');
         localStorage.removeItem('expiresAt');
       })
   }
 
-  isLoggedIn() {
+  isLoggedIn(): boolean {
     return moment().isBefore(this.getExpiration()) && this.getToken() !== null;
   }
 
-  isLoggedOut() {
+  isLoggedOut(): boolean {
     return !this.isLoggedIn();
   }
 
@@ -59,8 +59,8 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  getUser() {
-
+  getUser(): Observable<UserModel>{
+    return this.httpClient.get<UserModel>(this.apiUrl);
   }
 
   getExpiration() {

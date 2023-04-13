@@ -1,7 +1,7 @@
 import { Constants } from './../../utils/constants';
 import { CalendarEvent } from 'angular-calendar';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -16,6 +16,7 @@ import {
 } from 'src/app/utils/formValidator';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import * as moment from 'moment';
+import { UserModel } from 'src/app/services/auth/authResult';
 
 @Component({
   selector: 'app-scheduling-dialog',
@@ -25,24 +26,25 @@ import * as moment from 'moment';
 export class SchedulingDialogComponent implements OnInit {
   private dateTimePattern = 'DD/MM/YYYY HH:mm';
 
-  date: string[] = [];
+  date: string = '';
+  dateArgs: string[] = [];
 
   form!:FormGroup;
 
   isLoggedIn: boolean = false;
-  data: CalendarEvent;
-  currentUser: UserModel | undefined;
+  event: CalendarEvent;
+  currentUser?: UserModel;
 
   fieldMinLength = Constants.fieldMinLength;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) data: CalendarEvent,
+    @Inject(MAT_DIALOG_DATA) data: any,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<SchedulingDialogComponent>,
     private authService: AuthService
   ) {
-    this.data = data;
-    this.getUser();
+    this.event = data.event;
+    this.getUser(data.user);
   }
 
   ngOnInit(): void {
@@ -53,8 +55,8 @@ export class SchedulingDialogComponent implements OnInit {
       email: [this.currentUser?.email, [Validators.required, Validators.email]],
       firstName: [this.currentUser?.firstName, [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
       middleName: [this.currentUser?.middleName, [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
-      lastName: [this.currentUser?.phoneNUmber, [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
-      phoneNumber: [this.currentUser?.phoneNUmber, [
+      lastName: [this.currentUser?.lastName, [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+      phoneNumber: [this.currentUser?.phoneNumber, [
         Validators.required,
         Validators.minLength(Constants.phoneMinLength),
         Validators.maxLength(Constants.phoneMaxLength),
@@ -84,15 +86,16 @@ export class SchedulingDialogComponent implements OnInit {
     return this.form.get('phoneNumber') as FormControl;
   }
 
-  getUser() {
+  getUser(user: UserModel) {
     this.isLoggedIn = this.authService.isLoggedIn();
     if (this.isLoggedIn) {
-      this.currentUser = this.authService.getUser();
+      this.currentUser = user;
     }
   }
 
   private parseDate() {
-    this.date = moment(this.data.start).format(this.dateTimePattern).split(' ');
+    this.date = moment(this.event.start).format(this.dateTimePattern);
+    this.dateArgs = this.date.split(' ');
   }
 
   close() {

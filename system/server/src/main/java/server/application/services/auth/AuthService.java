@@ -12,14 +12,10 @@ import org.reactivestreams.Publisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import server.application.services.auth.models.response.DoctorResponse;
-import server.application.services.auth.models.response.LoginResponse;
-import server.application.services.auth.models.request.RegistrationRequest;
 import server.application.services.auth.models.dto.UserDto;
-import server.application.services.auth.models.response.ParentResponse;
-import server.application.services.auth.models.response.PatientResponse;
-import server.application.services.auth.models.response.UserResponse;
 import server.application.services.auth.models.dto.UserValidation;
+import server.application.services.auth.models.request.RegistrationRequest;
+import server.application.services.auth.models.response.LoginResponse;
 import server.domain.entities.ApplicationUser;
 import server.domain.entities.Parent;
 import server.domain.entities.enums.RoleEnum;
@@ -116,7 +112,7 @@ public class AuthService {
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
 
         return new UserValidation(
-                new UserDto(user.getId(), user.getFirstName(), user.getMiddleName(), user.getLastName(), user.getEmail().getEmail(),
+                new UserDto(user.getId(), user.getFirstName(), user.getMiddleName(), user.getLastName(), user.getEmail(),
                         user.getPhoneNumber().getPhoneNumber(),
                         user.getRoles().stream().map(r -> r.getName().name()).toList()),
                 this.passwordEncoder.matches(password, user.getPassword()),
@@ -133,7 +129,7 @@ public class AuthService {
                         u.getFirstName(),
                         u.getMiddleName(),
                         u.getLastName(),
-                        u.getEmail().getEmail(),
+                        u.getEmail(),
                         u.getPhoneNumber().getPhoneNumber(),
                         u.getRoles().stream().map(r -> r.getName().name()).toList()))
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
@@ -144,7 +140,7 @@ public class AuthService {
         var user = this.getUserByEmail(authentication.getName());
         user.invalidateSalt();
         this.userRepository.update(user);
-        log.info("User logged out [user={}, userId={}]", user.getEmail().getEmail(), user.getId());
+        log.info("User logged out [user={}, userId={}]", user.getEmail(), user.getId());
     }
 
     private LoginResponse getLoginResponse(Authentication authentication) {
@@ -153,29 +149,6 @@ public class AuthService {
                 user.id(),
                 this.tokenService.generateToken(authentication)
         );
-    }
-
-    @Transactional
-    @ReadOnly
-    public UserResponse getUser(String name) {
-        var user = this.getUserByEmail(name);
-        if (user.getRoles().stream().anyMatch(r -> r.getName() == RoleEnum.ROLE_PARENT)) {
-            return new ParentResponse(
-                    user.getFirstName(),
-                    user.getMiddleName(),
-                    user.getLastName(),
-                    user.getEmail().getEmail(),
-                    user.getPhoneNumber().getPhoneNumber(),
-                    user.getRoles().stream().map(r -> r.getName().name()).toList(),
-                    user.getParent().getPatients().stream().map(p -> new PatientResponse(p.getFirstName(), p.getLastName(), p.getAge(), p.getBirthDate())).toList());
-        }
-
-        return new DoctorResponse(user.getFirstName(),
-                user.getMiddleName(),
-                user.getLastName(),
-                user.getEmail().getEmail(),
-                user.getPhoneNumber().getPhoneNumber(),
-                user.getRoles().stream().map(r -> r.getName().name()).toList());
     }
 
     private ApplicationUser getUserByEmail(String email) {

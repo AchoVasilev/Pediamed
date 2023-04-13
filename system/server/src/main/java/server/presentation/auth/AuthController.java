@@ -5,7 +5,6 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
@@ -48,13 +47,6 @@ public class AuthController {
     @Post("/logout")
     public HttpResponse<?> logout(Authentication authentication) {
         this.authService.logOut(authentication);
-        return HttpResponse.ok();
-    }
-
-    @Get
-    @Secured(SecurityRule.IS_AUTHENTICATED)
-    public HttpResponse<?> getUser(Authentication authentication) {
-        var user = this.authService.getUser(authentication.getName());
         return HttpResponse.ok();
     }
 }

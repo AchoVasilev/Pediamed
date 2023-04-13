@@ -17,7 +17,7 @@ export interface UserModel {
   middleName: string;
   lastName: string;
   email: string;
-  phoneNUmber: string;
+  phoneNumber: string;
   patient?: PatientModel[]
 }
 
