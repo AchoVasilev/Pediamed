@@ -29,7 +29,31 @@ export class SchedulingDialogComponent implements OnInit {
   date: string = '';
   dateArgs: string[] = [];
 
-  form!:FormGroup;
+  form: FormGroup = this.fb.group({
+    start: new FormControl(null, [Validators.required]),
+    email: [null, [Validators.required, Validators.email]],
+    firstName: [
+      null,
+      [Validators.required, Validators.minLength(Constants.fieldMinLength)],
+    ],
+    middleName: [
+      null,
+      [Validators.required, Validators.minLength(Constants.fieldMinLength)],
+    ],
+    lastName: [
+      null,
+      [Validators.required, Validators.minLength(Constants.fieldMinLength)],
+    ],
+    phoneNumber: [
+      null,
+      [
+        Validators.required,
+        Validators.minLength(Constants.phoneMinLength),
+        Validators.maxLength(Constants.phoneMaxLength),
+        Validators.pattern(Constants.phoneRegExp),
+      ],
+    ],
+  });
 
   isLoggedIn: boolean = false;
   event: CalendarEvent;
@@ -44,26 +68,15 @@ export class SchedulingDialogComponent implements OnInit {
     private authService: AuthService
   ) {
     this.event = data.event;
-    this.getUser(data.user);
+    this.getUser();
   }
 
   ngOnInit(): void {
     this.parseDate();
-    console.log(this.currentUser);
-    this.form = this.fb.group({
-      start: new FormControl(this.date, [Validators.required]),
-      email: [this.currentUser?.email, [Validators.required, Validators.email]],
-      firstName: [this.currentUser?.firstName, [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
-      middleName: [this.currentUser?.middleName, [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
-      lastName: [this.currentUser?.lastName, [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
-      phoneNumber: [this.currentUser?.phoneNumber, [
-        Validators.required,
-        Validators.minLength(Constants.phoneMinLength),
-        Validators.maxLength(Constants.phoneMaxLength),
-        Validators.pattern(Constants.phoneRegExp),
-      ]],
+
+    this.form.patchValue({
+      start: this.date
     });
-    
   }
 
   get emailControl(): FormControl {
@@ -86,10 +99,20 @@ export class SchedulingDialogComponent implements OnInit {
     return this.form.get('phoneNumber') as FormControl;
   }
 
-  getUser(user: UserModel) {
+  getUser() {
     this.isLoggedIn = this.authService.isLoggedIn();
     if (this.isLoggedIn) {
-      this.currentUser = user;
+      this.authService.getUser().subscribe((u) => {
+        this.currentUser = u;
+        this.form.patchValue({
+          start: this.date,
+          email: u.email,
+          firstName: u.firstName,
+          middleName: u.middleName,
+          lastName: u.lastName,
+          phoneNumber: u.phoneNumber,
+        });
+      });
     }
   }
 

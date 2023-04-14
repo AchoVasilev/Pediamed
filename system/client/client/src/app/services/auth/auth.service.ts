@@ -10,7 +10,8 @@ import * as moment from 'moment';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl: string = environment.apiUrl + '/auth';
+  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrlWithPrefix: string = this.apiUrl + '/auth';
   private readonly httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -23,7 +24,7 @@ export class AuthService {
   constructor(private httpClient: HttpClient) { }
 
   login(email: string, password: string, persist: boolean): Observable<AuthResult> {
-    return this.httpClient.post<AuthResult>(this.apiUrl + '/login', {
+    return this.httpClient.post<AuthResult>(this.apiUrlWithPrefix + '/login', {
       email,
       password,
       persist
@@ -36,11 +37,11 @@ export class AuthService {
   }
 
   register(register: RegisterParent): Observable<any> {
-    return this.httpClient.post<any>(this.apiUrl + '/register', register, this.httpOptions);
+    return this.httpClient.post<any>(this.apiUrlWithPrefix + '/register', register, this.httpOptions);
   }
 
   logout() {
-    this.httpClient.post(this.apiUrl + '/logout', this.httpOptions)
+    this.httpClient.post(this.apiUrlWithPrefix + '/logout', this.httpOptions)
       .subscribe(r => {
         localStorage.removeItem('token');
         localStorage.removeItem('expiresAt');
@@ -60,7 +61,7 @@ export class AuthService {
   }
 
   getUser(): Observable<UserModel>{
-    return this.httpClient.get<UserModel>(this.apiUrl);
+    return this.httpClient.get<UserModel>(this.apiUrl + '/user');
   }
 
   getExpiration() {

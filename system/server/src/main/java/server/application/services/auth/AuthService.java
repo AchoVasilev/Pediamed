@@ -79,7 +79,6 @@ public class AuthService {
         log.info(String.format("User with id=%s successfully registered", newUser.getId()));
     }
 
-    @Transactional
     public Publisher<MutableHttpResponse<?>> authenticate(Publisher<AuthenticationResponse> auth) {
         return Flux.from(auth)
                 .map(authenticationResponse -> {
@@ -107,12 +106,19 @@ public class AuthService {
         return null;
     }
 
+    @Transactional
+    public void logOut(Authentication authentication) {
+        var user = this.getUserByEmail(authentication.getName());
+        user.invalidateSalt();
+        this.userRepository.update(user);
+        log.info("User logged out [user={}, userId={}]", user.getEmail().getEmail(), user.getId());
+    }
+
     private UserValidation validateCredentials(String username, String password) {
-        var user = this.userRepository.findByEmailEmail(username)
-                .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
+        var user = this.getUserByEmail(username);
 
         return new UserValidation(
-                new UserDto(user.getId(), user.getFirstName(), user.getMiddleName(), user.getLastName(), user.getEmail(),
+                new UserDto(user.getId(), user.getFirstName(), user.getMiddleName(), user.getLastName(), user.getEmail().getEmail(),
                         user.getPhoneNumber().getPhoneNumber(),
                         user.getRoles().stream().map(r -> r.getName().name()).toList()),
                 this.passwordEncoder.matches(password, user.getPassword()),
@@ -120,33 +126,10 @@ public class AuthService {
         );
     }
 
-    @Transactional
-    @ReadOnly
-    public UserDto findByEmail(String email) {
-        return this.userRepository.findByEmailEmail(email)
-                .map(u -> new UserDto(
-                        u.getId(),
-                        u.getFirstName(),
-                        u.getMiddleName(),
-                        u.getLastName(),
-                        u.getEmail(),
-                        u.getPhoneNumber().getPhoneNumber(),
-                        u.getRoles().stream().map(r -> r.getName().name()).toList()))
-                .orElseThrow(() -> new EntityNotFoundException(INVALID_CREDENTIALS));
-    }
-
-    @Transactional
-    public void logOut(Authentication authentication) {
-        var user = this.getUserByEmail(authentication.getName());
-        user.invalidateSalt();
-        this.userRepository.update(user);
-        log.info("User logged out [user={}, userId={}]", user.getEmail(), user.getId());
-    }
-
     private LoginResponse getLoginResponse(Authentication authentication) {
-        var user = this.findByEmail(authentication.getName());
+        var user = this.getUserByEmail(authentication.getName());
         return new LoginResponse(
-                user.id(),
+                user.getId(),
                 this.tokenService.generateToken(authentication)
         );
     }

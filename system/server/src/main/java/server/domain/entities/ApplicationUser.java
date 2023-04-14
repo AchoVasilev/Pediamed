@@ -67,8 +67,4 @@ public class ApplicationUser extends BaseEntity<UUID> {
     public void invalidateSalt() {
         this.salt = UUID.randomUUID().toString();
     }
-
-    public String getEmail() {
-        return this.email.getEmail();
-    }
 }

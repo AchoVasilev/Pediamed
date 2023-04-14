@@ -44,7 +44,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
   events$!: Observable<CalendarEvent<{ event: ScheduleData }>[]>;
   CalendarView = CalendarView;
-  user?: UserModel;
   cabinetName: string = CabinetName[CabinetName.Плевен];
   cabinetScheduleId: string | undefined;
   eventData: EventData[] = [];
@@ -60,8 +59,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private cabinetService: CabinetService,
     private dialog: MatDialog
   ) {
-    this.authService.getUser().subscribe(u => this.user = u);
-
     // could be cached
     this.scheduleService
       .getEventData()
@@ -196,7 +193,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   eventClicked({event}: {event:CalendarEvent}) {
     this.dialog.open(SchedulingDialogComponent, {
-      data: {event: event, user: this.user},
+      data: {event: event},
     });
   }
 }
