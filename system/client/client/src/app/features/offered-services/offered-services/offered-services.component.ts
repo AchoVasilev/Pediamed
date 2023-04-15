@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { OfferedServiceView } from '../../models/offeredServiceView';
-import { OfferedServiceService } from '../../services/offered-service/offered-service.service';
+import { OfferedServiceView } from '../../../models/offeredServiceView';
+import { OfferedServiceService } from '../../../services/offered-service/offered-service.service';
 
 @Component({
   selector: 'app-offered-services',
@@ -18,11 +18,5 @@ export class OfferedServicesComponent implements OnInit {
       .subscribe(data => {
         this.services = data;
       });
-
-    this.carousel();
-  }
-
-  carousel() {
-
   }
 }

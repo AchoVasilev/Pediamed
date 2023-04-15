@@ -15,6 +15,7 @@ import { EmailComponent } from './email/email.component';
 import { PasswordComponent } from './password/password.component';
 import { PasswordsComponent } from './passwords/passwords.component';
 import { MatSelectModule } from '@angular/material/select';
+import { AppointmentCauseSelectComponent } from './appointment-cause-select/appointment-cause-select.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
     EmailComponent,
     PasswordComponent,
     PasswordsComponent,
+    AppointmentCauseSelectComponent,
   ],
   imports: [
     CommonModule,

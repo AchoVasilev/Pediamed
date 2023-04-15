@@ -17,8 +17,6 @@ import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
 import * as moment from 'moment';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { UserModel } from 'src/app/services/auth/authResult';
 
 @Component({
   selector: 'app-schedule',
@@ -44,7 +42,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
   events$!: Observable<CalendarEvent<{ event: ScheduleData }>[]>;
   CalendarView = CalendarView;
-  cabinetName: string = CabinetName[CabinetName.Плевен];
+  cabinetName: string = CabinetName.Плевен;
   cabinetScheduleId: string | undefined;
   eventData: EventData[] = [];
   cabinetResponse?: CabinetResponse;
@@ -54,7 +52,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private cd: ChangeDetectorRef,
-    private authService: AuthService,
     private scheduleService: ScheduleService,
     private cabinetService: CabinetService,
     private dialog: MatDialog

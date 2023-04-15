@@ -18,7 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthModule } from './features/auth/auth.module';
-import { OfferedServicesModule } from './offered-services/offered-services.module';
+import { OfferedServicesModule } from './features/offered-services/offered-services.module';
 import { PrivacyComponent } from './shared/privacy/privacy.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
