@@ -2,7 +2,7 @@ package server.application.services.appointmentCause;
 
 import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
-import server.infrastructure.repositories.AppointmentCauseRepository;
+import server.domain.repositories.AppointmentCauseRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;

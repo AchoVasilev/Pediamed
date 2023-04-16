@@ -12,8 +12,8 @@ import server.application.services.schedule.models.ScheduleEvent;
 import server.domain.entities.CalendarEvent;
 import server.infrastructure.config.exceptions.models.CalendarEventException;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
-import server.infrastructure.repositories.EventDataRepository;
-import server.infrastructure.repositories.ScheduleRepository;
+import server.domain.repositories.EventDataRepository;
+import server.domain.repositories.ScheduleRepository;
 import server.infrastructure.utils.DateTimeUtility;
 
 import javax.transaction.Transactional;

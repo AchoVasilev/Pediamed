@@ -21,12 +21,18 @@ public class Patient extends BaseEntity<UUID> {
     @ManyToOne
     private Parent parent;
 
-    public Patient (String firstName, String lastName, Integer age, String birthDate, Parent parent) {
+    public Patient (String firstName, String lastName, Parent parent) {
         this.firstName = Guard.Against.EmptyOrBlank(firstName);
         this.lastName = Guard.Against.EmptyOrBlank(lastName);
-        this.age = this.validateAge(age);
-        this.birthDate = Guard.Against.Null(birthDate);
         this.parent = Guard.Against.Null(parent);
+    }
+
+    public void setAge(int age) {
+        this.age = this.validateAge(age);
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = Guard.Against.EmptyOrBlank(birthDate);
     }
 
     private Integer validateAge(Integer age) {

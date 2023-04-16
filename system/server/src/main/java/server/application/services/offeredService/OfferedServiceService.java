@@ -1,7 +1,7 @@
 package server.application.services.offeredService;
 
 import jakarta.inject.Singleton;
-import server.infrastructure.repositories.OfferedServiceRepository;
+import server.domain.repositories.OfferedServiceRepository;
 
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package server.infrastructure.repositories;
+package server.domain.repositories;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.data.annotation.Query;

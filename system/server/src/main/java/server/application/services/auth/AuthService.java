@@ -23,8 +23,8 @@ import server.domain.valueObjects.Email;
 import server.domain.valueObjects.PhoneNumber;
 import server.infrastructure.config.exceptions.models.EntityAlreadyExistsException;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
-import server.infrastructure.repositories.RoleRepository;
-import server.infrastructure.repositories.UserRepository;
+import server.domain.repositories.RoleRepository;
+import server.domain.repositories.UserRepository;
 import server.infrastructure.utils.TokenService;
 
 import javax.transaction.Transactional;
@@ -63,7 +63,6 @@ public class AuthService {
                 new Email(registrationRequest.email()),
                 this.passwordEncoder.encode(registrationRequest.password()),
                 registrationRequest.firstName(),
-                registrationRequest.middleName(),
                 registrationRequest.lastName(),
                 new PhoneNumber(registrationRequest.phoneNumber())
         );
@@ -118,7 +117,7 @@ public class AuthService {
         var user = this.getUserByEmail(username);
 
         return new UserValidation(
-                new UserDto(user.getId(), user.getFirstName(), user.getMiddleName(), user.getLastName(), user.getEmail().getEmail(),
+                new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail().getEmail(),
                         user.getPhoneNumber().getPhoneNumber(),
                         user.getRoles().stream().map(r -> r.getName().name()).toList()),
                 this.passwordEncoder.matches(password, user.getPassword()),

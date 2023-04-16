@@ -1,4 +1,4 @@
-package server.infrastructure.repositories;
+package server.domain.repositories;
 
 import io.micronaut.data.annotation.Repository;
 import server.domain.entities.Role;

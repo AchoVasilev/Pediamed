@@ -8,7 +8,7 @@ import server.application.services.schedule.models.ScheduleEvent;
 import server.domain.entities.Cabinet;
 import server.domain.entities.enums.CabinetWorkDays;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
-import server.infrastructure.repositories.CabinetRepository;
+import server.domain.repositories.CabinetRepository;
 import server.infrastructure.utils.DateTimeUtility;
 
 import javax.transaction.Transactional;

@@ -33,6 +33,7 @@ import localeBg from '@angular/common/locales/bg';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { ReusableComponentsModule } from './reusable-components/reusable-components.module';
+import { LoadingComponent } from './shared/loading/loading.component';
 registerLocaleData(localeBg);
 
 @NgModule({
@@ -42,6 +43,7 @@ registerLocaleData(localeBg);
     FooterComponent,
     HomeComponent,
     PrivacyComponent,
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,

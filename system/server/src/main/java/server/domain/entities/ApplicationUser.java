@@ -27,7 +27,6 @@ public class ApplicationUser extends BaseEntity<UUID> {
     private Email email;
     private String password;
     private String firstName;
-    private String middleName;
     private String lastName;
     @Embedded
     private PhoneNumber phoneNumber;
@@ -47,21 +46,15 @@ public class ApplicationUser extends BaseEntity<UUID> {
 
     private String salt;
 
-    public ApplicationUser(Email email, String password, String firstName, String middleName, String lastName, PhoneNumber phoneNumber) {
+    public ApplicationUser(Email email, String password, String firstName, String lastName, PhoneNumber phoneNumber) {
         this.id = UUID.randomUUID();
         this.email = email;
         this.password = Guard.Against.EmptyOrBlank(password);
         this.firstName = Guard.Against.EmptyOrBlank(firstName);
-        this.middleName = Guard.Against.EmptyOrBlank(middleName);
         this.lastName = Guard.Against.EmptyOrBlank(lastName);
         this.phoneNumber = phoneNumber;
         this.roles = new ArrayList<>();
         this.salt = UUID.randomUUID().toString();
-    }
-
-    public ApplicationUser(Email email, String password, String firstName, String middleName, String lastName, PhoneNumber phoneNumber, List<Role> roles) {
-        this(email,  password,  firstName,  middleName,  lastName, phoneNumber);
-        this.roles = roles;
     }
 
     public void invalidateSalt() {

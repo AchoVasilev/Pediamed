@@ -27,9 +27,6 @@ public record RegistrationRequest(
         String firstName,
         @NotBlank(message = REQUIRED_FIELD)
         @Size(min = FIELD_MIN_LENGTH, message = MINIMUM_LENGTH_REQUIRED)
-        String middleName,
-        @NotBlank(message = REQUIRED_FIELD)
-        @Size(min = FIELD_MIN_LENGTH, message = MINIMUM_LENGTH_REQUIRED)
         String lastName,
         @NotBlank(message = REQUIRED_FIELD)
         @Size(min = PHONE_MIN_LENGTH, max = PHONE_MAX_LENGTH, message = PHONE_FIELD_LENGTH)

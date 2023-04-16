@@ -37,7 +37,6 @@ export class RegisterComponent {
         repeatPassword: ['', passwordMatch(this.passwordControl)]
       }),
       firstName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
-      middleName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
       lastName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
       phoneNumber: ['', [
         Validators.required,
@@ -61,10 +60,6 @@ export class RegisterComponent {
 
   get firstName(): FormControl {
     return this.form.get('firstName') as FormControl;
-  }
-
-  get middleName(): FormControl {
-    return this.form.get('middleName') as FormControl;
   }
 
   get lastName(): FormControl {

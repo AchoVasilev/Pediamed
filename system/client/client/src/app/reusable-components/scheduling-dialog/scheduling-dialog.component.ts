@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { UserModel } from 'src/app/services/auth/authResult';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
+import { ScheduleService } from 'src/app/services/schedule/schedule.service';
 
 @Component({
   selector: 'app-scheduling-dialog',
@@ -27,10 +28,6 @@ export class SchedulingDialogComponent implements OnInit {
     end: new FormControl({value: null, disabled: true}, [Validators.required]),
     email: [null, [Validators.required, Validators.email]],
     firstName: [
-      null,
-      [Validators.required, Validators.minLength(Constants.fieldMinLength)],
-    ],
-    middleName: [
       null,
       [Validators.required, Validators.minLength(Constants.fieldMinLength)],
     ],
@@ -71,7 +68,8 @@ export class SchedulingDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) data: any,
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<SchedulingDialogComponent>
+    private dialogRef: MatDialogRef<SchedulingDialogComponent>,
+    private scheduleService: ScheduleService
   ) {
     this.event = data.event;
     this.startTime = data.startTime;
@@ -143,6 +141,8 @@ export class SchedulingDialogComponent implements OnInit {
     //     openSnackBar(this.snackBar, res.message);
     //   },
     // });
+
+    console.log(this.form.value);
 
     this.dialogRef.close(true);
   }
