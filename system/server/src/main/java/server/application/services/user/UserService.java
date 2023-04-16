@@ -9,6 +9,7 @@ import server.domain.repositories.UserRepository;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 import static server.common.ErrorMessages.INVALID_EMAIL;
 
@@ -34,6 +35,12 @@ public class UserService {
                 user.getEmail().getEmail(),
                 user.getPhoneNumber().getPhoneNumber(),
                 user.getRoles().stream().map(r -> r.getName().name()).toList());
+    }
+
+    @Transactional
+    @ReadOnly
+    public Optional<ApplicationUser> getUserBy(String email, String firstName, String lastName, String phoneNumber) {
+        return this.userRepository.findByEmailEmailAndFirstNameAndLastNameAndPhoneNumberPhoneNumber(email, firstName, lastName, phoneNumber);
     }
 
     private ApplicationUser getUserByEmail(String email) {

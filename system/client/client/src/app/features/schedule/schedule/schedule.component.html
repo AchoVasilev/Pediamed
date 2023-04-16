@@ -61,10 +61,11 @@
 <br />
 
 <ng-template #loading>
-  
+  {{setLoading(true)}}
 </ng-template>
 
 <div *ngIf="events$ | async; else loading; let events">
+  {{setLoading(false)}}
   <div [ngSwitch]="view" class="py-5 px-5">
     <mwl-calendar-month-view
       *ngSwitchCase="'month'"

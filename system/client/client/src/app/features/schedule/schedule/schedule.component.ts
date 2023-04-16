@@ -24,6 +24,7 @@ import { UserModel } from 'src/app/services/auth/authResult';
 import { AppointmentCauseService } from 'src/app/services/appointment-cause/appointment-cause.service';
 import { DoctorSchedulingDialogComponent } from 'src/app/reusable-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
 import { RegisteredUserSchedulingDialogComponent } from 'src/app/reusable-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
+import { LoadingService } from 'src/app/services/loading/loading.service';
 
 @Component({
   selector: 'app-schedule',
@@ -66,8 +67,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private cabinetService: CabinetService,
     private authService: AuthService,
     private appointmentCauseService: AppointmentCauseService,
-    private dialog: MatDialog
-  ) {
+    private dialog: MatDialog,
+    private loadingService: LoadingService
+  ) {    
     // could be cached
     this.scheduleService
       .getEventData()
@@ -78,6 +80,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.onLoad();
     this.getCabinet();
 
     const CALENDAR_RESPONSIVE = {
@@ -115,6 +118,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+  }
+
+  setLoading(value: boolean) {
+    this.loadingService.setLoading(value);
   }
 
   getCabinet() {
@@ -171,6 +178,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   generateDayEvents(event: any) {
+    if (!this.isDoctor) {
+      return;
+    }
+    
     let date = event.day.date;
     if (moment(date).isBefore(Date.now(), 'day')) {
       return;
@@ -256,5 +267,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         },
       });
     }
+  }
+
+  onLoad() {
+    document.querySelectorAll('a.nav-item.nav-link.active').forEach(el => el.classList.remove('active'));
+    const calendarLink = document.getElementById('calendar');
+    calendarLink?.classList.add('active');
   }
 }

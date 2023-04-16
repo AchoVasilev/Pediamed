@@ -1,4 +1,4 @@
-<div class="preloader" *ngIf="isLoading()">
+<div class="preloader" [ngClass]="!isLoading() ? 'preloader-deactivate': ''">
     <div class="loader">
         <div class="loader-outter"></div>
         <div class="loader-inner"></div>

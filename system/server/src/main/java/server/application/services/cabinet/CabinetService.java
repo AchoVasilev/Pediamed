@@ -33,8 +33,8 @@ public class CabinetService {
     }
 
     @Transactional
-    public void saveCabinet(Cabinet cabinet) {
-        this.cabinetRepository.save(cabinet);
+    public void updateCabinet(Cabinet cabinet) {
+        this.cabinetRepository.update(cabinet);
     }
 
     @Transactional

@@ -16,4 +16,5 @@ public class ErrorMessages {
     public static final String EVENTS_NOT_GENERATED = "Създаването на нови часове е неуспешно";
     public static final String INVALID_WORKDAYS_FOR_CABINET = "Кабинетът няма %s като работен ден";
     public static final String NOT_SUPPORTED_DAY = "Денят %s не се поддържа от платформата";
+    public static final String MISSING_EVENT = "Този час е вече зает";
 }

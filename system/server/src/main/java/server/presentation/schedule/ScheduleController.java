@@ -9,10 +9,7 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import server.application.services.schedule.ScheduleService;
-import server.application.services.schedule.models.CabinetSchedule;
-import server.application.services.schedule.models.EventDataInputRequest;
-import server.application.services.schedule.models.EventDataResponse;
-import server.application.services.schedule.models.EventResponse;
+import server.application.services.schedule.models.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -28,6 +25,13 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
+    @Post
+    @Secured(SecurityRule.IS_ANONYMOUS)
+    public HttpResponse<?> schedule(@Body AppointmentInput appointmentInput) {
+        this.scheduleService.scheduleAppointment(appointmentInput);
+        return HttpResponse.ok();
+    }
+
     @Get("/event-data")
     @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<List<EventDataResponse>> getEventData() {
@@ -37,7 +41,7 @@ public class ScheduleController {
     @Post("/event-data")
     // @Secured(value = {SecurityRule.IS_AUTHENTICATED, DOCTOR_ROLE, ADMIN_ROLE})
     @Secured(SecurityRule.IS_ANONYMOUS)
-    public HttpResponse<?> createEvents(@Body @Valid EventDataInputRequest data) {
+    public HttpResponse<EventResponse> createEvents(@Body @Valid EventDataInputRequest data) {
         return HttpResponse.ok(new EventResponse(this.scheduleService.generateEvents(data)));
     }
 

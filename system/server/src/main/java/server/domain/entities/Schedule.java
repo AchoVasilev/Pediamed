@@ -3,6 +3,7 @@ package server.domain.entities;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static server.common.ErrorMessages.MISSING_EVENT;
 
 @Entity
 @Table(name = "schedules")
@@ -45,5 +48,10 @@ public class Schedule extends BaseEntity<UUID> {
 
     public Integer getEventsCount() {
         return this.calendarEvents.size();
+    }
+
+    public CalendarEvent getEventBy(int id) {
+        return this.calendarEvents.stream().filter(e -> e.getId() == id && !e.getDeleted()).findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(MISSING_EVENT));
     }
 }

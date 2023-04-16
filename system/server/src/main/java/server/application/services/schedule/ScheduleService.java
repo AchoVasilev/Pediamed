@@ -2,18 +2,17 @@ package server.application.services.schedule;
 
 import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import server.application.services.cabinet.CabinetService;
-import server.application.services.schedule.models.CabinetSchedule;
-import server.application.services.schedule.models.EventDataInputRequest;
-import server.application.services.schedule.models.EventDataResponse;
-import server.application.services.schedule.models.ScheduleAppointment;
-import server.application.services.schedule.models.ScheduleEvent;
+import server.application.services.schedule.models.*;
+import server.application.services.user.UserService;
 import server.domain.entities.CalendarEvent;
-import server.infrastructure.config.exceptions.models.CalendarEventException;
-import server.infrastructure.config.exceptions.models.EntityNotFoundException;
+import server.domain.entities.Schedule;
 import server.domain.repositories.EventDataRepository;
 import server.domain.repositories.ScheduleRepository;
+import server.infrastructure.config.exceptions.models.CalendarEventException;
+import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 import server.infrastructure.utils.DateTimeUtility;
 
 import javax.transaction.Transactional;
@@ -27,16 +26,12 @@ import static server.common.SuccessMessages.EVENTS_GENERATED;
 
 @Singleton
 @Slf4j
+@RequiredArgsConstructor
 public class ScheduleService {
     private final EventDataRepository eventDataRepository;
     private final CabinetService cabinetService;
     private final ScheduleRepository scheduleRepository;
-
-    public ScheduleService(EventDataRepository eventDataRepository, CabinetService cabinetService, ScheduleRepository scheduleRepository) {
-        this.eventDataRepository = eventDataRepository;
-        this.cabinetService = cabinetService;
-        this.scheduleRepository = scheduleRepository;
-    }
+    private final UserService userService;
 
     @Transactional
     @ReadOnly
@@ -68,7 +63,7 @@ public class ScheduleService {
             throw new CalendarEventException(EVENTS_NOT_GENERATED);
         }
 
-        this.cabinetService.saveCabinet(cabinet);
+        this.cabinetService.updateCabinet(cabinet);
         log.info("Successfully generated events. [startDate={}, endDate={}, intervals={}, cabinetId={}, scheduleId={}]",
                 data.startDateTime(), data.endDateTime(), data.intervals(), cabinet.getId(), cabinet.getSchedule().getId());
         return String.format(EVENTS_GENERATED, data.startDateTime(), data.endDateTime(), data.intervals());
@@ -88,6 +83,22 @@ public class ScheduleService {
                                 .map(e -> new ScheduleEvent(e.getId(),DateTimeUtility.parseToString(e.getStartDate()),
                                         DateTimeUtility.parseToString(e.getEndDate()), e.getTitle()))
                                 .toList()))
+                .orElseThrow(() -> new EntityNotFoundException(SCHEDULE_NOT_FOUND));
+    }
+
+    @Transactional
+    public void scheduleAppointment(AppointmentInput appointmentInput) {
+        var schedule = this.getScheduleById(appointmentInput.scheduleId());
+        var event = schedule.getEventBy(appointmentInput.eventId());
+        var user = this.userService.getUserBy(appointmentInput.email(), appointmentInput.parentFirstName(), appointmentInput.parentLastName(), appointmentInput.phoneNumber());
+
+        if (user.isEmpty()) {
+
+        }
+    }
+
+    private Schedule getScheduleById(UUID scheduleId) {
+        return this.scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new EntityNotFoundException(SCHEDULE_NOT_FOUND));
     }
 }

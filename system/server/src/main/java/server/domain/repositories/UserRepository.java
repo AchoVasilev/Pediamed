@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface UserRepository extends BaseRepository<ApplicationUser, UUID> {
     //@Query("SELECT u.id, u.first_name, u.last_name, u.email FROM application_users u")
     Optional<ApplicationUser> findByEmailEmail(String email);
+
+    Optional<ApplicationUser> findByEmailEmailAndFirstNameAndLastNameAndPhoneNumberPhoneNumber(String email, String firstName, String lastName, String phoneNumber);
 }
