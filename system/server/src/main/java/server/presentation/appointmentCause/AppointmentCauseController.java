@@ -11,7 +11,7 @@ import server.application.services.appointmentCause.AppointmentCauseService;
 import java.util.List;
 
 @Controller("/appointment-cause")
-@Secured(SecurityRule.IS_AUTHENTICATED)
+@Secured(SecurityRule.IS_ANONYMOUS)
 public class AppointmentCauseController {
     private final AppointmentCauseService appointmentCauseService;
 

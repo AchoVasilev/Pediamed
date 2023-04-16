@@ -8,18 +8,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import {
-  checkForMaxLength,
-  checkForMinLength,
-  parseErrorMessage,
-  shouldShowErrorForControl,
-} from 'src/app/utils/formValidator';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import * as moment from 'moment';
 import { UserModel } from 'src/app/services/auth/authResult';
-import { Roles } from 'src/app/models/enums/roleEnum';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
-import { AppointmentCauseService } from 'src/app/services/appointment-cause/appointment-cause.service';
 
 @Component({
   selector: 'app-scheduling-dialog',
@@ -27,16 +17,14 @@ import { AppointmentCauseService } from 'src/app/services/appointment-cause/appo
   styleUrls: ['./scheduling-dialog.component.css'],
 })
 export class SchedulingDialogComponent implements OnInit {
-  private dateTimePattern = 'DD/MM/YYYY HH:mm';
-
   startTime: string = '';
   endTime: string = '';
-  dateArgs: string[] = [];
-  isDoctor: boolean = false;
+  dateTimeArgs: string[] = [];
   appointmentCauses: AppointmentCauseResponse[] = [];
+
   form: FormGroup = this.fb.group({
-    start: new FormControl(null, [Validators.required]),
-    end: new FormControl(null, [Validators.required]),
+    start: new FormControl({value: null, disabled: true}, [Validators.required]),
+    end: new FormControl({value: null, disabled: true}, [Validators.required]),
     email: [null, [Validators.required, Validators.email]],
     firstName: [
       null,
@@ -59,6 +47,19 @@ export class SchedulingDialogComponent implements OnInit {
         Validators.pattern(Constants.phoneRegExp),
       ],
     ],
+
+    patientFirstName: [
+      null,
+      [Validators.required, Validators.minLength(Constants.fieldMinLength)]
+    ],
+    patientLastName: [
+      null,
+      [Validators.required, Validators.minLength(Constants.fieldMinLength)]
+    ],
+    appointmentCause: [
+      null,
+      [Validators.required]
+    ]
   });
 
   isLoggedIn: boolean = false;
@@ -70,27 +71,27 @@ export class SchedulingDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) data: any,
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<SchedulingDialogComponent>,
-    private authService: AuthService,
-    private appointmentCauseService: AppointmentCauseService
+    private dialogRef: MatDialogRef<SchedulingDialogComponent>
   ) {
     this.event = data.event;
-    this.getUser();
+    this.startTime = data.startTime;
+    this.endTime = data.endTime;
+    this.dateTimeArgs = data.dateTimeArgs;
+    this.appointmentCauses = data.appointmentCauses;
   }
 
-  ngOnInit(): void {
-    this.parseDate();
-    this.getAppointmentCauses();
+  ngOnInit(): void {    
     this.form.patchValue({
-      start: { value: this.startTime, disabled: true },
+      start: this.startTime,
+      end: this.endTime,
     });
   }
 
-  getStartTime(): FormControl {
+  get startTimeControl(): FormControl {
     return this.form.get('start') as FormControl;
   }
 
-  getEndTime(): FormControl {
+  get endTimeControl(): FormControl {
     return this.form.get('end') as FormControl;
   }
 
@@ -114,37 +115,16 @@ export class SchedulingDialogComponent implements OnInit {
     return this.form.get('phoneNumber') as FormControl;
   }
 
-  getUser() {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    if (this.isLoggedIn) {
-      this.authService.getUser().subscribe((u) => {
-        this.currentUser = u;
-        this.isDoctor = u.roles.some((r) => r === Roles.Doctor);
-
-        if (!this.isDoctor) {
-          this.form.patchValue({
-            start: this.startTime,
-            email: u.email,
-            firstName: u.firstName,
-            middleName: u.middleName,
-            lastName: u.lastName,
-            phoneNumber: u.phoneNumber,
-          });
-        }
-      });
-    }
+  get patientFirstName(): FormControl {
+    return this.form.get('patientFirstName') as FormControl;
   }
 
-  getAppointmentCauses() {
-    this.appointmentCauseService
-      .getAppointmentCauses()
-      .subscribe((a) => (this.appointmentCauses = a));
+  get patientLastName(): FormControl {
+    return this.form.get('patientLastName') as FormControl;
   }
 
-  private parseDate() {
-    this.startTime = moment(this.event.start).format(this.dateTimePattern);
-    this.dateArgs = this.startTime.split(' ');
-    this.endTime = moment(this.event.end).format(this.dateTimePattern);
+  get appointmentCause(): FormControl {
+    return this.form.get('appointmentCause') as FormControl;
   }
 
   close() {
@@ -165,21 +145,5 @@ export class SchedulingDialogComponent implements OnInit {
     // });
 
     this.dialogRef.close(true);
-  }
-
-  checkForMinLength(control: string, formGroup: FormGroup = this.form): any {
-    checkForMinLength(formGroup.controls[control]);
-  }
-
-  checkForMaxLength(control: string, formGroup: FormGroup = this.form): any {
-    checkForMaxLength(formGroup.controls[control]);
-  }
-
-  validateForm(control: string, formGroup: FormGroup = this.form) {
-    return shouldShowErrorForControl(formGroup.controls[control]);
-  }
-
-  getErrorMessage(errorType: string, numberOfSymbols?: number) {
-    return parseErrorMessage(errorType, numberOfSymbols);
   }
 }

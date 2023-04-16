@@ -17,6 +17,13 @@ import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
 import * as moment from 'moment';
+import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { Roles } from 'src/app/models/enums/roleEnum';
+import { UserModel } from 'src/app/services/auth/authResult';
+import { AppointmentCauseService } from 'src/app/services/appointment-cause/appointment-cause.service';
+import { DoctorSchedulingDialogComponent } from 'src/app/reusable-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
+import { RegisteredUserSchedulingDialogComponent } from 'src/app/reusable-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
 
 @Component({
   selector: 'app-schedule',
@@ -46,20 +53,28 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   cabinetScheduleId: string | undefined;
   eventData: EventData[] = [];
   cabinetResponse?: CabinetResponse;
-  appointmentCauses: AppointmentCause[] = [];
   excludedDays: number[] = [];
+  isLoggedIn: boolean = false;
+  isDoctor: boolean = false;
+  appointmentCauses: AppointmentCauseResponse[] = [];
+  currentUser?: UserModel;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private cd: ChangeDetectorRef,
     private scheduleService: ScheduleService,
     private cabinetService: CabinetService,
+    private authService: AuthService,
+    private appointmentCauseService: AppointmentCauseService,
     private dialog: MatDialog
   ) {
     // could be cached
     this.scheduleService
       .getEventData()
       .subscribe((data) => (this.eventData = data));
+    
+    this.getAppointmentCauses();
+    this.getUser();
   }
 
   ngOnInit(): void {
@@ -124,10 +139,26 @@ export class ScheduleComponent implements OnInit, OnDestroy {
             title: ev?.title,
             end: endDate,
             id: ev?.id,
-          };          
+          };
         });
       })
     );
+  }
+
+  getUser() {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.authService.getUser().subscribe((u) => {
+        this.currentUser = u;
+        this.isDoctor = u.roles.some((r) => r === Roles.Doctor);
+      });
+    }
+  }
+
+  getAppointmentCauses() {
+    this.appointmentCauseService
+      .getAppointmentCauses()
+      .subscribe((a) => (this.appointmentCauses = a));
   }
 
   setView(view: CalendarView) {
@@ -136,7 +167,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   calculateExcludedDays(workDays: number[]) {
     this.excludedDays = [0, 1, 2, 3, 4, 5, 6];
-    this.excludedDays = this.excludedDays.filter(d => !workDays.includes(d));
+    this.excludedDays = this.excludedDays.filter((d) => !workDays.includes(d));
   }
 
   generateDayEvents(event: any) {
@@ -160,7 +191,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((res) => {
         if (res) {
-          setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 500)
+          setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 500);
         }
       });
   }
@@ -172,7 +203,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           ...result.scheduleAppointments,
           ...result.scheduleEvents,
         ];
-        
+
         return [...merged].map((ev) => {
           let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
           let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
@@ -188,9 +219,42 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     );
   }
 
-  eventClicked({event}: {event:CalendarEvent}) {
-    this.dialog.open(SchedulingDialogComponent, {
-      data: {event: event},
-    });
+  eventClicked({ event }: { event: CalendarEvent }) {
+    const startTime = moment(event.start).format(this.dateTimePattern);
+    const endTime = moment(event.end).format(this.dateTimePattern);
+    const dateTimeArgs = startTime.split(' ');
+
+    if (this.isLoggedIn && this.isDoctor) {
+      this.dialog.open(DoctorSchedulingDialogComponent, {
+        data: {
+          event: event,
+          appointmentCauses: this.appointmentCauses,
+          startTime,
+          endTime,
+          dateTimeArgs,
+        },
+      });
+    } else if (this.isLoggedIn && !this.isDoctor) {
+      this.dialog.open(RegisteredUserSchedulingDialogComponent, {
+        data: {
+          event: event,
+          user: this.currentUser,
+          appointmentCauses: this.appointmentCauses,
+          startTime,
+          endTime,
+          dateTimeArgs,
+        },
+      });
+    } else {
+      this.dialog.open(SchedulingDialogComponent, {
+        data: {
+          event: event,
+          appointmentCauses: this.appointmentCauses,
+          startTime,
+          endTime,
+          dateTimeArgs,
+        },
+      });
+    }
   }
 }

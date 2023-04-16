@@ -16,6 +16,8 @@ import { PasswordComponent } from './password/password.component';
 import { PasswordsComponent } from './passwords/passwords.component';
 import { MatSelectModule } from '@angular/material/select';
 import { AppointmentCauseSelectComponent } from './appointment-cause-select/appointment-cause-select.component';
+import { DoctorSchedulingDialogComponent } from './doctor-scheduling-dialog/doctor-scheduling-dialog.component';
+import { RegisteredUserSchedulingDialogComponent } from './registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { AppointmentCauseSelectComponent } from './appointment-cause-select/appo
     PasswordComponent,
     PasswordsComponent,
     AppointmentCauseSelectComponent,
+    DoctorSchedulingDialogComponent,
+    RegisteredUserSchedulingDialogComponent,
   ],
   imports: [
     CommonModule,

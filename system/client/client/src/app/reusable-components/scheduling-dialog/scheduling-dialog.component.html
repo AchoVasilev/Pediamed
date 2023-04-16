@@ -1,76 +1,90 @@
-<ng-container *ngIf="isLoggedIn && isDoctor">
-    <h1 mat-dialog-title>Запазване на час за {{ this.dateArgs[0] }} год. от {{ this.dateArgs[1] }} часа</h1>
-    <form action="post">
-        <app-form-field [control]="getStartTime()"
-        label="Начален час"
-        matSuffix="calendar_month"
-        placeholder="Начален час"></app-form-field>
-        
-    </form>
-</ng-container>
-
-<h1 mat-dialog-title>Запазване на час за {{ this.dateArgs[0] }} год. от {{ this.dateArgs[1] }} часа</h1>
+<h1 mat-dialog-title>
+  Запазване на час за {{ this.dateTimeArgs[0] }} год. от
+  {{ this.dateTimeArgs[1] }} часа
+</h1>
 <div mat-dialog-content>
-  <p>Изберете часове и продължителност</p>
-  <ng-container *ngIf="isLoggedIn; then loggedIn; else notLoggedIn"></ng-container>
+  <form method="post" [formGroup]="form">
+    <div class="row mb-3 mt-2">
+      <div class="form-outline col">
+        <app-form-field
+          [control]="startTimeControl"
+          label="Начало"
+          placeholder="Начална дата и час"
+          materialSuffix="calendar_month"
+        ></app-form-field>
+      </div>
+
+      <div class="form-outline col">
+        <app-form-field
+          [control]="endTimeControl"
+          label="Край"
+          placeholder="Крайна дата и час"
+          materialSuffix="calendar_month"
+        ></app-form-field>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="form-outline col">
+        <app-email [emailControl]="emailControl"></app-email>
+      </div>
+      <div class="form-outline col">
+        <app-phone-input [phoneNumberControl]="phoneNumber"></app-phone-input>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="form-outline col">
+        <app-form-field
+          [control]="firstName"
+          label="Име на родител"
+          placeholder="Име на родител"
+          materialSuffix="account_circle"
+        ></app-form-field>
+      </div>
+
+      <div class="form-outline col">
+        <app-form-field
+          [control]="lastName"
+          label="Фамилия на родител"
+          placeholder="Фамилия на родител"
+          materialSuffix="account_circle"
+        ></app-form-field>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="form-outline col">
+        <app-form-field
+          [control]="firstName"
+          label="Име на дете"
+          placeholder="Име на дете"
+          materialSuffix="account_circle"
+        ></app-form-field>
+      </div>
+
+      <div class="form-outline col">
+        <app-form-field
+          [control]="lastName"
+          label="Фамилия на дете"
+          placeholder="Фамилия на дете"
+          materialSuffix="account_circle"
+        ></app-form-field>
+      </div>
+    </div>
+    <div class="form-outline mb-2">
+      <app-appointment-cause-select
+        [appointmentCauses]="appointmentCauses"
+        [control]="appointmentCause"
+      ></app-appointment-cause-select>
+    </div>
+  </form>
 </div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Затвори</button>
-  <button mat-button [mat-dialog-close]="true" (click)="close()" cdkFocusInitial>Създаване</button>
+  <button
+    mat-button
+    [mat-dialog-close]="true"
+    (click)="close()"
+    cdkFocusInitial
+  >
+    Запазване
+  </button>
 </div>
-
-<ng-template #loggedIn>
-    <form action="post" [formGroup]="form">
-        <mat-form-field appearance="outline">
-            <mat-label>Начален час</mat-label>
-            <input matInput placeholder="Начален час" formControlName="start" [disabled]="true" />
-            <mat-icon matSuffix>calendar_month</mat-icon>
-            <mat-error
-                *ngIf="validateForm('start')">{{getErrorMessage('required')}}</mat-error>
-        </mat-form-field>
-        <div class="row mb-3">
-            <div class="form-outline col">
-                <app-email [emailControl]="emailControl"></app-email>
-            </div>
-    
-            <div class="form-outline col">
-                <app-phone-input [phoneNumberControl]="phoneNumber"></app-phone-input>
-            </div>
-        </div>
-    </form>
-</ng-template>
-
-<ng-template #notLoggedIn>
-  <form method="post" [formGroup]="form">
-    <div class="row mb-3">
-        <div class="form-outline col">
-            <app-email [emailControl]="emailControl"></app-email>
-        </div>
-
-        <div class="form-outline col">
-            <app-phone-input [phoneNumberControl]="phoneNumber"></app-phone-input>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="form-outline col">
-            <app-form-field [control]="firstName"
-            label="Име"
-            placeholder="Въведете своето име"
-            materialSuffix="account_circle"></app-form-field>
-        </div>
-
-        <div class="form-outline col">
-            <app-form-field [control]="middleName"
-            label="Презиме"
-            placeholder="Въведете своето презиме"
-            materialSuffix="account_circle"></app-form-field>
-        </div>
-    </div>
-    <div class="form-outline mb-2">
-        <app-form-field [control]="lastName"
-            label="Фамилия"
-            placeholder="Въведете своята фамилия"
-            materialSuffix="account_circle"></app-form-field>
-    </div>
-</form>
-</ng-template>

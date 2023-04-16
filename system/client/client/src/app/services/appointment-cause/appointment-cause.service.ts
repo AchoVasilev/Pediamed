@@ -12,6 +12,6 @@ export class AppointmentCauseService {
   constructor(private http: HttpClient) { }
 
   getAppointmentCauses() {
-    return this.http.get<AppointmentCauseResponse[]>(this.apiUrl + 'appointment-cause');
+    return this.http.get<AppointmentCauseResponse[]>(this.apiUrl + '/appointment-cause');
   }
 }
