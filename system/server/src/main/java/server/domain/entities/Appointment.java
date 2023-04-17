@@ -1,5 +1,6 @@
 package server.domain.entities;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,8 +17,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "appointments")
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class Appointment extends BaseEntity<UUID> {
     private LocalDateTime startDate;
     private LocalDateTime endDate;

@@ -17,9 +17,9 @@ public class CabinetController {
         this.cabinetService = cabinetService;
     }
 
-    @Get("/{name}")
+    @Get("/{id}")
     @Secured(SecurityRule.IS_ANONYMOUS)
-    public HttpResponse<CabinetResponse> getCabinet(@PathVariable("name") String name) {
-        return HttpResponse.ok(this.cabinetService.getCabinetByName(name));
+    public HttpResponse<CabinetResponse> getCabinet(@PathVariable("id") Integer id) {
+        return HttpResponse.ok(this.cabinetService.getCabinetById(id));
     }
 }

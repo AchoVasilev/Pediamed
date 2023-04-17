@@ -28,4 +28,8 @@ public class CalendarEvent extends BaseEntity<Integer> {
         this.title = Guard.Against.EmptyOrBlank(title);
         this.scheduleId = Guard.Against.Null(scheduleId);
     }
+
+    public void markDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

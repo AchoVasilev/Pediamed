@@ -17,9 +17,6 @@ export class AuthService {
       'Content-Type': 'application/json'
     })
   };
-
-  private readonly currentUserSource = new BehaviorSubject<any>(null);
-  readonly currentUser$ = this.currentUserSource.asObservable();
   
   constructor(private httpClient: HttpClient) { }
 
@@ -50,10 +47,6 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return moment().isBefore(this.getExpiration()) && this.getToken() !== null;
-  }
-
-  isLoggedOut(): boolean {
-    return !this.isLoggedIn();
   }
 
   getToken() {

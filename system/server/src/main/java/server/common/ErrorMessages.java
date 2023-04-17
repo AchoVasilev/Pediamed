@@ -17,4 +17,6 @@ public class ErrorMessages {
     public static final String INVALID_WORKDAYS_FOR_CABINET = "Кабинетът няма %s като работен ден";
     public static final String NOT_SUPPORTED_DAY = "Денят %s не се поддържа от платформата";
     public static final String MISSING_EVENT = "Този час е вече зает";
+    public static final String PATIENT_NOT_FOUND = "Пациент с имена %s %s не съществува";
+    public static final String INVALID_APPOINTMENT_CAUSE = "Избрали сте невалиден вид на часа";
 }

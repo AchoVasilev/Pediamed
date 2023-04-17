@@ -42,9 +42,11 @@ jpa:
     entity-scan:
       packages: 'server.domain.entities'
     properties:
-      hbm2ddl:
-        auto: create-drop
-      show_sql: true
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: false
+
 jackson:
   serializationInclusion: ALWAYS
 

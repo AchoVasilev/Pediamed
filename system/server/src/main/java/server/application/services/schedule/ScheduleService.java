@@ -4,9 +4,11 @@ import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import server.application.services.appointmentCause.AppointmentCauseService;
 import server.application.services.cabinet.CabinetService;
 import server.application.services.schedule.models.*;
 import server.application.services.user.UserService;
+import server.domain.entities.Appointment;
 import server.domain.entities.CalendarEvent;
 import server.domain.entities.Schedule;
 import server.domain.repositories.EventDataRepository;
@@ -32,6 +34,7 @@ public class ScheduleService {
     private final CabinetService cabinetService;
     private final ScheduleRepository scheduleRepository;
     private final UserService userService;
+    private final AppointmentCauseService appointmentCauseService;
 
     @Transactional
     @ReadOnly
@@ -76,10 +79,13 @@ public class ScheduleService {
                 .map(s -> new CabinetSchedule(s.getId(),
                         s.getAppointments()
                                 .stream()
-                                .map(ap -> new ScheduleAppointment(ap.getId(), ap.getStartDate(), ap.getEndDate(), ap.getTitle()))
+                                .filter(ap -> !ap.getDeleted())
+                                .map(ap -> new ScheduleAppointment(ap.getId(), DateTimeUtility.parseToString(ap.getStartDate()),
+                                       DateTimeUtility.parseToString(ap.getEndDate()), ap.getTitle()))
                                 .toList(),
                         s.getCalendarEvents()
                                 .stream()
+                                .filter(ce -> !ce.getDeleted())
                                 .map(e -> new ScheduleEvent(e.getId(),DateTimeUtility.parseToString(e.getStartDate()),
                                         DateTimeUtility.parseToString(e.getEndDate()), e.getTitle()))
                                 .toList()))
@@ -87,14 +93,32 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void scheduleAppointment(AppointmentInput appointmentInput) {
-        var schedule = this.getScheduleById(appointmentInput.scheduleId());
+    public void scheduleAppointment(UUID scheduleId, AppointmentInput appointmentInput) {
+
+        var user = this.userService.createUnregisteredParent(
+                appointmentInput.email(),
+                appointmentInput.parentFirstName(),
+                appointmentInput.parentLastName(),
+                appointmentInput.phoneNumber(),
+                appointmentInput.patientFirstName(),
+                appointmentInput.patientLastName());
+
+        var patient = user.getParent().getPatientBy(appointmentInput.patientFirstName(), appointmentInput.patientLastName());
+        var title = this.createAppointmentTitle(appointmentInput.patientFirstName(), appointmentInput.patientLastName());
+        var schedule = this.getScheduleById(scheduleId);
+
         var event = schedule.getEventBy(appointmentInput.eventId());
-        var user = this.userService.getUserBy(appointmentInput.email(), appointmentInput.parentFirstName(), appointmentInput.parentLastName(), appointmentInput.phoneNumber());
+        event.markDeleted(true);
+        var appointmentCause = this.appointmentCauseService.findById(appointmentInput.appointmentCauseId());
 
-        if (user.isEmpty()) {
+        var appointment = new Appointment(event.getStartDate(), event.getEndDate(), title, event.getId(), appointmentCause, schedule.getId(), user.getParent().getId(), patient.getId());
 
-        }
+        schedule.getAppointments().add(appointment);
+        this.scheduleRepository.update(schedule);
+    }
+
+    private String createAppointmentTitle(String childFirstName, String childLastName) {
+        return String.format("Запазен час за %s %s", childFirstName, childLastName);
     }
 
     private Schedule getScheduleById(UUID scheduleId) {

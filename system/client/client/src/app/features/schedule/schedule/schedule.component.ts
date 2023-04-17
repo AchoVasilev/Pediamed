@@ -1,10 +1,6 @@
 import { SchedulingDialogComponent } from '../../../reusable-components/scheduling-dialog/scheduling-dialog.component';
-import { AppointmentCause } from './../../../models/events/appointment';
 import { CabinetService } from './../../../services/cabinet/cabinet.service';
-import {
-  CabinetResponse,
-  ScheduleData,
-} from './../../../models/events/schedule';
+import { ScheduleData } from './../../../models/events/schedule';
 import { ScheduleDialogComponent } from '../../../reusable-components/schedule-dialog/schedule-dialog.component';
 import { EventData, EventDataInput } from '../../../models/events/schedule';
 import { ScheduleService } from '../../../services/schedule/schedule.service';
@@ -25,6 +21,8 @@ import { AppointmentCauseService } from 'src/app/services/appointment-cause/appo
 import { DoctorSchedulingDialogComponent } from 'src/app/reusable-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
 import { RegisteredUserSchedulingDialogComponent } from 'src/app/reusable-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
 import { LoadingService } from 'src/app/services/loading/loading.service';
+import { Cabinet } from 'src/app/models/cabinet/cabinet';
+import { colors } from '../colors/colors';
 
 @Component({
   selector: 'app-schedule',
@@ -50,12 +48,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
   events$!: Observable<CalendarEvent<{ event: ScheduleData }>[]>;
   CalendarView = CalendarView;
-  cabinetName: string = CabinetName.Плевен;
-  cabinetScheduleId: string | undefined;
+  cabinet: Cabinet = { id: 2, name: CabinetName.Плевен };
+  cabinetScheduleId?: string;
   eventData: EventData[] = [];
-  cabinetResponse?: CabinetResponse;
   excludedDays: number[] = [];
-  isLoggedIn: boolean = false;
   isDoctor: boolean = false;
   appointmentCauses: AppointmentCauseResponse[] = [];
   currentUser?: UserModel;
@@ -69,19 +65,19 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private appointmentCauseService: AppointmentCauseService,
     private dialog: MatDialog,
     private loadingService: LoadingService
-  ) {    
+  ) {
     // could be cached
     this.scheduleService
       .getEventData()
       .subscribe((data) => (this.eventData = data));
-    
+
     this.getAppointmentCauses();
     this.getUser();
   }
 
   ngOnInit(): void {
     this.onLoad();
-    this.getCabinet();
+    this.getCabinet(this.cabinet.id);
 
     const CALENDAR_RESPONSIVE = {
       small: {
@@ -116,6 +112,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       });
   }
 
+  isLoggedIn() {
+    return this.authService.isLoggedIn();
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
   }
@@ -124,28 +124,34 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.loadingService.setLoading(value);
   }
 
-  getCabinet() {
-    this.events$ = this.cabinetService.getCabinet(this.cabinetName).pipe(
+  getCabinet(id: number) {
+    this.events$ = this.cabinetService.getCabinet(id).pipe(
       map((result) => {
-        this.cabinetResponse = result;
-
         const merged: ScheduleData[] = [
-          ...this.cabinetResponse.cabinetSchedule.scheduleAppointments,
-          ...this.cabinetResponse.cabinetSchedule.scheduleEvents,
+          ...result.cabinetSchedule.scheduleAppointments,
+          ...result.cabinetSchedule.scheduleEvents,
         ];
 
-        this.cabinetScheduleId = this.cabinetResponse.cabinetSchedule.id;
+        this.cabinetScheduleId = result.cabinetSchedule.id;
 
         this.calculateExcludedDays(result.workDays);
+
         return [...merged].map((ev) => {
           let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
           let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
 
+          let title = '';
+          let isAppointment = ev?.title.includes('Запазен час') ? true : false;
+          if (!this.isDoctor) {
+            title = ev?.title.includes('Запазен час') ? 'Запазен час' : 'Свободен час';
+          }
+
           return {
             start: startDate,
-            title: ev?.title,
+            title: title,
             end: endDate,
             id: ev?.id,
+            color: isAppointment ? colors.yellow : colors.blue
           };
         });
       })
@@ -153,8 +159,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   getUser() {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    if (this.isLoggedIn) {
+    if (this.isLoggedIn()) {
       this.authService.getUser().subscribe((u) => {
         this.currentUser = u;
         this.isDoctor = u.roles.some((r) => r === Roles.Doctor);
@@ -178,10 +183,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   generateDayEvents(event: any) {
-    if (!this.isDoctor) {
+    if (!this.isLoggedIn() || !this.isDoctor) {
+      this.isDoctor = false;
       return;
     }
-    
+
     let date = event.day.date;
     if (moment(date).isBefore(Date.now(), 'day')) {
       return;
@@ -192,7 +198,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     const eventDataInput: EventDataInput = {
       date,
       eventData: this.eventData,
-      cabinetName: this.cabinetName,
+      cabinetName: this.cabinet.name,
     };
 
     this.dialog
@@ -202,7 +208,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((res) => {
         if (res) {
-          setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 500);
+          setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 1000);
         }
       });
   }
@@ -219,11 +225,18 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
           let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
 
+          let title = '';
+          let isAppointment = ev?.title.includes('Запазен час') ? true : false;
+          if (!this.isDoctor) {
+            title = ev?.title.includes('Запазен час') ? 'Запазен час' : 'Свободен час';
+          }
+
           return {
             start: startDate,
             title: ev?.title,
             end: endDate,
             id: ev?.id,
+            color: isAppointment ? colors.yellow : colors.blue
           };
         });
       })
@@ -235,42 +248,68 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     const endTime = moment(event.end).format(this.dateTimePattern);
     const dateTimeArgs = startTime.split(' ');
 
-    if (this.isLoggedIn && this.isDoctor) {
-      this.dialog.open(DoctorSchedulingDialogComponent, {
-        data: {
-          event: event,
-          appointmentCauses: this.appointmentCauses,
-          startTime,
-          endTime,
-          dateTimeArgs,
-        },
-      });
-    } else if (this.isLoggedIn && !this.isDoctor) {
-      this.dialog.open(RegisteredUserSchedulingDialogComponent, {
-        data: {
-          event: event,
-          user: this.currentUser,
-          appointmentCauses: this.appointmentCauses,
-          startTime,
-          endTime,
-          dateTimeArgs,
-        },
-      });
+    if (this.isLoggedIn() && this.isDoctor) {
+      this.dialog
+        .open(DoctorSchedulingDialogComponent, {
+          data: {
+            event: event,
+            appointmentCauses: this.appointmentCauses,
+            startTime,
+            endTime,
+            dateTimeArgs,
+            scheduleId: this.cabinetScheduleId,
+          },
+        })
+        .afterClosed()
+        .subscribe((res) => {
+          if (res) {
+            setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 500);
+          }
+        });
+    } else if (this.isLoggedIn() && !this.isDoctor) {
+      this.dialog
+        .open(RegisteredUserSchedulingDialogComponent, {
+          data: {
+            event: event,
+            user: this.currentUser,
+            appointmentCauses: this.appointmentCauses,
+            startTime,
+            endTime,
+            dateTimeArgs,
+            scheduleId: this.cabinetScheduleId,
+          },
+        })
+        .afterClosed()
+        .subscribe((res) => {
+          if (res) {
+            setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 500);
+          }
+        });
     } else {
-      this.dialog.open(SchedulingDialogComponent, {
-        data: {
-          event: event,
-          appointmentCauses: this.appointmentCauses,
-          startTime,
-          endTime,
-          dateTimeArgs,
-        },
-      });
+      this.dialog
+        .open(SchedulingDialogComponent, {
+          data: {
+            event: event,
+            appointmentCauses: this.appointmentCauses,
+            startTime,
+            endTime,
+            dateTimeArgs,
+            scheduleId: this.cabinetScheduleId,
+          },
+        })
+        .afterClosed()
+        .subscribe((res) => {
+          if (res) {
+            setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 500);
+          }
+        });
     }
   }
 
   onLoad() {
-    document.querySelectorAll('a.nav-item.nav-link.active').forEach(el => el.classList.remove('active'));
+    document
+      .querySelectorAll('a.nav-item.nav-link.active')
+      .forEach((el) => el.classList.remove('active'));
     const calendarLink = document.getElementById('calendar');
     calendarLink?.classList.add('active');
   }

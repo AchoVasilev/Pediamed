@@ -18,6 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AppointmentCauseSelectComponent } from './appointment-cause-select/appointment-cause-select.component';
 import { DoctorSchedulingDialogComponent } from './doctor-scheduling-dialog/doctor-scheduling-dialog.component';
 import { RegisteredUserSchedulingDialogComponent } from './registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { RegisteredUserSchedulingDialogComponent } from './registered-user-sched
     MatDialogModule,
     MatOptionModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSnackBarModule
   ],
   exports: [
     ScheduleDialogComponent,

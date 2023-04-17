@@ -1,5 +1,6 @@
 package server.domain.entities;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.infrastructure.utils.guards.Guard;
@@ -10,9 +11,9 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@NoArgsConstructor
 @Getter
 @Table(name = "patients")
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class Patient extends BaseEntity<UUID> {
     private String firstName;
     private String lastName;
@@ -21,10 +22,9 @@ public class Patient extends BaseEntity<UUID> {
     @ManyToOne
     private Parent parent;
 
-    public Patient (String firstName, String lastName, Parent parent) {
+    public Patient (String firstName, String lastName) {
         this.firstName = Guard.Against.EmptyOrBlank(firstName);
         this.lastName = Guard.Against.EmptyOrBlank(lastName);
-        this.parent = Guard.Against.Null(parent);
     }
 
     public void setAge(int age) {

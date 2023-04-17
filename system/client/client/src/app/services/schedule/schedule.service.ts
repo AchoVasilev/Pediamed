@@ -25,4 +25,8 @@ export class ScheduleService {
   getSchedule(id: string): Observable<CabinetSchedule> {
     return this.http.get<CabinetSchedule>(`${this.apiUrl}/${id}`);
   }
+
+  scheduleAppointment(scheduleId: string, data: any) {
+    return this.http.post<any>(`${this.apiUrl}/${scheduleId}/full`, data);
+  }
 }

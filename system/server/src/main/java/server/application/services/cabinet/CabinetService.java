@@ -39,8 +39,8 @@ public class CabinetService {
 
     @Transactional
     @ReadOnly
-    public CabinetResponse getCabinetByName(String name) {
-        return this.cabinetRepository.findByName(name)
+    public CabinetResponse getCabinetById(Integer id) {
+        return this.cabinetRepository.findById(id)
                 .map(c -> new CabinetResponse(
                         c.getId(),
                         c.getName(),
@@ -48,10 +48,13 @@ public class CabinetService {
                         new CabinetSchedule(c.getSchedule().getId(),
                                 c.getSchedule().getAppointments()
                                         .stream()
-                                        .map(ap -> new ScheduleAppointment(ap.getId(), ap.getStartDate(), ap.getEndDate(), ap.getTitle()))
+                                        .filter(ap -> !ap.getDeleted())
+                                        .map(ap -> new ScheduleAppointment(ap.getId(), DateTimeUtility.parseToString(ap.getStartDate()),
+                                               DateTimeUtility.parseToString(ap.getEndDate()), ap.getTitle()))
                                         .toList(),
                                 c.getSchedule().getCalendarEvents()
                                         .stream()
+                                        .filter(ce -> !ce.getDeleted())
                                         .map(e -> new ScheduleEvent(e.getId(), DateTimeUtility.parseToString(e.getStartDate()),
                                                 DateTimeUtility.parseToString(e.getEndDate()), e.getTitle()))
                                         .toList()),

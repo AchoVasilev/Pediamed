@@ -16,36 +16,33 @@ import server.application.services.auth.models.dto.UserDto;
 import server.application.services.auth.models.dto.UserValidation;
 import server.application.services.auth.models.request.RegistrationRequest;
 import server.application.services.auth.models.response.LoginResponse;
+import server.application.services.role.RoleService;
 import server.domain.entities.ApplicationUser;
 import server.domain.entities.Parent;
 import server.domain.entities.enums.RoleEnum;
+import server.domain.repositories.UserRepository;
 import server.domain.valueObjects.Email;
 import server.domain.valueObjects.PhoneNumber;
 import server.infrastructure.config.exceptions.models.EntityAlreadyExistsException;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
-import server.domain.repositories.RoleRepository;
-import server.domain.repositories.UserRepository;
 import server.infrastructure.utils.TokenService;
 
 import javax.transaction.Transactional;
 
-import static server.common.ErrorMessages.EMAIL_ALREADY_EXISTS;
-import static server.common.ErrorMessages.ENTITY_NOT_FOUND;
-import static server.common.ErrorMessages.INVALID_CREDENTIALS;
-import static server.common.ErrorMessages.INVALID_EMAIL;
+import static server.common.ErrorMessages.*;
 
 @Singleton
 @Slf4j
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final TokenService tokenService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, TokenService tokenService) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService, TokenService tokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
         this.tokenService = tokenService;
     }
 
@@ -56,8 +53,7 @@ public class AuthService {
             throw new EntityAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS, registrationRequest.email()));
         }
 
-        var role = this.roleRepository.findByName(RoleEnum.ROLE_PARENT)
-                .orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
+        var role = this.roleService.findByName(RoleEnum.ROLE_PARENT);
 
         var newUser = new ApplicationUser(
                 new Email(registrationRequest.email()),
@@ -67,7 +63,6 @@ public class AuthService {
                 new PhoneNumber(registrationRequest.phoneNumber())
         );
 
-        role.setApplicationUser(newUser);
         newUser.getRoles().add(role);
 
         var parent = new Parent();

@@ -53,10 +53,10 @@ export class ScheduleDialogComponent {
     this.scheduleService.postEventData(eventData)
       .subscribe({
         next: (res) => {
-          openSnackBar(this.snackBar, res.message)}
+          openSnackBar(this.snackBar, res.message)
+        },
+        complete: () => this.dialogRef.close(true)
       });
-      
-    this.dialogRef.close(true);
   }
 
   validateForm(control: string, formGroup: FormGroup = this.form) {

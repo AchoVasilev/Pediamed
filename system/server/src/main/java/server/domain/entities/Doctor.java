@@ -29,8 +29,8 @@ public class Doctor extends BaseEntity<UUID>{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_user_id", referencedColumnName = "id")
     private ApplicationUser applicationUser;
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor")
     private List<Specialization> specializations = new ArrayList<>();
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor")
     private List<Cabinet> cabinets = new ArrayList<>();
 }

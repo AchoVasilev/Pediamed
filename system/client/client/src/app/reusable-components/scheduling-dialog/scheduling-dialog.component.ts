@@ -22,16 +22,17 @@ export class SchedulingDialogComponent implements OnInit {
   endTime: string = '';
   dateTimeArgs: string[] = [];
   appointmentCauses: AppointmentCauseResponse[] = [];
+  scheduleId: string;
 
   form: FormGroup = this.fb.group({
     start: new FormControl({value: null, disabled: true}, [Validators.required]),
     end: new FormControl({value: null, disabled: true}, [Validators.required]),
     email: [null, [Validators.required, Validators.email]],
-    firstName: [
+    parentFirstName: [
       null,
       [Validators.required, Validators.minLength(Constants.fieldMinLength)],
     ],
-    lastName: [
+    parentLastName: [
       null,
       [Validators.required, Validators.minLength(Constants.fieldMinLength)],
     ],
@@ -53,7 +54,7 @@ export class SchedulingDialogComponent implements OnInit {
       null,
       [Validators.required, Validators.minLength(Constants.fieldMinLength)]
     ],
-    appointmentCause: [
+    appointmentCauseId: [
       null,
       [Validators.required]
     ]
@@ -76,6 +77,7 @@ export class SchedulingDialogComponent implements OnInit {
     this.endTime = data.endTime;
     this.dateTimeArgs = data.dateTimeArgs;
     this.appointmentCauses = data.appointmentCauses;
+    this.scheduleId = data.scheduleId;
   }
 
   ngOnInit(): void {    
@@ -98,15 +100,11 @@ export class SchedulingDialogComponent implements OnInit {
   }
 
   get firstName(): FormControl {
-    return this.form.get('firstName') as FormControl;
-  }
-
-  get middleName(): FormControl {
-    return this.form.get('middleName') as FormControl;
+    return this.form.get('parentFirstName') as FormControl;
   }
 
   get lastName(): FormControl {
-    return this.form.get('lastName') as FormControl;
+    return this.form.get('parentLastName') as FormControl;
   }
 
   get phoneNumber(): FormControl {
@@ -122,7 +120,7 @@ export class SchedulingDialogComponent implements OnInit {
   }
 
   get appointmentCause(): FormControl {
-    return this.form.get('appointmentCause') as FormControl;
+    return this.form.get('appointmentCauseId') as FormControl;
   }
 
   close() {
@@ -144,6 +142,22 @@ export class SchedulingDialogComponent implements OnInit {
 
     console.log(this.form.value);
 
-    this.dialogRef.close(true);
+    let {email, parentFirstName, parentLastName, phoneNumber, patientFirstName, patientLastName, appointmentCauseId} = this.form.value;
+
+    const data = {
+      email,
+      parentFirstName,
+      parentLastName,
+      phoneNumber,
+      patientFirstName,
+      patientLastName,
+      appointmentCauseId,
+      eventId: this.event.id
+    };
+
+    this.scheduleService.scheduleAppointment(this.scheduleId, data)
+      .subscribe({
+        next: () =>  this.dialogRef.close(true)
+      });
   }
 }

@@ -3,6 +3,7 @@ package server.domain.entities;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 
 import javax.persistence.CascadeType;

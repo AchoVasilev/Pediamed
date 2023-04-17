@@ -7,13 +7,7 @@ import server.domain.valueObjects.Email;
 import server.domain.valueObjects.PhoneNumber;
 import server.infrastructure.utils.guards.Guard;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,13 +26,12 @@ public class ApplicationUser extends BaseEntity<UUID> {
     private PhoneNumber phoneNumber;
     @Setter
     @OneToOne(mappedBy = "applicationUser",
-     cascade = CascadeType.ALL,
-    fetch = FetchType.LAZY)
+            cascade = CascadeType.PERSIST,
+            fetch = FetchType.LAZY)
     private Parent parent;
     @Setter
     @OneToOne(mappedBy = "applicationUser",
-    cascade = CascadeType.ALL,
-    fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY)
     private Doctor doctor;
 
     @OneToMany(mappedBy = "applicationUser")
@@ -47,7 +40,6 @@ public class ApplicationUser extends BaseEntity<UUID> {
     private String salt;
 
     public ApplicationUser(Email email, String password, String firstName, String lastName, PhoneNumber phoneNumber) {
-        this.id = UUID.randomUUID();
         this.email = email;
         this.password = Guard.Against.EmptyOrBlank(password);
         this.firstName = Guard.Against.EmptyOrBlank(firstName);
@@ -55,6 +47,14 @@ public class ApplicationUser extends BaseEntity<UUID> {
         this.phoneNumber = phoneNumber;
         this.roles = new ArrayList<>();
         this.salt = UUID.randomUUID().toString();
+    }
+
+    public ApplicationUser(Email email, String firstName, String lastName, PhoneNumber phoneNumber) {
+        this.email = email;
+        this.firstName = Guard.Against.EmptyOrBlank(firstName);
+        this.lastName = Guard.Against.EmptyOrBlank(lastName);
+        this.phoneNumber = phoneNumber;
+        this.roles = new ArrayList<>();
     }
 
     public void invalidateSalt() {

@@ -28,12 +28,12 @@ CREATE TABLE appointment_causes (
 
 CREATE TABLE application_users (
     id UUID PRIMARY KEY,
-    email VARCHAR NOT NULL,
-    password VARCHAR NOT NULL,
+    email VARCHAR,
+    password VARCHAR,
     first_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
     phone_number VARCHAR NOT NULL,
-    salt VARCHAR NOT NULL,
+    salt VARCHAR,
     date_created TIMESTAMP NOT NULL DEFAULT (now() at time zone 'utc'),
     date_modified TIMESTAMP,
     deleted BOOLEAN DEFAULT FALSE
@@ -100,6 +100,7 @@ CREATE TABLE cabinets (
     post_code VARCHAR NOT NULL,
     phone_number VARCHAR NOT NULL,
     doctor_id UUID REFERENCES doctors(id),
+    time_zone VARCHAR NOT NULL DEFAULT 'Europe/Sofia',
     date_created TIMESTAMP NOT NULL DEFAULT (now() at time zone 'utc'),
     date_modified TIMESTAMP,
     work_days VARCHAR,
