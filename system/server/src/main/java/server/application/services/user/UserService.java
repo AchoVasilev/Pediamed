@@ -16,8 +16,10 @@ import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.UUID;
 
 import static server.common.ErrorMessages.INVALID_EMAIL;
+import static server.common.ErrorMessages.USER_NOT_FOUND;
 
 @Singleton
 @Slf4j
@@ -36,17 +38,12 @@ public class UserService {
         var user = this.getUserByEmail(name);
         log.info("Exporting user [userId={}, username={}]", user.getId(), user.getEmail().getEmail());
 
-        return new UserResponse(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail().getEmail(),
-                user.getPhoneNumber().getPhoneNumber(),
-                user.getRoles().stream().map(r -> r.getName().name()).toList());
+        return this.mapUser(user);
     }
 
-    private Optional<ApplicationUser> getUserBy(String email, String firstName, String lastName, String phoneNumber) {
-        return this.userRepository.findByEmailEmailAndFirstNameAndLastNameAndPhoneNumberPhoneNumber(email, firstName, lastName, phoneNumber);
+    public ApplicationUser getUser(UUID userId) {
+        return this.userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
     }
 
     @Transactional
@@ -71,5 +68,19 @@ public class UserService {
     private ApplicationUser getUserByEmail(String email) {
         return this.userRepository.findByEmailEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EMAIL));
+    }
+
+    private UserResponse mapUser(ApplicationUser user) {
+        return new UserResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail().getEmail(),
+                user.getPhoneNumber().getPhoneNumber(),
+                user.getRoles().stream().map(r -> r.getName().name()).toList());
+    }
+
+    private Optional<ApplicationUser> getUserBy(String email, String firstName, String lastName, String phoneNumber) {
+        return this.userRepository.findByEmailEmailAndFirstNameAndLastNameAndPhoneNumberPhoneNumber(email, firstName, lastName, phoneNumber);
     }
 }

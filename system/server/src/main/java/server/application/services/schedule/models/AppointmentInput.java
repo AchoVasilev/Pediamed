@@ -1,6 +1,9 @@
 package server.application.services.schedule.models;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
+
+import java.util.UUID;
 
 import static server.common.ErrorMessages.REQUIRED_FIELD;
 
@@ -18,6 +21,8 @@ public record AppointmentInput(
         @NotBlank(message = REQUIRED_FIELD)
         String patientLastName,
         int eventId,
-        int appointmentCauseId
+        int appointmentCauseId,
+        @Null
+        UUID userId
 ) {
 }

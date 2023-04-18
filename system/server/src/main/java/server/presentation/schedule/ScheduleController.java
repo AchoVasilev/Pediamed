@@ -9,17 +9,24 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import server.application.services.schedule.ScheduleService;
-import server.application.services.schedule.models.*;
+import server.application.services.schedule.models.CabinetSchedule;
+import server.application.services.schedule.models.EventDataInputRequest;
+import server.application.services.schedule.models.EventDataResponse;
+import server.application.services.schedule.models.EventResponse;
+import server.application.services.schedule.models.AppointmentInput;
+import server.application.services.schedule.models.RegisteredUserAppointmentInput;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+import static server.common.Constants.ROLE_ADMINISTRATOR;
+import static server.common.Constants.ROLE_DOCTOR;
+import static server.common.Constants.ROLE_PATIENT;
+
 @Controller("/schedule")
 public class ScheduleController {
     private final ScheduleService scheduleService;
-    private final String DOCTOR_ROLE = "ROLE_DOCTOR";
-    private final String ADMIN_ROLE = "ROLE_ADMINISTRATOR";
 
     public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
@@ -32,6 +39,13 @@ public class ScheduleController {
         return HttpResponse.ok();
     }
 
+    @Post("/{id}/registered")
+    @Secured(value = {SecurityRule.IS_AUTHENTICATED, ROLE_PATIENT})
+    public HttpResponse<?> schedule(@PathVariable("id") UUID scheduleId, @Body RegisteredUserAppointmentInput registeredUserAppointmentInput) {
+        this.scheduleService.scheduleAppointment(scheduleId, registeredUserAppointmentInput);
+        return HttpResponse.ok();
+    }
+
     @Get("/event-data")
     @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<List<EventDataResponse>> getEventData() {
@@ -39,7 +53,7 @@ public class ScheduleController {
     }
 
     @Post("/event-data")
-    @Secured(value = {SecurityRule.IS_AUTHENTICATED, DOCTOR_ROLE, ADMIN_ROLE})
+    @Secured(value = {SecurityRule.IS_AUTHENTICATED, ROLE_DOCTOR, ROLE_ADMINISTRATOR})
     public HttpResponse<EventResponse> createEvents(@Body @Valid EventDataInputRequest data) {
         return HttpResponse.ok(new EventResponse(this.scheduleService.generateEvents(data)));
     }

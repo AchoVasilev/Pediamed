@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static server.common.ErrorMessages.PATIENT_ID_NOT_FOUND;
 import static server.common.ErrorMessages.PATIENT_NOT_FOUND;
 
 @Entity
@@ -29,5 +30,12 @@ public class Parent extends BaseEntity<UUID> {
                 .filter(c -> c.getFirstName().equals(firstName) && c.getLastName().equals(lastName))
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException(String.format(PATIENT_NOT_FOUND, firstName, lastName)));
+    }
+
+    public Patient getPatientBy(UUID patientId) {
+        return this.patients.stream()
+                .filter(p -> p.getId() == patientId)
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(PATIENT_ID_NOT_FOUND));
     }
 }

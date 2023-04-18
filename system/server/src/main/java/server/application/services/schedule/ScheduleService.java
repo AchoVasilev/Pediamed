@@ -6,10 +6,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import server.application.services.appointmentCause.AppointmentCauseService;
 import server.application.services.cabinet.CabinetService;
-import server.application.services.schedule.models.*;
+import server.application.services.schedule.models.AppointmentInput;
+import server.application.services.schedule.models.CabinetSchedule;
+import server.application.services.schedule.models.EventDataInputRequest;
+import server.application.services.schedule.models.EventDataResponse;
+import server.application.services.schedule.models.RegisteredUserAppointmentInput;
+import server.application.services.schedule.models.ScheduleAppointment;
+import server.application.services.schedule.models.ScheduleEvent;
 import server.application.services.user.UserService;
 import server.domain.entities.Appointment;
 import server.domain.entities.CalendarEvent;
+import server.domain.entities.Patient;
 import server.domain.entities.Schedule;
 import server.domain.repositories.EventDataRepository;
 import server.domain.repositories.ScheduleRepository;
@@ -81,12 +88,12 @@ public class ScheduleService {
                                 .stream()
                                 .filter(ap -> !ap.getDeleted())
                                 .map(ap -> new ScheduleAppointment(ap.getId(), DateTimeUtility.parseToString(ap.getStartDate()),
-                                       DateTimeUtility.parseToString(ap.getEndDate()), ap.getTitle()))
+                                        DateTimeUtility.parseToString(ap.getEndDate()), ap.getTitle()))
                                 .toList(),
                         s.getCalendarEvents()
                                 .stream()
                                 .filter(ce -> !ce.getDeleted())
-                                .map(e -> new ScheduleEvent(e.getId(),DateTimeUtility.parseToString(e.getStartDate()),
+                                .map(e -> new ScheduleEvent(e.getId(), DateTimeUtility.parseToString(e.getStartDate()),
                                         DateTimeUtility.parseToString(e.getEndDate()), e.getTitle()))
                                 .toList()))
                 .orElseThrow(() -> new EntityNotFoundException(SCHEDULE_NOT_FOUND));
@@ -94,7 +101,6 @@ public class ScheduleService {
 
     @Transactional
     public void scheduleAppointment(UUID scheduleId, AppointmentInput appointmentInput) {
-
         var user = this.userService.createUnregisteredParent(
                 appointmentInput.email(),
                 appointmentInput.parentFirstName(),
@@ -104,14 +110,33 @@ public class ScheduleService {
                 appointmentInput.patientLastName());
 
         var patient = user.getParent().getPatientBy(appointmentInput.patientFirstName(), appointmentInput.patientLastName());
-        var title = this.createAppointmentTitle(appointmentInput.patientFirstName(), appointmentInput.patientLastName());
+
+        this.scheduleAppointment(scheduleId, appointmentInput.eventId(), appointmentInput.appointmentCauseId(), user.getParent().getId(), patient);
+    }
+
+    @Transactional
+    public void scheduleAppointment(UUID scheduleId, RegisteredUserAppointmentInput registeredUserAppointmentInput) {
+        var user = this.userService.getUser(registeredUserAppointmentInput.userId());
+        var patient = user.getParent().getPatientBy(registeredUserAppointmentInput.patientId());
+
+        this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), user.getParent().getId(), patient);
+    }
+
+    private void scheduleAppointment(UUID scheduleId, Integer eventId, Integer appointmentCauseId, UUID parentId, Patient patient) {
+        var title = this.createAppointmentTitle(patient.getFirstName(), patient.getLastName());
         var schedule = this.getScheduleById(scheduleId);
 
-        var event = schedule.getEventBy(appointmentInput.eventId());
+        var event = schedule.getEventBy(eventId);
         event.markDeleted(true);
-        var appointmentCause = this.appointmentCauseService.findById(appointmentInput.appointmentCauseId());
+        var appointmentCause = this.appointmentCauseService.findById(appointmentCauseId);
 
-        var appointment = new Appointment(event.getStartDate(), event.getEndDate(), title, event.getId(), appointmentCause, schedule.getId(), user.getParent().getId(), patient.getId());
+        var appointment = new Appointment(event.getStartDate(),
+                event.getEndDate(),
+                title, event.getId(),
+                appointmentCause,
+                schedule.getId(),
+                parentId,
+                patient.getId());
 
         schedule.getAppointments().add(appointment);
         this.scheduleRepository.update(schedule);
