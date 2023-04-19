@@ -41,6 +41,8 @@ public class UserService {
         return this.mapUser(user);
     }
 
+    @Transactional
+    @ReadOnly
     public ApplicationUser getUser(UUID userId) {
         return this.userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
@@ -65,9 +67,27 @@ public class UserService {
         return this.userRepository.save(newUser);
     }
 
-    private ApplicationUser getUserByEmail(String email) {
-        return this.userRepository.findByEmailEmail(email)
+    @Transactional
+    public ApplicationUser save(ApplicationUser applicationUser) {
+        return this.userRepository.save(applicationUser);
+    }
+
+    @Transactional
+    public ApplicationUser update(ApplicationUser applicationUser) {
+        return this.userRepository.update(applicationUser);
+    }
+
+    @Transactional
+    @ReadOnly
+    public ApplicationUser getUserByEmail(String email) {
+        return this.getByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_EMAIL));
+    }
+
+    @Transactional
+    @ReadOnly
+    public Optional<ApplicationUser> getByEmail(String email) {
+        return this.userRepository.findByEmailEmail(email);
     }
 
     private UserResponse mapUser(ApplicationUser user) {

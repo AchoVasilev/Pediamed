@@ -1,7 +1,7 @@
 import { Duration } from 'moment';
 
 export interface AuthResult {
-  id: string;
+  user: UserModel;
   tokenModel: TokenModel;
 }
 

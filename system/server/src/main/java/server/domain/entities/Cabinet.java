@@ -6,7 +6,15 @@ import lombok.NoArgsConstructor;
 import server.domain.valueObjects.PhoneNumber;
 import server.infrastructure.utils.guards.Guard;
 
-import javax.persistence.*;
+import javax.persistence.AttributeConverter;
+import javax.persistence.CascadeType;
+import javax.persistence.Convert;
+import javax.persistence.Converter;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

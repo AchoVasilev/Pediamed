@@ -23,6 +23,7 @@ import { RegisteredUserSchedulingDialogComponent } from 'src/app/reusable-compon
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { Cabinet } from 'src/app/models/cabinet/cabinet';
 import { colors } from '../colors/colors';
+import { UserDataService } from 'src/app/services/data/user-data.service';
 
 @Component({
   selector: 'app-schedule',
@@ -52,19 +53,17 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   cabinetScheduleId?: string;
   eventData: EventData[] = [];
   excludedDays: number[] = [];
-  isDoctor: boolean = false;
   appointmentCauses: AppointmentCauseResponse[] = [];
-  currentUser?: UserModel;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private cd: ChangeDetectorRef,
     private scheduleService: ScheduleService,
     private cabinetService: CabinetService,
-    private authService: AuthService,
     private appointmentCauseService: AppointmentCauseService,
     private dialog: MatDialog,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private userDataService: UserDataService
   ) {
     // could be cached
     this.scheduleService
@@ -113,7 +112,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   isLoggedIn() {
-    return this.authService.isLoggedIn();
+    return this.userDataService.getLogin();
+  }
+
+  isDoctor() {
+    return this.userDataService.isDoctor();
   }
 
   ngOnDestroy(): void {
@@ -160,11 +163,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   getUser() {
     if (this.isLoggedIn()) {
-      this.authService.getUser().subscribe((u) => {
-        this.currentUser = u;
-        this.isDoctor = u.roles.some((r) => r === Roles.Doctor);
-      });
+      return this.userDataService.getUser();
     }
+
+    return null;
   }
 
   getAppointmentCauses() {
@@ -183,8 +185,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   generateDayEvents(event: any) {
-    if (!this.isLoggedIn() || !this.isDoctor) {
-      this.isDoctor = false;
+    if (!this.isLoggedIn() || !this.isDoctor()) {
       return;
     }
 
@@ -227,7 +228,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
           let title = '';
           let isAppointment = ev?.title.includes('Запазен час') ? true : false;
-          if (!this.isDoctor) {
+          if (!this.isDoctor()) {
             title = ev?.title.includes('Запазен час') ? 'Запазен час' : 'Свободен час';
           }
 
@@ -248,7 +249,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     const endTime = moment(event.end).format(this.dateTimePattern);
     const dateTimeArgs = startTime.split(' ');
 
-    if (this.isLoggedIn() && this.isDoctor) {
+    if (this.isLoggedIn() && this.isDoctor()) {
       this.dialog
         .open(DoctorSchedulingDialogComponent, {
           data: {
@@ -271,7 +272,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         .open(RegisteredUserSchedulingDialogComponent, {
           data: {
             event: event,
-            user: this.currentUser,
+            user: this.getUser(),
             appointmentCauses: this.appointmentCauses,
             startTime,
             endTime,

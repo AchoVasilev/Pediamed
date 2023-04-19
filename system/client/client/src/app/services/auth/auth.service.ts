@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, shareReplay, tap } from 'rxjs';
+import { Observable, shareReplay, tap } from 'rxjs';
 import { RegisterParent } from 'src/app/models/user/registerParent';
 import { environment } from 'src/environments/environment';
 import { AuthResult, UserModel } from './authResult';
 import * as moment from 'moment';
+import { UserDataService } from '../data/user-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class AuthService {
     })
   };
   
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private userDataService: UserDataService) { }
 
   login(email: string, password: string, persist: boolean): Observable<AuthResult> {
     return this.httpClient.post<AuthResult>(this.apiUrlWithPrefix + '/login', {
@@ -29,6 +30,8 @@ export class AuthService {
       .pipe(
         tap(data => {
           this.setSession(data);
+          this.userDataService.setLogin(true);
+          this.userDataService.setUser(data.user);
         }),
         shareReplay());
   }
@@ -42,6 +45,7 @@ export class AuthService {
       .subscribe(r => {
         localStorage.removeItem('token');
         localStorage.removeItem('expiresAt');
+        this.userDataService.setLogin(false);
       })
   }
 
@@ -54,7 +58,11 @@ export class AuthService {
   }
 
   getUser(): Observable<UserModel>{
-    return this.httpClient.get<UserModel>(this.apiUrl + '/user');
+    return this.httpClient.get<UserModel>(this.apiUrl + '/user').pipe(
+      tap(user => {
+        this.userDataService.setUser(user);
+      })
+    );
   }
 
   getExpiration() {
@@ -67,6 +75,5 @@ export class AuthService {
     const expiresAt = moment().add(authResult.tokenModel.expiresAt);
     localStorage.setItem('token', authResult.tokenModel.token);
     localStorage.setItem('expiresAt', JSON.stringify(expiresAt.valueOf()))
-    localStorage.setItem('userId', authResult.id);
   }
 }

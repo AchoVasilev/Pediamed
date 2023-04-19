@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { faClinicMedical } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { UserDataService } from 'src/app/services/data/user-data.service';
 
 @Component({
   selector: 'app-header',
@@ -13,11 +14,11 @@ export class HeaderComponent{
   menu: ElementRef | undefined;
   faClinic = faClinicMedical;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private userDataService: UserDataService) {
   }
 
   get isLoggedIn():boolean {
-    return this.authService.isLoggedIn();
+    return this.userDataService.getLogin();
   }
 
   onClick(event: any) {
