@@ -1,24 +1,17 @@
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PhoneInputComponent } from './phone-input/phone-input.component';
 import { ScheduleDialogComponent } from './schedule-dialog/schedule-dialog.component';
 import { SchedulingDialogComponent } from './scheduling-dialog/scheduling-dialog.component';
 import { FormFieldComponent } from './form-field/form-field.component';
-import { MatOptionModule } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
 import { EmailComponent } from './email/email.component';
 import { PasswordComponent } from './password/password.component';
 import { PasswordsComponent } from './passwords/passwords.component';
-import { MatSelectModule } from '@angular/material/select';
 import { AppointmentCauseSelectComponent } from './appointment-cause-select/appointment-cause-select.component';
 import { DoctorSchedulingDialogComponent } from './doctor-scheduling-dialog/doctor-scheduling-dialog.component';
 import { RegisteredUserSchedulingDialogComponent } from './registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MaterialModule } from '../material/material/material.module';
 
 @NgModule({
   declarations: [
@@ -35,15 +28,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   ],
   imports: [
     CommonModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
     ReactiveFormsModule,
-    MatDialogModule,
-    MatOptionModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSnackBarModule
+    MaterialModule
   ],
   exports: [
     ScheduleDialogComponent,

@@ -14,9 +14,6 @@ import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
 import * as moment from 'moment';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { Roles } from 'src/app/models/enums/roleEnum';
-import { UserModel } from 'src/app/services/auth/authResult';
 import { AppointmentCauseService } from 'src/app/services/appointment-cause/appointment-cause.service';
 import { DoctorSchedulingDialogComponent } from 'src/app/reusable-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
 import { RegisteredUserSchedulingDialogComponent } from 'src/app/reusable-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
@@ -143,30 +140,36 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
           let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
 
-          let title = '';
           let isAppointment = ev?.title.includes('Запазен час') ? true : false;
-          if (!this.isDoctor) {
-            title = ev?.title.includes('Запазен час') ? 'Запазен час' : 'Свободен час';
-          }
+          let title = this.getTitle(ev);
 
           return {
             start: startDate,
             title: title,
             end: endDate,
             id: ev?.id,
-            color: isAppointment ? colors.yellow : colors.blue
+            color: isAppointment ? colors.yellow : colors.blue,
           };
         });
       })
     );
   }
 
-  getUser() {
-    if (this.isLoggedIn()) {
-      return this.userDataService.getUser();
+  private getTitle(ev: ScheduleData) {
+    let title = '';
+    if (!this.isDoctor()) {
+      title = ev?.title.includes('Запазен час')
+        ? 'Запазен час'
+        : 'Свободен час';
+    } else {
+      title = ev?.title;
     }
 
-    return null;
+    return title;
+  }
+
+  getUser() {
+    return this.userDataService.getUser();
   }
 
   getAppointmentCauses() {
@@ -226,18 +229,15 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
           let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
 
-          let title = '';
           let isAppointment = ev?.title.includes('Запазен час') ? true : false;
-          if (!this.isDoctor()) {
-            title = ev?.title.includes('Запазен час') ? 'Запазен час' : 'Свободен час';
-          }
+          let title = this.getTitle(ev);
 
           return {
             start: startDate,
-            title: ev?.title,
+            title: title,
             end: endDate,
             id: ev?.id,
-            color: isAppointment ? colors.yellow : colors.blue
+            color: isAppointment ? colors.yellow : colors.blue,
           };
         });
       })

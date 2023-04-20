@@ -11,17 +11,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthModule } from './features/auth/auth.module';
 import { OfferedServicesModule } from './features/offered-services/offered-services.module';
 import { PrivacyComponent } from './shared/privacy/privacy.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthInterceptorProviders } from './services/auth/auth.interceptor';
 import { AuthService } from './services/auth/auth.service';
 import { OfferedServiceService } from './services/offered-service/offered-service.service';
@@ -30,10 +23,9 @@ import { DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { registerLocaleData } from '@angular/common';
 import localeBg from '@angular/common/locales/bg';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSelectModule } from '@angular/material/select';
 import { ReusableComponentsModule } from './reusable-components/reusable-components.module';
 import { LoadingComponent } from './shared/loading/loading.component';
+import { MaterialModule } from './material/material/material.module';
 registerLocaleData(localeBg);
 
 @NgModule({
@@ -56,20 +48,12 @@ registerLocaleData(localeBg);
     AuthModule,
     OfferedServicesModule,
     ScheduleModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatDialogModule,
-    MatSelectModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
-    ReusableComponentsModule
+    ReusableComponentsModule,
+    MaterialModule
   ],
   providers: [AuthService, OfferedServiceService, AuthInterceptorProviders],
   bootstrap: [AppComponent],

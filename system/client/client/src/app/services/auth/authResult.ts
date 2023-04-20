@@ -14,11 +14,10 @@ export interface UserModel {
   id: string;
   roles: string[];
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
   email: string;
   phoneNumber: string;
-  patient?: PatientModel[]
 }
 
 export interface PatientModel {
