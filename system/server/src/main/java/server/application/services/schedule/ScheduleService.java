@@ -140,6 +140,9 @@ public class ScheduleService {
 
         schedule.getAppointments().add(appointment);
         this.scheduleRepository.update(schedule);
+
+        var r = schedule.getAppointmentBy(appointment.getCalendarEventId());
+        var g = r;
     }
 
     private String createAppointmentTitle(String childFirstName, String childLastName) {

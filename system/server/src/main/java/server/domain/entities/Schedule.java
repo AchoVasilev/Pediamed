@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static server.common.ErrorMessages.MISSING_EVENT;
+import static server.common.ErrorMessages.MISSING_APPOINTMENT;
 
 @Entity
 @Table(name = "schedules")
@@ -54,5 +55,12 @@ public class Schedule extends BaseEntity<UUID> {
     public CalendarEvent getEventBy(int id) {
         return this.calendarEvents.stream().filter(e -> e.getId() == id && !e.getDeleted()).findFirst()
                 .orElseThrow(() -> new EntityNotFoundException(MISSING_EVENT));
+    }
+
+    public Appointment getAppointmentBy(int eventId) {
+        return this.appointments.stream()
+                .filter(ap -> ap.getCalendarEventId() == eventId && !ap.getDeleted())
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(MISSING_APPOINTMENT));
     }
 }

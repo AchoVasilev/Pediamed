@@ -37,6 +37,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private dateTimePattern = 'DD/MM/YYYY HH:mm';
 
+  refresh = new Subject<void>();
   view: CalendarView = CalendarView.Week;
   daysInWeek = 7;
   dayStartHour = 7;
@@ -137,19 +138,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         this.calculateExcludedDays(result.workDays);
 
         return [...merged].map((ev) => {
-          let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
-          let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
-
-          let isAppointment = ev?.title.includes('Запазен час') ? true : false;
-          let title = this.getTitle(ev);
-
-          return {
-            start: startDate,
-            title: title,
-            end: endDate,
-            id: ev?.id,
-            color: isAppointment ? colors.yellow : colors.blue,
-          };
+          return this.mapEvent(ev);
         });
       })
     );
@@ -226,22 +215,26 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         ];
 
         return [...merged].map((ev) => {
-          let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
-          let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
-
-          let isAppointment = ev?.title.includes('Запазен час') ? true : false;
-          let title = this.getTitle(ev);
-
-          return {
-            start: startDate,
-            title: title,
-            end: endDate,
-            id: ev?.id,
-            color: isAppointment ? colors.yellow : colors.blue,
-          };
+          return this.mapEvent(ev);
         });
       })
     );
+  }
+
+  private mapEvent(ev: ScheduleData) {
+    let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
+    let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
+
+    let isAppointment = ev?.title.includes('Запазен час') ? true : false;
+    let title = this.getTitle(ev);
+
+    return {
+      start: startDate,
+      title: title,
+      end: endDate,
+      id: ev?.id,
+      color: isAppointment ? colors.yellow : colors.blue,
+    };
   }
 
   eventClicked({ event }: { event: CalendarEvent }) {
