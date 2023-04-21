@@ -5,6 +5,6 @@ import java.util.UUID;
 public record RegisteredUserAppointmentInput(
         UUID userId,
         UUID patientId,
-        int eventId,
+        UUID eventId,
         int appointmentCauseId){
 }

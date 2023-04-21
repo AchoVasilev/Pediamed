@@ -35,15 +35,14 @@ public class ScheduleController {
     @Post("/{id}/full")
     @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<?> schedule(@PathVariable("id") UUID scheduleId, @Body AppointmentInput appointmentInput) {
-        this.scheduleService.scheduleAppointment(scheduleId, appointmentInput);
-        return HttpResponse.ok();
+        return HttpResponse.ok(this.scheduleService.scheduleAppointment(scheduleId, appointmentInput));
     }
 
     @Post("/{id}/registered")
     @Secured(value = {SecurityRule.IS_AUTHENTICATED, ROLE_PATIENT})
     public HttpResponse<?> schedule(@PathVariable("id") UUID scheduleId, @Body RegisteredUserAppointmentInput registeredUserAppointmentInput) {
-        this.scheduleService.scheduleAppointment(scheduleId, registeredUserAppointmentInput);
-        return HttpResponse.ok();
+        return HttpResponse.ok(this.scheduleService
+                .scheduleAppointment(scheduleId, registeredUserAppointmentInput));
     }
 
     @Get("/event-data")

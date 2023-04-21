@@ -20,7 +20,7 @@ public record AppointmentInput(
         String patientFirstName,
         @NotBlank(message = REQUIRED_FIELD)
         String patientLastName,
-        int eventId,
+        UUID eventId,
         int appointmentCauseId,
         @Null
         UUID userId

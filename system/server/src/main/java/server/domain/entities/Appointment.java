@@ -31,12 +31,12 @@ public class Appointment extends BaseEntity<UUID> {
     private UUID scheduleId;
     private UUID parentId;
     private UUID patientId;
-    private Integer calendarEventId;
+    private UUID calendarEventId;
 
     public Appointment(LocalDateTime startDate,
                        LocalDateTime endDate,
                        String title,
-                       Integer calendarEventId,
+                       UUID calendarEventId,
                        AppointmentCause appointmentCause,
                        UUID scheduleId,
                        UUID parentId,
@@ -44,9 +44,9 @@ public class Appointment extends BaseEntity<UUID> {
         this.startDate = DateTimeUtility.validateStartDate(startDate, endDate);
         this.endDate = DateTimeUtility.validateEndDate(startDate, endDate);
         this.title = Guard.Against.EmptyOrBlank(title);
-        this.calendarEventId = Guard.Against.Zero(calendarEventId);
+        this.calendarEventId = Guard.Against.NullOrEmpty(calendarEventId);
         this.appointmentCause = Guard.Against.Null(appointmentCause);
-        this.scheduleId = Guard.Against.Null(scheduleId);
+        this.scheduleId = Guard.Against.NullOrEmpty(scheduleId);
         this.parentId = Guard.Against.NullOrEmpty(parentId);
         this.patientId = Guard.Against.NullOrEmpty(patientId);
     }

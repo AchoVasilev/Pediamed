@@ -52,12 +52,12 @@ public class Schedule extends BaseEntity<UUID> {
         return this.calendarEvents.size();
     }
 
-    public CalendarEvent getEventBy(int id) {
-        return this.calendarEvents.stream().filter(e -> e.getId() == id && !e.getDeleted()).findFirst()
+    public CalendarEvent getEventBy(UUID id) {
+        return this.calendarEvents.stream().filter(e -> e.getId() != id && !e.getDeleted()).findFirst()
                 .orElseThrow(() -> new EntityNotFoundException(MISSING_EVENT));
     }
 
-    public Appointment getAppointmentBy(int eventId) {
+    public Appointment getAppointmentBy(UUID eventId) {
         return this.appointments.stream()
                 .filter(ap -> ap.getCalendarEventId() == eventId && !ap.getDeleted())
                 .findFirst()

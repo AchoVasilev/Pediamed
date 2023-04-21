@@ -21,6 +21,7 @@ import { LoadingService } from 'src/app/services/loading/loading.service';
 import { Cabinet } from 'src/app/models/cabinet/cabinet';
 import { colors } from '../colors/colors';
 import { UserDataService } from 'src/app/services/data/user-data.service';
+import { ScheduleDataService } from 'src/app/services/data/schedule-data.service';
 
 @Component({
   selector: 'app-schedule',
@@ -61,7 +62,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private appointmentCauseService: AppointmentCauseService,
     private dialog: MatDialog,
     private loadingService: LoadingService,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private scheduleDataService: ScheduleDataService
   ) {
     // could be cached
     this.scheduleService
@@ -128,9 +130,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   getCabinet(id: number) {
     this.events$ = this.cabinetService.getCabinet(id).pipe(
       map((result) => {
+        this.scheduleDataService.setSchedule([...result.cabinetSchedule.scheduleAppointments, ...result.cabinetSchedule.scheduleEvents]);
+
         const merged: ScheduleData[] = [
-          ...result.cabinetSchedule.scheduleAppointments,
-          ...result.cabinetSchedule.scheduleEvents,
+          ...this.scheduleDataService.getSchedule(),
         ];
 
         this.cabinetScheduleId = result.cabinetSchedule.id;
@@ -153,7 +156,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     } else {
       title = ev?.title;
     }
-
+    
     return title;
   }
 
@@ -201,20 +204,15 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((res) => {
         if (res) {
-          setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 1000);
+          setTimeout(() => this.refetchEvents(), 1000);
         }
       });
   }
 
-  refetchEvents(id: string) {
-    this.events$ = this.scheduleService.getSchedule(id).pipe(
-      map((result) => {
-        const merged: ScheduleData[] = [
-          ...result.scheduleAppointments,
-          ...result.scheduleEvents,
-        ];
-
-        return [...merged].map((ev) => {
+  refetchEvents() {
+    this.events$ = this.scheduleDataService.getSchedule$().pipe(
+      map((result) => {        
+        return [...result].map((ev) => {
           return this.mapEvent(ev);
         });
       })
@@ -257,7 +255,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         .afterClosed()
         .subscribe((res) => {
           if (res) {
-            setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 500);
+            setTimeout(() => this.refetchEvents(), 500);
           }
         });
     } else if (this.isLoggedIn() && !this.isDoctor) {
@@ -276,7 +274,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         .afterClosed()
         .subscribe((res) => {
           if (res) {
-            setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 500);
+            setTimeout(() => this.refetchEvents(), 500);
           }
         });
     } else {
@@ -294,7 +292,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         .afterClosed()
         .subscribe((res) => {
           if (res) {
-            setTimeout(() => this.refetchEvents(this.cabinetScheduleId!), 500);
+            this.scheduleDataService.removeItem(event!.id!.toString());
+            this.scheduleDataService.addItem(res);
+            setTimeout(() => this.refetchEvents(), 500);
           }
         });
     }

@@ -1,7 +1,9 @@
 package server.application.services.schedule.models;
 
+import java.util.UUID;
+
 public record ScheduleEvent (
-    Integer id,
+    UUID id,
     String startDate,
     String endDate,
     String title

@@ -140,8 +140,6 @@ export class SchedulingDialogComponent implements OnInit {
     //   },
     // });
 
-    console.log(this.form.value);
-
     let {email, parentFirstName, parentLastName, phoneNumber, patientFirstName, patientLastName, appointmentCauseId} = this.form.value;
 
     const data = {
@@ -156,8 +154,8 @@ export class SchedulingDialogComponent implements OnInit {
     };
 
     this.scheduleService.scheduleAppointment(this.scheduleId, data)
-      .subscribe({
-        next: () =>  this.dialogRef.close(true)
+      .subscribe(appointment => {
+        this.dialogRef.close(appointment);
       });
   }
 }

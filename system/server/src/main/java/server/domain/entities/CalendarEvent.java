@@ -15,7 +15,7 @@ import java.util.UUID;
 @Table(name = "calendar_events")
 @Getter
 @NoArgsConstructor
-public class CalendarEvent extends BaseEntity<Integer> {
+public class CalendarEvent extends BaseEntity<UUID> {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String title;

@@ -100,7 +100,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void scheduleAppointment(UUID scheduleId, AppointmentInput appointmentInput) {
+    public ScheduleAppointment scheduleAppointment(UUID scheduleId, AppointmentInput appointmentInput) {
         var user = this.userService.createUnregisteredParent(
                 appointmentInput.email(),
                 appointmentInput.parentFirstName(),
@@ -111,18 +111,18 @@ public class ScheduleService {
 
         var patient = user.getParent().getPatientBy(appointmentInput.patientFirstName(), appointmentInput.patientLastName());
 
-        this.scheduleAppointment(scheduleId, appointmentInput.eventId(), appointmentInput.appointmentCauseId(), user.getParent().getId(), patient);
+        return this.scheduleAppointment(scheduleId, appointmentInput.eventId(), appointmentInput.appointmentCauseId(), user.getParent().getId(), patient);
     }
 
     @Transactional
-    public void scheduleAppointment(UUID scheduleId, RegisteredUserAppointmentInput registeredUserAppointmentInput) {
+    public ScheduleAppointment scheduleAppointment(UUID scheduleId, RegisteredUserAppointmentInput registeredUserAppointmentInput) {
         var user = this.userService.getUser(registeredUserAppointmentInput.userId());
         var patient = user.getParent().getPatientBy(registeredUserAppointmentInput.patientId());
 
-        this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), user.getParent().getId(), patient);
+        return this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), user.getParent().getId(), patient);
     }
 
-    private void scheduleAppointment(UUID scheduleId, Integer eventId, Integer appointmentCauseId, UUID parentId, Patient patient) {
+    private ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID eventId, Integer appointmentCauseId, UUID parentId, Patient patient) {
         var title = this.createAppointmentTitle(patient.getFirstName(), patient.getLastName());
         var schedule = this.getScheduleById(scheduleId);
 
@@ -141,8 +141,9 @@ public class ScheduleService {
         schedule.getAppointments().add(appointment);
         this.scheduleRepository.update(schedule);
 
-        var r = schedule.getAppointmentBy(appointment.getCalendarEventId());
-        var g = r;
+        var createdAppointment = schedule.getAppointmentBy(appointment.getCalendarEventId());
+        return new ScheduleAppointment(createdAppointment.getId(), DateTimeUtility.parseToString(createdAppointment.getStartDate()),
+                DateTimeUtility.parseToString(createdAppointment.getEndDate()), createdAppointment.getTitle());
     }
 
     private String createAppointmentTitle(String childFirstName, String childLastName) {
