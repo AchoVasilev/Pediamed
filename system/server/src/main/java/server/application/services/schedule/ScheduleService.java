@@ -26,12 +26,12 @@ import server.infrastructure.utils.DateTimeUtility;
 
 import javax.transaction.Transactional;
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static server.common.ErrorMessages.EVENTS_NOT_GENERATED;
 import static server.common.ErrorMessages.SCHEDULE_NOT_FOUND;
-import static server.common.SuccessMessages.EVENTS_GENERATED;
 
 @Singleton
 @Slf4j
@@ -54,7 +54,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public String generateEvents(EventDataInputRequest data) {
+    public List<ScheduleEvent> generateEvents(EventDataInputRequest data) {
         var startDate = DateTimeUtility.parseDate(data.startDateTime());
         var endDate = DateTimeUtility.parseDate(data.endDateTime());
 
@@ -62,21 +62,24 @@ public class ScheduleService {
 
         DateTimeUtility.validateWorkDays(cabinet.getWorkDays(), DayOfWeek.from(startDate).name(), DayOfWeek.from(endDate).name());
         String EVENT_TITLE = "Свободен час";
+        var events = new ArrayList<CalendarEvent>();
         for (var slotStart = startDate; slotStart.isBefore(endDate); slotStart = slotStart.plusMinutes(data.intervals())) {
             var slotEnd = slotStart.plusMinutes(data.intervals());
             var event = new CalendarEvent(slotStart, slotEnd, EVENT_TITLE, cabinet.getSchedule().getId());
 
-            cabinet.getSchedule().addCalendarEvent(event);
+            events.add(event);
         }
 
-        if (cabinet.getSchedule().getEventsCount() == 0) {
+        if (events.isEmpty()) {
             throw new CalendarEventException(EVENTS_NOT_GENERATED);
         }
 
+        cabinet.getSchedule().addCalendarEvents(events);
+
         this.cabinetService.updateCabinet(cabinet);
-        log.info("Successfully generated events. [startDate={}, endDate={}, intervals={}, cabinetId={}, scheduleId={}]",
-                data.startDateTime(), data.endDateTime(), data.intervals(), cabinet.getId(), cabinet.getSchedule().getId());
-        return String.format(EVENTS_GENERATED, data.startDateTime(), data.endDateTime(), data.intervals());
+        log.info("Successfully generated events. [eventsCount={}] [startDate={}, endDate={}, intervals={}, cabinetId={}, scheduleId={}]",
+                events.size(), data.startDateTime(), data.endDateTime(), data.intervals(), cabinet.getId(), cabinet.getSchedule().getId());
+        return this.mapEvents(events);
     }
 
     @Transactional
@@ -90,12 +93,7 @@ public class ScheduleService {
                                 .map(ap -> new ScheduleAppointment(ap.getId(), DateTimeUtility.parseToString(ap.getStartDate()),
                                         DateTimeUtility.parseToString(ap.getEndDate()), ap.getTitle()))
                                 .toList(),
-                        s.getCalendarEvents()
-                                .stream()
-                                .filter(ce -> !ce.getDeleted())
-                                .map(e -> new ScheduleEvent(e.getId(), DateTimeUtility.parseToString(e.getStartDate()),
-                                        DateTimeUtility.parseToString(e.getEndDate()), e.getTitle()))
-                                .toList()))
+                        this.mapEvents(s.getCalendarEvents())))
                 .orElseThrow(() -> new EntityNotFoundException(SCHEDULE_NOT_FOUND));
     }
 
@@ -153,5 +151,13 @@ public class ScheduleService {
     private Schedule getScheduleById(UUID scheduleId) {
         return this.scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new EntityNotFoundException(SCHEDULE_NOT_FOUND));
+    }
+
+    private List<ScheduleEvent> mapEvents(List<CalendarEvent> events) {
+        return events.stream()
+                .filter(ce -> !ce.getDeleted())
+                .map(e -> new ScheduleEvent(e.getId(), DateTimeUtility.parseToString(e.getStartDate()),
+                        DateTimeUtility.parseToString(e.getEndDate()), e.getTitle()))
+                .toList();
     }
 }

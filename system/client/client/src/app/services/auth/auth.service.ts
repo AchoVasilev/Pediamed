@@ -50,7 +50,9 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return moment().isBefore(this.getExpiration()) && this.getToken() !== null;
+    const isLogged = moment().isBefore(this.getExpiration()) && this.getToken() !== null;
+    this.userDataService.setLogin(isLogged);
+    return isLogged;
   }
 
   getToken() {

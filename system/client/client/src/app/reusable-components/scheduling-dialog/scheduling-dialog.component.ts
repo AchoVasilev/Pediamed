@@ -154,8 +154,8 @@ export class SchedulingDialogComponent implements OnInit {
     };
 
     this.scheduleService.scheduleAppointment(this.scheduleId, data)
-      .subscribe(appointment => {
-        this.dialogRef.close(appointment);
+      .subscribe(appointment => {        
+        this.dialogRef.close({appointment});
       });
   }
 }

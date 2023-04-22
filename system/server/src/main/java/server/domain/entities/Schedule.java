@@ -35,21 +35,10 @@ public class Schedule extends BaseEntity<UUID> {
     @JoinColumn(name = "schedule_id", referencedColumnName = "id")
     private List<CalendarEvent> calendarEvents = new ArrayList<>();
 
-    public void addCalendarEvent(CalendarEvent calendarEvent) {
-        var isEventPresent = this.calendarEvents
-                .stream()
-                .anyMatch(e -> e.getEndDate().equals(calendarEvent.getStartDate())
-                        && e.getStartDate().equals(calendarEvent.getStartDate()));
-
-        if (isEventPresent) {
-            return;
+    public void addCalendarEvents(List<CalendarEvent> events) {
+        for (CalendarEvent event : events) {
+            this.addCalendarEvent(event);
         }
-
-        this.calendarEvents.add(calendarEvent);
-    }
-
-    public Integer getEventsCount() {
-        return this.calendarEvents.size();
     }
 
     public CalendarEvent getEventBy(UUID id) {
@@ -62,5 +51,18 @@ public class Schedule extends BaseEntity<UUID> {
                 .filter(ap -> ap.getCalendarEventId() == eventId && !ap.getDeleted())
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException(MISSING_APPOINTMENT));
+    }
+
+    private void addCalendarEvent(CalendarEvent calendarEvent) {
+        var isEventPresent = this.calendarEvents
+                .stream()
+                .anyMatch(e -> e.getEndDate().equals(calendarEvent.getStartDate())
+                        && e.getStartDate().equals(calendarEvent.getStartDate()));
+
+        if (isEventPresent) {
+            return;
+        }
+
+        this.calendarEvents.add(calendarEvent);
     }
 }

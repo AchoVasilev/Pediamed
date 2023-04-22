@@ -9,12 +9,12 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import server.application.services.schedule.ScheduleService;
+import server.application.services.schedule.models.AppointmentInput;
 import server.application.services.schedule.models.CabinetSchedule;
 import server.application.services.schedule.models.EventDataInputRequest;
 import server.application.services.schedule.models.EventDataResponse;
-import server.application.services.schedule.models.EventResponse;
-import server.application.services.schedule.models.AppointmentInput;
 import server.application.services.schedule.models.RegisteredUserAppointmentInput;
+import server.application.services.schedule.models.ScheduleEvent;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -53,8 +53,8 @@ public class ScheduleController {
 
     @Post("/event-data")
     @Secured(value = {SecurityRule.IS_AUTHENTICATED, ROLE_DOCTOR, ROLE_ADMINISTRATOR})
-    public HttpResponse<EventResponse> createEvents(@Body @Valid EventDataInputRequest data) {
-        return HttpResponse.ok(new EventResponse(this.scheduleService.generateEvents(data)));
+    public HttpResponse<List<ScheduleEvent>> createEvents(@Body @Valid EventDataInputRequest data) {
+        return HttpResponse.ok(this.scheduleService.generateEvents(data));
     }
 
     @Get("/{id}")

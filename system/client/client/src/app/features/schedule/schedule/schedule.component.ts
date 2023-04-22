@@ -10,7 +10,7 @@ import { CalendarDateFormatter } from 'angular-calendar';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
 import * as moment from 'moment';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
@@ -150,7 +150,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   private getTitle(ev: ScheduleData) {
     let title = '';
     if (!this.isDoctor()) {
-      title = ev?.title.includes('Запазен час')
+      title = ev?.title?.includes('Запазен час')
         ? 'Запазен час'
         : 'Свободен час';
     } else {
@@ -204,7 +204,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((res) => {
         if (res) {
-          setTimeout(() => this.refetchEvents(), 1000);
+          this.scheduleDataService.addMultiple(res.events);          
+          this.refetchEvents();
         }
       });
   }
@@ -219,11 +220,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     );
   }
 
-  private mapEvent(ev: ScheduleData) {
+  private mapEvent(ev: ScheduleData) {        
     let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
     let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
 
-    let isAppointment = ev?.title.includes('Запазен час') ? true : false;
+    let isAppointment = ev?.title?.includes('Запазен час') ? true : false;
     let title = this.getTitle(ev);
 
     return {
@@ -255,7 +256,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         .afterClosed()
         .subscribe((res) => {
           if (res) {
-            setTimeout(() => this.refetchEvents(), 500);
+            this.refetchEvents();
           }
         });
     } else if (this.isLoggedIn() && !this.isDoctor) {
@@ -291,10 +292,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         })
         .afterClosed()
         .subscribe((res) => {
-          if (res) {
+          if (res) {            
             this.scheduleDataService.removeItem(event!.id!.toString());
-            this.scheduleDataService.addItem(res);
-            setTimeout(() => this.refetchEvents(), 500);
+            this.scheduleDataService.addItem(res.appointment);
+            this.refetchEvents();
           }
         });
     }
