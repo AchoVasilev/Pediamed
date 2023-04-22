@@ -1,4 +1,3 @@
-import { Duration } from 'moment';
 
 export interface AuthResult {
   user: UserModel;
@@ -7,7 +6,7 @@ export interface AuthResult {
 
 export interface TokenModel {
   token: string;
-  expiresAt: Duration;
+  expiresAt: string;
 }
 
 export interface UserModel {

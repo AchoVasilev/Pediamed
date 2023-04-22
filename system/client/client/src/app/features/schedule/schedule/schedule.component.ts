@@ -12,7 +12,6 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
-import * as moment from 'moment';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
 import { AppointmentCauseService } from 'src/app/services/appointment-cause/appointment-cause.service';
 import { DoctorSchedulingDialogComponent } from 'src/app/reusable-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
@@ -22,6 +21,7 @@ import { Cabinet } from 'src/app/models/cabinet/cabinet';
 import { colors } from '../colors/colors';
 import { UserDataService } from 'src/app/services/data/user-data.service';
 import { ScheduleDataService } from 'src/app/services/data/schedule-data.service';
+import { format, isBefore, parse, parseJSON } from 'date-fns';
 
 @Component({
   selector: 'app-schedule',
@@ -36,7 +36,8 @@ import { ScheduleDataService } from 'src/app/services/data/schedule-data.service
 })
 export class ScheduleComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  private dateTimePattern = 'DD/MM/YYYY HH:mm';
+  private dateTimePattern = 'dd/MM/yyyy HH:mm';
+  private datePattern = 'dd/MM/yyyy';
 
   refresh = new Subject<void>();
   view: CalendarView = CalendarView.Week;
@@ -185,11 +186,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     }
 
     let date = event.day.date;
-    if (moment(date).isBefore(Date.now(), 'day')) {
+    if (isBefore(Date.now(), date)) {
       return;
     }
 
-    date = moment(date).format('DD/MM/yyyy');
+    date = format(date, this.datePattern);
 
     const eventDataInput: EventDataInput = {
       date,
@@ -221,8 +222,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   private mapEvent(ev: ScheduleData) {        
-    let startDate = moment(ev.startDate, this.dateTimePattern).toDate();
-    let endDate = moment(ev.endDate, this.dateTimePattern).toDate();
+    let startDate = parse(ev.startDate, this.dateTimePattern, new Date());
+    let endDate = parse(ev.endDate, this.dateTimePattern, new Date());
 
     let isAppointment = ev?.title?.includes('Запазен час') ? true : false;
     let title = this.getTitle(ev);
@@ -237,8 +238,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   eventClicked({ event }: { event: CalendarEvent }) {
-    const startTime = moment(event.start).format(this.dateTimePattern);
-    const endTime = moment(event.end).format(this.dateTimePattern);
+    const startTime = format(event.start, this.dateTimePattern);
+    const endTime = format(event.end!, this.dateTimePattern);
     const dateTimeArgs = startTime.split(' ');
 
     if (this.isLoggedIn() && this.isDoctor()) {

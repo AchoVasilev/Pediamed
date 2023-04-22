@@ -4,8 +4,8 @@ import { Observable, shareReplay, tap } from 'rxjs';
 import { RegisterParent } from 'src/app/models/user/registerParent';
 import { environment } from 'src/environments/environment';
 import { AuthResult, UserModel } from './authResult';
-import * as moment from 'moment';
 import { UserDataService } from '../data/user-data.service';
+import { isAfter, parseJSON, toDate } from 'date-fns';
 
 @Injectable({
   providedIn: 'root'
@@ -50,8 +50,12 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    const isLogged = moment().isBefore(this.getExpiration()) && this.getToken() !== null;
+    const isLogged = isAfter(this.getExpiration(), new Date()) && this.getToken() !== null;
     this.userDataService.setLogin(isLogged);
+    if (isLogged && !this.userDataService.getUser()) {
+      this.getUser();
+    }
+
     return isLogged;
   }
 
@@ -70,12 +74,13 @@ export class AuthService {
   getExpiration() {
     const expiration = localStorage.getItem("expiresAt");
     const expiresAt = JSON.parse(expiration!);
-    return moment(expiresAt);
+    
+    return toDate(expiresAt);
   }
 
   private setSession(authResult: AuthResult) {
-    const expiresAt = moment().add(authResult.tokenModel.expiresAt);
+    const expiresAt = parseJSON(authResult.tokenModel.expiresAt);
     localStorage.setItem('token', authResult.tokenModel.token);
-    localStorage.setItem('expiresAt', JSON.stringify(expiresAt.valueOf()))
+    localStorage.setItem('expiresAt', JSON.stringify(expiresAt.getTime()));
   }
 }

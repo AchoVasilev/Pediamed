@@ -18,8 +18,6 @@ import server.infrastructure.config.security.PediamedJwtClaimsSetGenerator;
 
 import java.text.ParseException;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,9 +41,9 @@ public class TokenService implements TokenGenerator {
     public TokenModel generateToken(Authentication authentication) {
         var expiration = (int)authentication.getAttributes().getOrDefault("expiration", 86400);
         var claims = pediamedJwtClaimsSetGenerator.generateClaims(authentication, expiration);
-
         var encodedToken = this.generateToken(claims).orElseThrow();
-        return new TokenModel(encodedToken, Date.from(Instant.now().plus(expiration, ChronoUnit.SECONDS)));
+
+        return new TokenModel(encodedToken, Instant.now().plusSeconds(expiration).toString());
     }
 
     @Override
