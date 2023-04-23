@@ -1,0 +1,12 @@
+<mat-form-field appearance="outline">
+    <mat-label>Телефон</mat-label>
+    <input matInput placeholder="Въведете своя телефон" [formControl]="phoneNumberControl" />
+    <mat-icon matSuffix>phone</mat-icon>
+    <mat-error
+        *ngIf="validateForm() && checkForMinLength()">{{getErrorMessage('minLength', phoneMinLength)}}
+    </mat-error>
+    <mat-error
+        *ngIf="validateForm() && checkForMaxLength()">{{getErrorMessage('maxLength', phoneMaxLength)}}
+    </mat-error>
+    <mat-error *ngIf="validateForm() && checkForRegExp() && !(checkForMinLength() || checkForMaxLength())">{{getErrorMessage('phoneRegEx')}}</mat-error>
+</mat-form-field>

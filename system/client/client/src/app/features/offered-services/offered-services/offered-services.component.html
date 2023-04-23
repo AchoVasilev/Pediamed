@@ -1,0 +1,32 @@
+<div class="container-fluid bg-primary py-5 hero-header">
+  <div class="container jumbotron-opacity pb-4 pt-4 mb-4 mt-4">
+    <div class="pb-4 mb-4">
+      <h1 class="text-center">Предлагани услуги</h1>
+
+      <hr />
+
+      <ng-container *ngIf="services && services.length === 0">
+        <h3 style="margin-top: 2%">Все още няма записани услуги</h3>
+      </ng-container>
+
+      <div class="mb-4 pb-4">
+        <table class="table table-bordered table-striped pb-4 mb-4">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">&#8470;</th>
+              <th scope="col">Вид услуга</th>
+              <th scope="col">Цена (лв.)</th>
+            </tr>
+          </thead>
+          <tbody class="pb-4 mb-4">
+            <tr *ngFor="let service of services; let i = index">
+              <td>{{ i }}</td>
+              <td>{{ service.name }}</td>
+              <td>{{ service.price }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

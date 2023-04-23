@@ -1,7 +1,10 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { shouldShowErrorForControl, parseErrorMessage } from 'src/app/shared/utils/formValidator';
+import { shouldShowErrorForControl, parseErrorMessage } from 'src/app/utils/formValidator';
+import { openSnackBar } from 'src/app/utils/matSnackBarUtil';
 
 @Component({
   selector: 'app-login',
@@ -14,16 +17,28 @@ export class LoginComponent {
   loading = false;
   errorMsg: string = '';
 
-  constructor(private authService: AuthService) {
-    this.form = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required]),
-      persist: new FormControl(false)
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private snackBar: MatSnackBar,
+    private fb: FormBuilder) {
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+      persist: [false]
     });
   }
 
-  validateForm(control: string, form: FormGroup = this.form) {
-    return shouldShowErrorForControl(control, form);
+  get emailControl(): FormControl {
+    return this.form.get('email') as FormControl;
+  }
+
+  get passwordControl(): FormControl {
+    return this.form.get('password') as FormControl;
+  }
+
+  validateForm(control: string, formGroup: FormGroup = this.form) {
+    return shouldShowErrorForControl(formGroup.controls[control]);
   }
 
   getErrorMessage(control: string, numberOfSymbols?: number) {
@@ -36,9 +51,14 @@ export class LoginComponent {
 
     this.authService.login(email, password, persist)
       .subscribe({
+        next: () => {
+          this.loading = false;
+          this.router.navigateByUrl('');
+        },
         error: (err) => {
           if (err.status === 401) {
-            this.errorMsg = err.error.message;
+            this.openSnackBar(err.error.message);
+            this.loading = false;
           }
         }
       })
@@ -47,5 +67,9 @@ export class LoginComponent {
   toggleHide(event: Event) {
     event.preventDefault();
     this.hide = !this.hide;
+  }
+
+  openSnackBar(message: string) {
+    openSnackBar(this.snackBar, message);
   }
 }

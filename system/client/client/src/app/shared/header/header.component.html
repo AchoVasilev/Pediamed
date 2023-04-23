@@ -2,21 +2,17 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
             <a routerLink="/" class="navbar-brand">
-                <h1 class="m-0 text-uppercase text-primary"><i class="me-2"><fa-icon
-                            [icon]="faClinic"></fa-icon></i>Педиамед</h1>
+                <img src="../../../assets/img/logo.jpg" alt="logo">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav ms-auto py-0">
+                <div class="navbar-nav ms-auto py-0" id="navigation" (click)="onClick($event)">
                     <a routerLink="/" class="nav-item nav-link active">Начало</a>
-                    <a routerLink="/about" class="nav-item nav-link">За нас</a>
+                    <a routerLink="/schedule/calendar" class="nav-item nav-link" id="calendar">Календар</a>
                     <a routerLink="/services" class="nav-item nav-link">Услуги</a>
-                    <div class="nav-item dropdown" (mouseout)="onMouseLeave()" (mouseover)="onHover()">
+                    <div class="nav-item dropdown">
                         <a href="javascript:void(0)" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Меню</a>
                         <div class="dropdown-menu m-0" id="menu">
-                            <a href="blog.html" class="dropdown-item">Blog Grid</a>
+                            <a routerLink="/about" class="dropdown-item">За нас</a>
                             <a href="detail.html" class="dropdown-item">Blog Detail</a>
                             <a href="team.html" class="dropdown-item">The Team</a>
                             <a href="testimonial.html" class="dropdown-item">Testimonial</a>
@@ -24,8 +20,14 @@
                             <a href="search.html" class="dropdown-item">Search</a>
                         </div>
                     </div>
-                    <a routerLink="/auth/login" class="nav-item nav-link">Вход</a>
-                    <a routerLink="/auth/register" class="nav-item nav-link">Регистрация</a>
+                        <ng-container *ngIf="!isLoggedIn">
+                            <a routerLink="/auth/login" class="nav-item nav-link">Вход</a>
+                            <a routerLink="/auth/register" class="nav-item nav-link">Регистрация</a>
+                        </ng-container>
+                        <ng-container *ngIf="isLoggedIn">
+                            <a routerLink="/users/profile" class="nav-item nav-link">Профил</a>
+                            <button class="nav-item nav-link" (click)="onLogOut()">Излез</button>
+                        </ng-container>
                 </div>
             </div>
         </nav>

@@ -1,72 +1,79 @@
-<div class="row text-center">
-    <div class="col-md-4">
-      <div class="btn-group">
-        <div
-          class="btn btn-primary"
-          mwlCalendarPreviousView
-          [view]="view"
-          [(viewDate)]="viewDate"
-        >
-          Previous
-        </div>
-        <div
-          class="btn btn-outline-secondary"
-          mwlCalendarToday
-          [(viewDate)]="viewDate"
-        >
-          Today
-        </div>
-        <div
-          class="btn btn-primary"
-          mwlCalendarNextView
-          [view]="view"
-          [(viewDate)]="viewDate"
-        >
-          Next
-        </div>
+<div class="row text-center mt-5">
+  <h1>Календар за кабинет {{ cabinet.name }}</h1>
+  <div class="col-md-4">
+    <div class="btn-group">
+      <div
+        class="btn btn-primary"
+        mwlCalendarPreviousView
+        [view]="view"
+        [(viewDate)]="viewDate"
+      >
+        Назад
       </div>
-    </div>
-    <div class="col-md-4">
-      <h3>
-        {{ viewDate | calendarDate:(view + 'ViewTitle'):locale:weekStartsOn }}
-      </h3>
-    </div>
-    <div class="col-md-4">
-      <div class="btn-group">
-        <div
-          class="btn btn-primary"
-          (click)="setView(CalendarView.Month)"
-          [class.active]="view === CalendarView.Month"
-        >
-          Month
-        </div>
-        <div
-          class="btn btn-primary"
-          (click)="setView(CalendarView.Week)"
-          [class.active]="view === CalendarView.Week"
-        >
-          Week
-        </div>
-        <div
-          class="btn btn-primary"
-          (click)="setView(CalendarView.Day)"
-          [class.active]="view === CalendarView.Day"
-        >
-          Day
-        </div>
+      <div
+        class="btn btn-outline-secondary"
+        mwlCalendarToday
+        [(viewDate)]="viewDate"
+      >
+        Днес
+      </div>
+      <div
+        class="btn btn-primary"
+        mwlCalendarNextView
+        [view]="view"
+        [(viewDate)]="viewDate"
+      >
+        Напред
       </div>
     </div>
   </div>
-  <br />
-  
-  <div [ngSwitch]="view">
+  <div class="col-md-4">
+    <h3>
+      {{ viewDate | calendarDate : view + "ViewTitle" : locale : weekStartsOn }}
+    </h3>
+  </div>
+  <div class="col-md-4">
+    <div class="btn-group">
+      <div
+        class="btn btn-primary"
+        (click)="setView(CalendarView.Month)"
+        [class.active]="view === CalendarView.Month"
+      >
+        Месец
+      </div>
+      <div
+        class="btn btn-primary"
+        (click)="setView(CalendarView.Week)"
+        [class.active]="view === CalendarView.Week"
+      >
+        Седмица
+      </div>
+      <div
+        class="btn btn-primary"
+        (click)="setView(CalendarView.Day)"
+        [class.active]="view === CalendarView.Day"
+      >
+        Ден
+      </div>
+    </div>
+  </div>
+</div>
+<br />
+
+<ng-template #loading>
+  {{setLoading(true)}}
+</ng-template>
+
+<div *ngIf="events$ | async; else loading; let events">
+  {{setLoading(false)}}
+  <div [ngSwitch]="view" class="py-5 px-5">
     <mwl-calendar-month-view
       *ngSwitchCase="'month'"
       [viewDate]="viewDate"
       [events]="events"
       [locale]="locale"
       [weekStartsOn]="weekStartsOn"
-      [weekendDays]="weekendDays"
+      [excludeDays]="excludedDays"
     >
     </mwl-calendar-month-view>
     <mwl-calendar-week-view
@@ -75,7 +82,11 @@
       [events]="events"
       [locale]="locale"
       [weekStartsOn]="weekStartsOn"
-      [weekendDays]="weekendDays"
+      [dayStartHour]="dayStartHour"
+      [dayEndHour]="dayEndHour"
+      (dayHeaderClicked)="generateDayEvents($event)"
+      (eventClicked)="eventClicked($event)"
+      [excludeDays]="excludedDays"
     >
     </mwl-calendar-week-view>
     <mwl-calendar-day-view
@@ -83,7 +94,9 @@
       [viewDate]="viewDate"
       [events]="events"
       [locale]="locale"
+      [dayStartHour]="dayStartHour"
+      [dayEndHour]="dayEndHour"
     >
     </mwl-calendar-day-view>
   </div>
-  
+</div>

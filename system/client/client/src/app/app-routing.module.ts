@@ -15,10 +15,13 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'services', loadChildren: () => import('./offered-services/offered-services.module').then(m => m.OfferedServicesModule)
+    path: 'services', loadChildren: () => import('./features/offered-services/offered-services.module').then(m => m.OfferedServicesModule)
   },
   {
-    path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(u => u.AuthModule)
+    path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
+  },
+  {
+    path: 'schedule', loadChildren: () => import('./features/schedule/schedule.module').then(m => m.ScheduleModule)
   }
 ];
 

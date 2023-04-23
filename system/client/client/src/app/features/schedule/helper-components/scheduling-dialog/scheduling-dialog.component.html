@@ -1,0 +1,89 @@
+<h1 mat-dialog-title>
+  Запазване на час за {{ this.dateTimeArgs[0] }} год. от
+  {{ this.dateTimeArgs[1] }} часа
+</h1>
+<div mat-dialog-content>
+  <form method="post" [formGroup]="form">
+    <div class="row mb-3 mt-2">
+      <div class="form-outline col">
+        <app-form-field
+          [control]="startTimeControl"
+          label="Начало"
+          placeholder="Начална дата и час"
+          materialSuffix="calendar_month"
+        ></app-form-field>
+      </div>
+
+      <div class="form-outline col">
+        <app-form-field
+          [control]="endTimeControl"
+          label="Край"
+          placeholder="Крайна дата и час"
+          materialSuffix="calendar_month"
+        ></app-form-field>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="form-outline col">
+        <app-email [emailControl]="emailControl"></app-email>
+      </div>
+      <div class="form-outline col">
+        <app-phone-input [phoneNumberControl]="phoneNumber"></app-phone-input>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="form-outline col">
+        <app-form-field
+          [control]="firstName"
+          label="Име на родител"
+          placeholder="Име на родител"
+          materialSuffix="account_circle"
+        ></app-form-field>
+      </div>
+
+      <div class="form-outline col">
+        <app-form-field
+          [control]="lastName"
+          label="Фамилия на родител"
+          placeholder="Фамилия на родител"
+          materialSuffix="account_circle"
+        ></app-form-field>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="form-outline col">
+        <app-form-field
+          [control]="patientFirstName"
+          label="Име на дете"
+          placeholder="Име на дете"
+          materialSuffix="account_circle"
+        ></app-form-field>
+      </div>
+
+      <div class="form-outline col">
+        <app-form-field
+          [control]="patientLastName"
+          label="Фамилия на дете"
+          placeholder="Фамилия на дете"
+          materialSuffix="account_circle"
+        ></app-form-field>
+      </div>
+    </div>
+    <div class="form-outline mb-2">
+      <app-appointment-cause-select
+        [appointmentCauses]="appointmentCauses"
+        [control]="appointmentCause"
+      ></app-appointment-cause-select>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Затвори</button>
+  <button
+    mat-button
+    (click)="close()"
+    cdkFocusInitial
+  >
+    Запазване
+  </button>
+</div>

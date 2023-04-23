@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Създаване на свободни часове за {{ this.data.date }}</h1>
+<div mat-dialog-content>
+  <p>Изберете часове и продължителност</p>
+  <form action="post" [formGroup]="form">
+    <app-date-time-event-data [eventData]="data.eventData" [timesGroup]="hoursGroup"></app-date-time-event-data>
+    <mat-form-field appearance="fill">
+      <mat-label>Продължителност</mat-label>
+      <mat-select formControlName="intervals">
+        <mat-option></mat-option>
+        <mat-option [value]="data.intervals" *ngFor="let data of data.eventData">{{ data.intervals }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="validateForm('intervals')">{{ getErrorMessage('required') }}</mat-error>
+    </mat-form-field>
+</form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Затвори</button>
+  <button mat-button (click)="close()" [disabled]="!this.form.valid">Създаване</button>
+</div>

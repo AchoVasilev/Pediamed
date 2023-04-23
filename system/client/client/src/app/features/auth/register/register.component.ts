@@ -1,13 +1,14 @@
+import { Constants } from './../../../utils/constants';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { RegisterParent } from 'src/app/models/user/registerParent';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { checkForMaxLength, checkForMinLength, parseErrorMessage, shouldShowErrorForControl } from 'src/app/shared/utils/formValidator';
-import { openSnackBar } from 'src/app/shared/utils/matSnackBarUtil';
-import { passwordMatch } from 'src/app/shared/utils/passwordValidator';
+import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
+import { openSnackBar } from 'src/app/utils/matSnackBarUtil';
+import { passwordMatch } from 'src/app/utils/passwordValidator';
 
 @Component({
   selector: 'app-register',
@@ -15,27 +16,31 @@ import { passwordMatch } from 'src/app/shared/utils/passwordValidator';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  fieldMinLength: number = 4;
-  phoneMinLength: number = 10;
-  phoneMaxLength: number = 13;
-  private passwordControl = new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]);
-  hide: boolean = true;
+  private passwordControl = new FormControl('', [Validators.required, Validators.minLength(Constants.fieldMinLength)]);
   loading: boolean = false;
   form: FormGroup;
 
-  constructor(private authService: AuthService, private router: Router, private matSnackBar: MatSnackBar) {
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private matSnackBar: MatSnackBar, 
+    private fb: FormBuilder) {
 
-    this.form = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      passwords: new FormGroup({
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      passwords: this.fb.group({
         password: this.passwordControl,
-        repeatPassword: new FormControl('', [passwordMatch(this.passwordControl)])
+        repeatPassword: ['', passwordMatch(this.passwordControl)]
       }),
-      firstName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      middleName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      lastName: new FormControl('', [Validators.required, Validators.minLength(this.fieldMinLength)]),
-      phoneNumber: new FormControl('', [Validators.required, Validators.minLength(this.phoneMinLength), Validators.maxLength(this.phoneMaxLength)]),
-      terms: new FormControl(false, [Validators.requiredTrue])
+      firstName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+      lastName: ['', [Validators.required, Validators.minLength(Constants.fieldMinLength)]],
+      phoneNumber: ['', [
+        Validators.required,
+        Validators.minLength(Constants.phoneMinLength),
+        Validators.maxLength(Constants.phoneMaxLength),
+        Validators.pattern(Constants.phoneRegExp),
+      ]],
+      terms: [false, [Validators.requiredTrue]]
     });
   }
 
@@ -43,16 +48,24 @@ export class RegisterComponent {
     return this.form.controls['passwords'] as FormGroup;
   }
 
-  validateForm(control: string, form: FormGroup = this.form) {
-    return shouldShowErrorForControl(control, form);
+  get emailControl(): FormControl {
+    return this.form.get('email') as FormControl;
   }
 
-  checkForMinLength(control: string, formGroup: FormGroup = this.form) {
-    return checkForMinLength(control, formGroup);
+  get firstName(): FormControl {
+    return this.form.get('firstName') as FormControl;
   }
 
-  checkForMaxLength(control: string, formGroup: FormGroup = this.form) {
-    return checkForMaxLength(control, formGroup);
+  get lastName(): FormControl {
+    return this.form.get('lastName') as FormControl;
+  }
+
+  get phoneNumber(): FormControl {
+    return this.form.get('phoneNumber') as FormControl;
+  }
+
+  validateForm(control: string, formGroup: FormGroup = this.form) {
+    return shouldShowErrorForControl(formGroup.controls[control]);
   }
 
   getErrorMessage(control: string, numberOfSymbols?: number) {
@@ -77,11 +90,9 @@ export class RegisterComponent {
 
     this.authService.register(registerParent)
       .subscribe({
-        next: (data) => {
-          if (data) {
-            this.loading = false;
-            this.router.navigateByUrl('/auth/login');
-          }
+        next: () => {
+          this.loading = false;
+          this.router.navigateByUrl('/auth/login');
         },
         error: (err: HttpErrorResponse) => {
           if (err.status === HttpStatusCode.BadRequest) {
@@ -90,10 +101,5 @@ export class RegisterComponent {
           }
         },
       });
-  }
-
-  toggleHide(event: Event) {
-    event.preventDefault();
-    this.hide = !this.hide;
   }
 }

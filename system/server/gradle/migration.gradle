@@ -1,0 +1,27 @@
+class GenerateMigration extends DefaultTask {
+
+    @TaskAction
+    void addMigration() {
+        System.out.println("Migration name:")
+        def migrationName = System.in.newReader()
+            .readLine()
+            .replaceAll(" ", "_")
+
+        def timePart = new Date().getTime()
+
+        def filename = "V1_${timePart}__$migrationName"
+        def migrationDir = 'src/main/resources/db/migration'
+
+        def file = "${getProject().getProjectDir()}/$migrationDir/${filename}.sql"
+        println()
+        print("Creating $file : ")
+        def success = new File(file).createNewFile()
+        print(success ? "Success" : "Failed")
+
+    }
+}
+
+task addMigration (type: GenerateMigration) {
+    group 'project'
+    description 'Creates a flyway db migration file'
+}

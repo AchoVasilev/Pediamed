@@ -1,3 +1,5 @@
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
 :root {
     --primary: #13C5DD;
     --secondary: #354F8E;
@@ -51,6 +53,7 @@
 html,
 body {
     height: 100%;
+    overflow-x: hidden;
 }
 
 body {

@@ -1,24 +1,56 @@
-server:
-  max-http-request-header-size: 20KB
-spring:
-  datasource:
+micronaut:
+  application:
+    name: server
+  server:
+    host: localhost
+    cors:
+      enabled: true
+      configurations:
+        web:
+          allowedOrigins:
+            - http://localhost:4200
+  security:
+    authentication: bearer
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:file:src/resources/certs/private.pem}"'
+              jws-algorithm: HS256
+              access-token:
+                expiration: 86400
+                long-expiration: 2592000
+
+rsa:
+  private-key: certs/private.pem
+  public-key: certs/public.pem
+
+max-http-request-header-size: 20KB
+
+datasources:
+  default:
+    dialect: postgres
+    db-type: postgres
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/pediamed?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    url: jdbc:postgresql://localhost:5432/pediamed?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
     username: postgres
     password: postgres
-  sql:
-    init:
-      mode: always
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: true
-    hibernate:
-      ddl-auto: create-drop
+
+jpa:
+  default:
+    entity-scan:
+      packages: 'server.domain.entities'
     properties:
       hibernate:
-        format_sql: true
-    defer-datasource-initialization: true
-    show-sql: true
-rsa:
-  rsa-private-key: classpath:certs/private.pem
-  rsa-public-key: classpath:certs/public.pem
+        hbm2ddl:
+          auto: update
+        show_sql: false
+
+jackson:
+  serializationInclusion: ALWAYS
+
+flyway:
+  datasources:
+    default:
+      locations: [ classpath:db/migration, classpath:db/seed ]
