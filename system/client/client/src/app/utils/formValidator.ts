@@ -24,6 +24,14 @@ export function checkPasswordsMatch(control: AbstractControl) {
     return control.errors?.['passwordMissmatch'];
 }
 
+export function checkStartIsBefore(control: AbstractControl) {
+    return control.errors?.['startIsBefore'];
+}
+
+export function checkEndIsBefore(control: AbstractControl) {
+    return control.errors?.['endIsBefore'];
+}
+
 export const ERROR_MESSAGES: any = {
     required: 'Това поле е задължително!',
     minLength: 'Полето трябва да е дълго поне %d символа!',
@@ -31,7 +39,9 @@ export const ERROR_MESSAGES: any = {
     email: 'Въведете валиден и-мейл!',
     passwordsMissmatch: 'Паролите не съвпадат',
     terms: 'Трябва да се съгласите с условията!',
-    phoneRegEx: 'Въведете валиден номер!'
+    phoneRegEx: 'Въведете валиден номер!',
+    startIsBefore: 'Началният час не може да е преди настоящия',
+    endIsBefore: 'Крайният час не може да е преди началния'
 }
 
 function formatString(str: string, num?: number) {

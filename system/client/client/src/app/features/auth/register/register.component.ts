@@ -1,4 +1,3 @@
-import { ValidatorFn } from '@angular/forms';
 import { Constants } from './../../../utils/constants';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
@@ -18,11 +17,8 @@ import { passwordMatch } from 'src/app/utils/passwordValidator';
 })
 export class RegisterComponent {
   private passwordControl = new FormControl('', [Validators.required, Validators.minLength(Constants.fieldMinLength)]);
-  hide: boolean = true;
   loading: boolean = false;
   form: FormGroup;
-  passwordValidators = [Validators.required, Validators.minLength(Constants.fieldMinLength)];
-  repeatPasswordValidators: ValidatorFn[];
 
   constructor(
     private authService: AuthService, 
@@ -46,8 +42,6 @@ export class RegisterComponent {
       ]],
       terms: [false, [Validators.requiredTrue]]
     });
-
-    this.repeatPasswordValidators = [passwordMatch(this.passwordsGroup.controls['password'])];
   }
 
   get passwordsGroup(): FormGroup {

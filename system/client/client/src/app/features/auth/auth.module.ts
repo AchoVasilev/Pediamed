@@ -6,7 +6,6 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MaterialModule } from 'src/app/material/material/material.module';
 
 @NgModule({
@@ -19,7 +18,6 @@ import { MaterialModule } from 'src/app/material/material/material.module';
     AuthRoutingModule,
     ReactiveFormsModule,
     MaterialModule,
-    MatProgressSpinnerModule,
     ReusableComponentsModule
   ]
 })

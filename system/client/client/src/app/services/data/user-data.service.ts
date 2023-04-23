@@ -32,7 +32,8 @@ export class UserDataService {
 
   setUser(user: UserModel) {
     this.userSubject.next(user);
-    const isDoctor = this.getUser().roles.some(r => r === Roles.Doctor);
+    const isDoctor = user.roles.some(r => r === Roles.Doctor);
+    
     this.isDoctorSubject.next(isDoctor);
   }
 }

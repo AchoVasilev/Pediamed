@@ -1,7 +1,6 @@
-import { SchedulingDialogComponent } from '../../../reusable-components/scheduling-dialog/scheduling-dialog.component';
+import { SchedulingDialogComponent } from '../helper-components/scheduling-dialog/scheduling-dialog.component';
 import { CabinetService } from './../../../services/cabinet/cabinet.service';
 import { ScheduleData } from './../../../models/events/schedule';
-import { ScheduleDialogComponent } from '../../../reusable-components/schedule-dialog/schedule-dialog.component';
 import { EventData, EventDataInput } from '../../../models/events/schedule';
 import { ScheduleService } from '../../../services/schedule/schedule.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,18 +9,19 @@ import { CalendarDateFormatter } from 'angular-calendar';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
-import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
 import { AppointmentCauseService } from 'src/app/services/appointment-cause/appointment-cause.service';
-import { DoctorSchedulingDialogComponent } from 'src/app/reusable-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
-import { RegisteredUserSchedulingDialogComponent } from 'src/app/reusable-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
 import { LoadingService } from 'src/app/services/loading/loading.service';
 import { Cabinet } from 'src/app/models/cabinet/cabinet';
 import { colors } from '../colors/colors';
 import { UserDataService } from 'src/app/services/data/user-data.service';
 import { ScheduleDataService } from 'src/app/services/data/schedule-data.service';
-import { format, isBefore, parse, parseJSON } from 'date-fns';
+import { format, isBefore, parse } from 'date-fns';
+import { DoctorSchedulingDialogComponent } from '../helper-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
+import { RegisteredUserSchedulingDialogComponent } from '../helper-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
+import { ScheduleDialogComponent } from '../helper-components/schedule-dialog/schedule-dialog.component';
 
 @Component({
   selector: 'app-schedule',
@@ -39,7 +39,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   private dateTimePattern = 'dd/MM/yyyy HH:mm';
   private datePattern = 'dd/MM/yyyy';
 
-  refresh = new Subject<void>();
   view: CalendarView = CalendarView.Week;
   daysInWeek = 7;
   dayStartHour = 7;
@@ -186,7 +185,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     }
 
     let date = event.day.date;
-    if (isBefore(Date.now(), date)) {
+    if (isBefore(date, Date.now())) {
       return;
     }
 

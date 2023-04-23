@@ -49,7 +49,7 @@ public class AuthService {
     @Transactional
     public void register(RegistrationRequest registrationRequest) {
         var user = this.userService.getByEmail(registrationRequest.email());
-        if (user.isPresent()) {
+        if (user.isPresent() && !user.get().getDeleted() && user.get().getPassword() != null) {
             throw new EntityAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS, registrationRequest.email()));
         }
 

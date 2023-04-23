@@ -1,4 +1,3 @@
-import { Constants } from './../../utils/constants';
 import { CalendarEvent } from 'angular-calendar';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
@@ -8,9 +7,10 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { UserModel } from 'src/app/services/auth/authResult';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
+import { UserModel } from 'src/app/services/auth/authResult';
 import { ScheduleService } from 'src/app/services/schedule/schedule.service';
+import { Constants } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-scheduling-dialog',
@@ -124,22 +124,6 @@ export class SchedulingDialogComponent implements OnInit {
   }
 
   close() {
-    // const date = this.data.date;
-    // const { hours, endHour, intervals } = this.form.value;
-
-    // const eventData: EventDataCreate = {
-    //   startDateTime: `${date} ${hours}`,
-    //   endDateTime: `${date} ${endHour}`,
-    //   intervals,
-    //   cabinetName: this.data.cabinetName,
-    // };
-
-    // this.scheduleService.postEventData(eventData).subscribe({
-    //   next: (res) => {
-    //     openSnackBar(this.snackBar, res.message);
-    //   },
-    // });
-
     let {email, parentFirstName, parentLastName, phoneNumber, patientFirstName, patientLastName, appointmentCauseId} = this.form.value;
 
     const data = {
