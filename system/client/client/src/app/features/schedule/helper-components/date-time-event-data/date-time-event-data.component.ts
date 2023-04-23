@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { EventData } from 'src/app/models/events/schedule';
-import { checkStartIsBefore, parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
+import { checkEndIsBefore, checkStartIsBefore, parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
 
 @Component({
   selector: 'app-date-time-event-data',
@@ -32,7 +32,7 @@ export class DateTimeEventDataComponent {
   }
 
   endIsBefore() {
-    return checkStartIsBefore(this.endTime);
+    return checkEndIsBefore(this.endTime);
   }
 
   getErrorMessage(errorType: string, numberOfSymbols?: number) {

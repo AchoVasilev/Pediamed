@@ -1,10 +1,14 @@
 import { AbstractControl, ValidatorFn } from "@angular/forms";
 import { isBefore, parse } from "date-fns";
+import { Constants } from "./constants";
 
-export function validateStartDate(startTime: AbstractControl) {
-    const validatorFn: ValidatorFn = () => {
-        const startDateTime = parse(startTime.value, "dd/MM/yyyy HH:mm", new Date());
-        if(isBefore(startDateTime, new Date())) {
+export function validateStartDate(date: string) {
+    const validatorFn: ValidatorFn = (startTime: AbstractControl) => {
+        
+        const startDateTime = parse(`${date} ${startTime.value}`, Constants.dateTimePattern, new Date());
+        const eventDate = parse(date, Constants.datePattern, new Date());
+        
+        if(isBefore(startDateTime, eventDate)) {
             return {
                 startIsBefore: true
             }
@@ -16,11 +20,11 @@ export function validateStartDate(startTime: AbstractControl) {
     return validatorFn;
 }
 
-export function validateEndDate(endTime: AbstractControl) {
-    const validatorFn: ValidatorFn = (startTime: AbstractControl) => {
-        const startDateTime = parse(startTime.value, "dd/MM/yyyy HH:mm", new Date());
-        const endDateTime = parse(endTime.value, "dd/MM/yyyy HH:mm", new Date());
-
+export function validateEndDate(date: string, startTime: AbstractControl) {
+    const validatorFn: ValidatorFn = (endTime: AbstractControl) => {
+        const startDateTime = parse(`${date} ${startTime.value}`, Constants.dateTimePattern, new Date());
+        const endDateTime = parse(`${date} ${endTime.value}`, Constants.dateTimePattern, new Date());
+        
         if(isBefore(endDateTime, startDateTime)) {
             return {
                 endIsBefore: true

@@ -22,6 +22,7 @@ import { format, isBefore, parse } from 'date-fns';
 import { DoctorSchedulingDialogComponent } from '../helper-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
 import { RegisteredUserSchedulingDialogComponent } from '../helper-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
 import { ScheduleDialogComponent } from '../helper-components/schedule-dialog/schedule-dialog.component';
+import { Constants } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-schedule',
@@ -36,8 +37,8 @@ import { ScheduleDialogComponent } from '../helper-components/schedule-dialog/sc
 })
 export class ScheduleComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  private dateTimePattern = 'dd/MM/yyyy HH:mm';
-  private datePattern = 'dd/MM/yyyy';
+  private dateTimePattern = Constants.dateTimePattern;
+  private datePattern = Constants.datePattern;
 
   view: CalendarView = CalendarView.Week;
   daysInWeek = 7;

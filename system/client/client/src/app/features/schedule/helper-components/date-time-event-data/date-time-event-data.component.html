@@ -10,6 +10,9 @@
     <mat-error *ngIf="validateForm(startTime) && startIsBefore()">{{
       getErrorMessage("startIsBefore")
     }}</mat-error>
+    <mat-error *ngIf="validateForm(startTime) && !startIsBefore()">{{
+      getErrorMessage("required")
+    }}</mat-error>
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Краен час</mat-label>
@@ -21,6 +24,9 @@
     </mat-select>
     <mat-error *ngIf="validateForm(endTime) && endIsBefore()">{{
       getErrorMessage("endIsBefore")
+    }}</mat-error>
+    <mat-error *ngIf="validateForm(endTime) && !endIsBefore()">{{
+      getErrorMessage("required")
     }}</mat-error>
   </mat-form-field>
 </ng-container>

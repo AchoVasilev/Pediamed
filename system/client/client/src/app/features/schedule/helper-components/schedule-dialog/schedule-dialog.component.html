@@ -15,5 +15,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Затвори</button>
-  <button mat-button (click)="close()" cdkFocusInitial>Създаване</button>
+  <button mat-button (click)="close()" [disabled]="!this.form.valid">Създаване</button>
 </div>

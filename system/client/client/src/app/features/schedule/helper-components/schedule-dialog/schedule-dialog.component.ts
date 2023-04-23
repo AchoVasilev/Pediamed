@@ -11,8 +11,14 @@ import {
   shouldShowErrorForControl,
 } from 'src/app/utils/formValidator';
 import { ScheduleService } from 'src/app/services/schedule/schedule.service';
-import { validateEndDate, validateStartDate } from 'src/app/utils/dateTimeValidator';
-import { EventDataCreate, EventDataInput } from 'src/app/models/events/schedule';
+import {
+  validateEndDate,
+  validateStartDate,
+} from 'src/app/utils/dateTimeValidator';
+import {
+  EventDataCreate,
+  EventDataInput,
+} from 'src/app/models/events/schedule';
 
 @Component({
   selector: 'app-schedule-dialog',
@@ -21,22 +27,33 @@ import { EventDataCreate, EventDataInput } from 'src/app/models/events/schedule'
 })
 export class ScheduleDialogComponent {
   data: EventDataInput;
-  form: FormGroup = this.fb.group({
-    hoursGroup: this.fb.group({
-      hours: new FormControl('', [Validators.required, validateStartDate]),
-      endHour: new FormControl('', [Validators.required, validateEndDate]),
-    }),
-    intervals: new FormControl('', [Validators.required]),
-  });
+  form: FormGroup;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) data: EventDataInput,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<ScheduleDialogComponent>,
-    private scheduleService: ScheduleService) {
+    private scheduleService: ScheduleService
+  ) {
     this.data = data;
+
+    const hours = new FormControl('', [
+      Validators.required,
+      validateStartDate(this.data.date),
+    ]);
+
+    this.form = this.fb.group({
+      hoursGroup: this.fb.group({
+        hours: hours,
+        endHour: new FormControl('', [
+          Validators.required,
+          validateEndDate(this.data.date, hours),
+        ]),
+      }),
+      intervals: new FormControl('', [Validators.required]),
+    });
   }
-  
+
   close() {
     const date = this.data.date;
     const { hours, endHour, intervals } = this.form.value;
@@ -45,11 +62,12 @@ export class ScheduleDialogComponent {
       startDateTime: `${date} ${hours}`,
       endDateTime: `${date} ${endHour}`,
       intervals,
-      cabinetName: this.data.cabinetName
+      cabinetName: this.data.cabinetName,
     };
 
-    this.scheduleService.postEventData(eventData)
-      .subscribe(events => this.dialogRef.close({events}));
+    this.scheduleService
+      .postEventData(eventData)
+      .subscribe((events) => this.dialogRef.close({ events }));
   }
 
   get hoursGroup() {
