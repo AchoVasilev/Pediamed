@@ -87,40 +87,8 @@ export class SchedulingDialogComponent implements OnInit {
     });
   }
 
-  get startTimeControl(): FormControl {
-    return this.form.get('start') as FormControl;
-  }
-
-  get endTimeControl(): FormControl {
-    return this.form.get('end') as FormControl;
-  }
-
-  get emailControl(): FormControl {
-    return this.form.get('email') as FormControl;
-  }
-
-  get firstName(): FormControl {
-    return this.form.get('parentFirstName') as FormControl;
-  }
-
-  get lastName(): FormControl {
-    return this.form.get('parentLastName') as FormControl;
-  }
-
-  get phoneNumber(): FormControl {
-    return this.form.get('phoneNumber') as FormControl;
-  }
-
-  get patientFirstName(): FormControl {
-    return this.form.get('patientFirstName') as FormControl;
-  }
-
-  get patientLastName(): FormControl {
-    return this.form.get('patientLastName') as FormControl;
-  }
-
-  get appointmentCause(): FormControl {
-    return this.form.get('appointmentCauseId') as FormControl;
+  getControl(name: string): FormControl {
+    return this.form.get(name) as FormControl;
   }
 
   close() {

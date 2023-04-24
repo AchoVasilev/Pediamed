@@ -7,7 +7,7 @@
     <div class="row mb-3 mt-2">
       <div class="form-outline col">
         <app-form-field
-          [control]="startTimeControl"
+          [control]="getControl('start')"
           label="Начало"
           placeholder="Начална дата и час"
           materialSuffix="calendar_month"
@@ -16,7 +16,7 @@
 
       <div class="form-outline col">
         <app-form-field
-          [control]="endTimeControl"
+          [control]="getControl('end')"
           label="Край"
           placeholder="Крайна дата и час"
           materialSuffix="calendar_month"
@@ -25,16 +25,16 @@
     </div>
     <div class="row mb-3">
       <div class="form-outline col">
-        <app-email [emailControl]="emailControl"></app-email>
+        <app-email [emailControl]="getControl('email')"></app-email>
       </div>
       <div class="form-outline col">
-        <app-phone-input [phoneNumberControl]="phoneNumber"></app-phone-input>
+        <app-phone-input [phoneNumberControl]="getControl('phoneNumber')"></app-phone-input>
       </div>
     </div>
     <div class="row mb-3">
       <div class="form-outline col">
         <app-form-field
-          [control]="firstName"
+          [control]="getControl('parentFirstName')"
           label="Име на родител"
           placeholder="Име на родител"
           materialSuffix="account_circle"
@@ -43,7 +43,7 @@
 
       <div class="form-outline col">
         <app-form-field
-          [control]="lastName"
+          [control]="getControl('parentLastName')"
           label="Фамилия на родител"
           placeholder="Фамилия на родител"
           materialSuffix="account_circle"
@@ -53,7 +53,7 @@
     <div class="row mb-3">
       <div class="form-outline col">
         <app-form-field
-          [control]="patientFirstName"
+          [control]="getControl('patientFirstName')"
           label="Име на дете"
           placeholder="Име на дете"
           materialSuffix="account_circle"
@@ -62,7 +62,7 @@
 
       <div class="form-outline col">
         <app-form-field
-          [control]="patientLastName"
+          [control]="getControl('patientLastName')"
           label="Фамилия на дете"
           placeholder="Фамилия на дете"
           materialSuffix="account_circle"
@@ -72,7 +72,7 @@
     <div class="form-outline mb-2">
       <app-appointment-cause-select
         [appointmentCauses]="appointmentCauses"
-        [control]="appointmentCause"
+        [control]="getControl('appointmentCauseId')"
       ></app-appointment-cause-select>
     </div>
   </form>
