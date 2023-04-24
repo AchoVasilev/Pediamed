@@ -77,13 +77,7 @@
     </div>
   </form>
 </div>
-<div mat-dialog-actions>
-  <button mat-button mat-dialog-close>Затвори</button>
-  <button
-    mat-button
-    (click)="close()"
-    cdkFocusInitial
-  >
-    Запазване
-  </button>
+<div mat-dialog-actions align="end">
+  <app-button color="warn" name="Затвори" mat-dialog-close></app-button>
+  <app-button color="primary" name="Запазване" (click)="close()" [disabled]="!this.form.valid"></app-button>
 </div>

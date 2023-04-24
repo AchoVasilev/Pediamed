@@ -9,6 +9,7 @@ import { PasswordComponent } from './password/password.component';
 import { PasswordsComponent } from './passwords/passwords.component';
 import { AppointmentCauseSelectComponent } from './appointment-cause-select/appointment-cause-select.component';
 import { MaterialModule } from '../material/material/material.module';
+import { ButtonComponent } from './button/button.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { MaterialModule } from '../material/material/material.module';
     PasswordComponent,
     PasswordsComponent,
     AppointmentCauseSelectComponent,
+    ButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,8 @@ import { MaterialModule } from '../material/material/material.module';
     EmailComponent,
     PasswordComponent,
     PasswordsComponent,
-    AppointmentCauseSelectComponent
+    AppointmentCauseSelectComponent,
+    ButtonComponent
   ],
 })
 export class ReusableComponentsModule {}
