@@ -10,6 +10,7 @@ import { PasswordsComponent } from './passwords/passwords.component';
 import { AppointmentCauseSelectComponent } from './appointment-cause-select/appointment-cause-select.component';
 import { MaterialModule } from '../material/material/material.module';
 import { ButtonComponent } from './button/button.component';
+import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ButtonComponent } from './button/button.component';
     PasswordsComponent,
     AppointmentCauseSelectComponent,
     ButtonComponent,
+    AutocompleteComponent,
   ],
   imports: [
     CommonModule,
