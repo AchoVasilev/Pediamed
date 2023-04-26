@@ -55,8 +55,8 @@ public class ScheduleService {
 
     @Transactional
     public List<ScheduleEvent> generateEvents(EventDataInputRequest data) {
-        var startDate = DateTimeUtility.parseDate(data.startDateTime());
-        var endDate = DateTimeUtility.parseDate(data.endDateTime());
+        var startDate = DateTimeUtility.parseDateTime(data.startDateTime());
+        var endDate = DateTimeUtility.parseDateTime(data.endDateTime());
 
         var cabinet = this.cabinetService.getCabinetByCity(data.cabinetName());
 

@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static server.common.ErrorMessages.MISSING_EVENT;
 import static server.common.ErrorMessages.MISSING_APPOINTMENT;
+import static server.common.ErrorMessages.MISSING_EVENT;
 
 @Entity
 @Table(name = "schedules")
@@ -34,6 +34,11 @@ public class Schedule extends BaseEntity<UUID> {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "schedule_id", referencedColumnName = "id")
     private List<CalendarEvent> calendarEvents = new ArrayList<>();
+
+    public Schedule(Cabinet cabinet) {
+        this.id = UUID.randomUUID();
+        this.cabinet = cabinet;
+    }
 
     public void addCalendarEvents(List<CalendarEvent> events) {
         for (CalendarEvent event : events) {

@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @Getter
 @Table(name = "cabinets")
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class Cabinet extends BaseEntity<Integer> {
     private String name;
     private String city;

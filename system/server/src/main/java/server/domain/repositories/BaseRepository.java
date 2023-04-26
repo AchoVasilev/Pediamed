@@ -6,7 +6,7 @@ import io.micronaut.data.repository.CrudRepository;
 import server.domain.entities.BaseEntity;
 import java.util.List;
 
-public interface BaseRepository<TEntity extends BaseEntity<?>, TKey> extends CrudRepository<TEntity, TKey> {
+public interface BaseRepository<TEntity extends BaseEntity, TKey> extends CrudRepository<TEntity, TKey> {
 
     @Override
     @Query("UPDATE #{#entityName} e SET e.deleted = false WHERE e.id=?1")

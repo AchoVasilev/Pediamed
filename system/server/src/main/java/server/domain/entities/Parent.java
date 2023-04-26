@@ -1,6 +1,8 @@
 package server.domain.entities;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 
 import javax.persistence.*;
@@ -14,6 +16,7 @@ import static server.common.ErrorMessages.PATIENT_NOT_FOUND;
 @Entity
 @Getter
 @Table(name = "parents")
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class Parent extends BaseEntity<UUID> {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_user_id", referencedColumnName = "id")
@@ -21,7 +24,9 @@ public class Parent extends BaseEntity<UUID> {
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parent")
     private final List<Patient> patients;
 
-    public Parent() {
+    public Parent(ApplicationUser applicationUser) {
+        this.id = UUID.randomUUID();
+        this.applicationUser = applicationUser;
         this.patients = new ArrayList<>();
     }
 

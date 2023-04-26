@@ -23,6 +23,7 @@ public class CalendarEvent extends BaseEntity<UUID> {
     private UUID scheduleId;
 
     public CalendarEvent(LocalDateTime startDate, LocalDateTime endDate, String title, UUID scheduleId) {
+        this.id = UUID.randomUUID();
         this.startDate = DateTimeUtility.validateStartDate(startDate, endDate);
         this.endDate = DateTimeUtility.validateEndDate(startDate, endDate);
         this.title = Guard.Against.EmptyOrBlank(title);

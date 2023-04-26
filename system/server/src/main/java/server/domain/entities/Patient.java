@@ -23,6 +23,7 @@ public class Patient extends BaseEntity<UUID> {
     private Parent parent;
 
     public Patient (String firstName, String lastName) {
+        this.id = UUID.randomUUID();
         this.firstName = Guard.Against.EmptyOrBlank(firstName);
         this.lastName = Guard.Against.EmptyOrBlank(lastName);
     }

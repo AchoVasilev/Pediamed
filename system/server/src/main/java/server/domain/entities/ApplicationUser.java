@@ -24,9 +24,8 @@ public class ApplicationUser extends BaseEntity<UUID> {
     private String lastName;
     @Embedded
     private PhoneNumber phoneNumber;
-    @Setter
     @OneToOne(mappedBy = "applicationUser",
-            cascade = CascadeType.PERSIST,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
     private Parent parent;
     @Setter
@@ -40,16 +39,13 @@ public class ApplicationUser extends BaseEntity<UUID> {
     private String salt;
 
     public ApplicationUser(Email email, String password, String firstName, String lastName, PhoneNumber phoneNumber) {
-        this.email = email;
+        this(email, firstName, lastName, phoneNumber);
         this.password = Guard.Against.EmptyOrBlank(password);
-        this.firstName = Guard.Against.EmptyOrBlank(firstName);
-        this.lastName = Guard.Against.EmptyOrBlank(lastName);
-        this.phoneNumber = phoneNumber;
-        this.roles = new ArrayList<>();
         this.salt = UUID.randomUUID().toString();
     }
 
     public ApplicationUser(Email email, String firstName, String lastName, PhoneNumber phoneNumber) {
+        this.id = UUID.randomUUID();
         this.email = email;
         this.firstName = Guard.Against.EmptyOrBlank(firstName);
         this.lastName = Guard.Against.EmptyOrBlank(lastName);
@@ -59,5 +55,15 @@ public class ApplicationUser extends BaseEntity<UUID> {
 
     public void invalidateSalt() {
         this.salt = UUID.randomUUID().toString();
+    }
+
+    public void addParent() {
+        this.parent = new Parent(this);
+    }
+
+    public void addPatientToParent(String patientFirstName, String patientLastName) {
+        this.getParent()
+                .getPatients()
+                .add(new Patient(patientFirstName, patientLastName));
     }
 }

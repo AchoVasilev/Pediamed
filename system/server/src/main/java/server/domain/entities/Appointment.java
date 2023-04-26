@@ -41,6 +41,7 @@ public class Appointment extends BaseEntity<UUID> {
                        UUID scheduleId,
                        UUID parentId,
                        UUID patientId) {
+        this.id = UUID.randomUUID();
         this.startDate = DateTimeUtility.validateStartDate(startDate, endDate);
         this.endDate = DateTimeUtility.validateEndDate(startDate, endDate);
         this.title = Guard.Against.EmptyOrBlank(title);

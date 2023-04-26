@@ -24,6 +24,7 @@ public class Role extends BaseEntity<UUID> {
     private ApplicationUser applicationUser;
 
     public Role(String name) {
+        this.id = UUID.randomUUID();
         this.name = RoleEnum.valueOf(Guard.Against.EmptyOrBlank(name));
     }
 }
