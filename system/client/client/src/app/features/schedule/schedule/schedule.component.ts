@@ -185,12 +185,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let date = event.day.date;
-    if (isBefore(date, Date.now())) {
-      return;
-    }
-
-    date = format(date, this.datePattern);
+    const date = format(event.day.date, this.datePattern);
 
     const eventDataInput: EventDataInput = {
       date,

@@ -16,11 +16,11 @@ export class DateTimeEventDataComponent {
   eventData?: EventData[];
 
   get startTime() {
-    return this.timesGroup?.get('hours') as FormControl;
+    return this.timesGroup.get('hours') as FormControl;
   }
 
   get endTime() {
-    return this.timesGroup?.get('endHour') as FormControl;
+    return this.timesGroup.get('endHour') as FormControl;
   }
 
   validateForm(control: FormControl) {
