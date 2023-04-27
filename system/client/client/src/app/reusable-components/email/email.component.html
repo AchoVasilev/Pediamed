@@ -1,8 +1,15 @@
 <mat-form-field appearance="outline">
-    <mat-label>И-мейл</mat-label>
-    <input matInput placeholder="Въведете своя и-мейл"
-        [formControl]="emailControl" />
-    <mat-icon matSuffix>email</mat-icon>
-    <mat-error *ngIf="validateForm()">{{getErrorMessage('email')}}
-    </mat-error>
+  <mat-label>И-мейл</mat-label>
+  <input
+    matInput
+    placeholder="Въведете своя и-мейл"
+    [formControl]="emailControl"
+  />
+  <mat-icon matSuffix>email</mat-icon>
+  <mat-error *ngIf="validateForm() && getErrorMessage('email') && !getErrorMessage('invalidCredentials')"
+    >{{ getErrorMessage("email") }}
+  </mat-error>
+  <mat-error *ngIf="validateForm() && getErrorMessage('invalidCredentials')"
+    >{{ getErrorMessage("invalidCredentials") }}
+  </mat-error>
 </mat-form-field>

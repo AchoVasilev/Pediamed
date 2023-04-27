@@ -4,7 +4,7 @@ import { ScheduleComponent } from './schedule/schedule.component';
 
 const routes: Routes = [
   {
-    path: 'schedule',
+    path: '',
     children: [
       {
         path: 'calendar',

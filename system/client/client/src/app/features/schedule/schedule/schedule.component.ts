@@ -150,7 +150,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   private getTitle(ev: ScheduleData) {
     let title = '';
-    if (!this.isDoctor()) {
+    if (!this.isLoggedIn() || !this.isDoctor()) {
       title = ev?.title?.includes('Запазен час')
         ? 'Запазен час'
         : 'Свободен час';
@@ -182,6 +182,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   generateDayEvents(event: any) {
     if (!this.isLoggedIn() || !this.isDoctor()) {
+      return;
+    }
+
+    if (event.day.isPast) {
       return;
     }
 
@@ -271,7 +275,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         .afterClosed()
         .subscribe((res) => {
           if (res) {
-            setTimeout(() => this.refetchEvents(), 500);
+            this.refetchEvents();
           }
         });
     } else {

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import server.infrastructure.utils.guards.Guard;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.UUID;
@@ -20,12 +21,14 @@ public class Patient extends BaseEntity<UUID> {
     private Integer age;
     private String birthDate;
     @ManyToOne
+    @JoinColumn(name = "parent_id")
     private Parent parent;
 
-    public Patient (String firstName, String lastName) {
+    public Patient (String firstName, String lastName, Parent parent) {
         this.id = UUID.randomUUID();
         this.firstName = Guard.Against.EmptyOrBlank(firstName);
         this.lastName = Guard.Against.EmptyOrBlank(lastName);
+        this.parent = Guard.Against.Null(parent);
     }
 
     public void setAge(int age) {

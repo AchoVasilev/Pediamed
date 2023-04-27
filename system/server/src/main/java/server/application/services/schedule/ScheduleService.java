@@ -26,6 +26,7 @@ import server.infrastructure.utils.DateTimeUtility;
 
 import javax.transaction.Transactional;
 import java.time.DayOfWeek;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -55,10 +56,10 @@ public class ScheduleService {
 
     @Transactional
     public List<ScheduleEvent> generateEvents(EventDataInputRequest data) {
-        var startDate = DateTimeUtility.parseDateTime(data.startDateTime());
-        var endDate = DateTimeUtility.parseDateTime(data.endDateTime());
-
         var cabinet = this.cabinetService.getCabinetByCity(data.cabinetName());
+        var zoneId = ZoneId.of(cabinet.getTimeZone());
+        var startDate = DateTimeUtility.parseDateTime(data.startDateTime(), zoneId);
+        var endDate = DateTimeUtility.parseDateTime(data.endDateTime(), zoneId);
 
         DateTimeUtility.validateWorkDays(cabinet.getWorkDays(), DayOfWeek.from(startDate).name(), DayOfWeek.from(endDate).name());
         String EVENT_TITLE = "Свободен час";
@@ -124,10 +125,9 @@ public class ScheduleService {
         var title = this.createAppointmentTitle(patient.getFirstName(), patient.getLastName());
         var schedule = this.getScheduleById(scheduleId);
 
-        var event = schedule.getEventBy(eventId);
-        event.markDeleted(true);
         var appointmentCause = this.appointmentCauseService.findById(appointmentCauseId);
 
+        var event = schedule.getEventBy(eventId);
         var appointment = new Appointment(event.getStartDate(),
                 event.getEndDate(),
                 title, event.getId(),
@@ -136,6 +136,7 @@ public class ScheduleService {
                 parentId,
                 patient.getId());
 
+        event.markDeleted(true);
         schedule.getAppointments().add(appointment);
         this.scheduleRepository.update(schedule);
 

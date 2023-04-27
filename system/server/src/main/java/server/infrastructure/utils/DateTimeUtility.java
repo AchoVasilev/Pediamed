@@ -7,11 +7,12 @@ import server.infrastructure.utils.guards.Guard;
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
+import static server.common.Constants.SOFIA_TIMEZONE;
 import static server.common.ErrorMessages.DATE_IS_AFTER;
 import static server.common.ErrorMessages.DATE_IS_BEFORE;
 import static server.common.ErrorMessages.DATE_PASSED;
@@ -22,10 +23,10 @@ public class DateTimeUtility {
     private static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm";
     private static final String DATE_FORMAT = "dd/MM/yyyy";
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter
-            .ofPattern(DATE_TIME_FORMAT, new Locale("bg", "BG"));
+            .ofPattern(DATE_TIME_FORMAT);
 
-    public static LocalDateTime parseDateTime(String dateTime) {
-        return LocalDateTime.parse(dateTime, dateTimeFormatter);
+    public static ZonedDateTime parseDateTime(String dateTime, ZoneId zoneId) {
+        return ZonedDateTime.parse(dateTime, dateTimeFormatter.withZone(zoneId));
     }
 
     public static ZonedDateTime parseDate(String date) {
@@ -63,7 +64,7 @@ public class DateTimeUtility {
         }
     }
 
-    public static LocalDateTime validateStartDate(LocalDateTime startDate, LocalDateTime endDate) {
+    public static ZonedDateTime validateStartDate(ZonedDateTime startDate, ZonedDateTime endDate) {
         Guard.Against.Null(startDate);
         if (startDate.isAfter(endDate)) {
             throw new DateTimeException(DATE_IS_AFTER);
@@ -72,7 +73,7 @@ public class DateTimeUtility {
         return validateForCurrentDate(startDate);
     }
 
-    public static LocalDateTime validateEndDate(LocalDateTime startDate, LocalDateTime endDate) {
+    public static ZonedDateTime validateEndDate(ZonedDateTime startDate, ZonedDateTime endDate) {
         Guard.Against.Null(endDate);
         if (endDate.isBefore(startDate)) {
             throw new DateTimeException(DATE_IS_BEFORE);
@@ -81,13 +82,13 @@ public class DateTimeUtility {
         return validateForCurrentDate(endDate);
     }
 
-    public static String parseToString(LocalDateTime dateTime) {
+    public static String parseToString(ZonedDateTime dateTime) {
         return dateTime.format(dateTimeFormatter);
     }
 
-    private static LocalDateTime validateForCurrentDate(LocalDateTime dateTime) {
-        var currentDate = LocalDateTime.now().format(dateTimeFormatter);
-        if (dateTime.isBefore(LocalDateTime.parse(currentDate, dateTimeFormatter))) {
+    private static ZonedDateTime validateForCurrentDate(ZonedDateTime dateTime) {
+        var currentDate = ZonedDateTime.now(ZoneId.of(SOFIA_TIMEZONE));
+        if (dateTime.isBefore(currentDate)) {
             throw new DateTimeException(DATE_PASSED);
         }
 

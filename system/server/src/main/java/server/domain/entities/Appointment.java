@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Entity
@@ -20,8 +20,8 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class Appointment extends BaseEntity<UUID> {
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private ZonedDateTime startDate;
+    private ZonedDateTime endDate;
     private String title;
     @Setter
     @OneToOne
@@ -33,8 +33,8 @@ public class Appointment extends BaseEntity<UUID> {
     private UUID patientId;
     private UUID calendarEventId;
 
-    public Appointment(LocalDateTime startDate,
-                       LocalDateTime endDate,
+    public Appointment(ZonedDateTime startDate,
+                       ZonedDateTime endDate,
                        String title,
                        UUID calendarEventId,
                        AppointmentCause appointmentCause,

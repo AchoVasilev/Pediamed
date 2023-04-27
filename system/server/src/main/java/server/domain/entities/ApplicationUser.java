@@ -62,9 +62,8 @@ public class ApplicationUser extends BaseEntity<UUID> {
     }
 
     public void addPatientToParent(String patientFirstName, String patientLastName) {
-        var parent = this.getParent();
         this.getParent()
                 .getPatients()
-                .add(new Patient(patientFirstName, patientLastName));
+                .add(new Patient(patientFirstName, patientLastName, this.getParent()));
     }
 }

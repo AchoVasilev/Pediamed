@@ -41,7 +41,8 @@ export const ERROR_MESSAGES: any = {
     terms: 'Трябва да се съгласите с условията!',
     phoneRegEx: 'Въведете валиден номер!',
     startIsBefore: 'Началният час не може да е преди настоящия',
-    endIsBefore: 'Крайният час не може да е преди началния'
+    endIsBefore: 'Крайният час не може да е преди началния',
+    invalidCredentials: 'Невалиден и-мейл или парола'
 }
 
 function formatString(str: string, num?: number) {
