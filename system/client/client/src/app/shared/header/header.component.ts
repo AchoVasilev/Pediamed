@@ -1,5 +1,4 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { faClinicMedical } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
@@ -11,7 +10,6 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 export class HeaderComponent{
   @ViewChild('#menu')
   menu: ElementRef | undefined;
-  faClinic = faClinicMedical;
 
   constructor(private authService: AuthService) {
   }

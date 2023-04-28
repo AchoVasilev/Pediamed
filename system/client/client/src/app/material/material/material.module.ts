@@ -11,7 +11,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatOptionModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [],
@@ -28,7 +27,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatSelectModule,
     MatOptionModule,
     MatAutocompleteModule,
-    FontAwesomeModule,
   ],
   exports: [
     MatIconModule,
@@ -43,7 +41,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatSelectModule,
     MatOptionModule,
     MatAutocompleteModule,
-    FontAwesomeModule,
   ],
 })
 export class MaterialModule {}
