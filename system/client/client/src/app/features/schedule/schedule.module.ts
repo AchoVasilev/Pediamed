@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { ScheduleRoutingModule } from './schedule-routing.module';
 import { ScheduleComponent } from './schedule/schedule.component';
@@ -11,7 +10,6 @@ import { DoctorSchedulingDialogComponent } from './helper-components/doctor-sche
 import { RegisteredUserSchedulingDialogComponent } from './helper-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
 import { DateTimeEventDataComponent } from './helper-components/date-time-event-data/date-time-event-data.component';
 import { MaterialModule } from 'src/app/material/material/material.module';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ReusableComponentsModule } from 'src/app/reusable-components/reusable-components.module';
 
 @NgModule({
@@ -24,8 +22,6 @@ import { ReusableComponentsModule } from 'src/app/reusable-components/reusable-c
     DateTimeEventDataComponent,
   ],
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
     ScheduleRoutingModule,
     MaterialModule,
     ReusableComponentsModule,

@@ -2,7 +2,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PhoneInputComponent } from './phone-input/phone-input.component';
-import { SchedulingDialogComponent } from '../features/schedule/helper-components/scheduling-dialog/scheduling-dialog.component';
 import { FormFieldComponent } from './form-field/form-field.component';
 import { EmailComponent } from './email/email.component';
 import { PasswordComponent } from './password/password.component';
@@ -29,6 +28,8 @@ import { AutocompleteComponent } from './autocomplete/autocomplete.component';
     MaterialModule
   ],
   exports: [
+    CommonModule,
+    ReactiveFormsModule,
     PhoneInputComponent,
     FormFieldComponent,
     EmailComponent,

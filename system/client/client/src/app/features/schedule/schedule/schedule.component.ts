@@ -1,6 +1,6 @@
 import { SchedulingDialogComponent } from '../helper-components/scheduling-dialog/scheduling-dialog.component';
 import { CabinetService } from './../../../services/cabinet/cabinet.service';
-import { ScheduleData } from './../../../models/events/schedule';
+import { MetaInfo, ScheduleData } from './../../../models/events/schedule';
 import { EventData, EventDataInput } from '../../../models/events/schedule';
 import { ScheduleService } from '../../../services/schedule/schedule.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,7 +18,7 @@ import { Cabinet } from 'src/app/models/cabinet/cabinet';
 import { colors } from '../colors/colors';
 import { UserDataService } from 'src/app/services/data/user-data.service';
 import { ScheduleDataService } from 'src/app/services/data/schedule-data.service';
-import { format, isBefore, parse } from 'date-fns';
+import { format, isPast, parse } from 'date-fns';
 import { DoctorSchedulingDialogComponent } from '../helper-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
 import { RegisteredUserSchedulingDialogComponent } from '../helper-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
 import { ScheduleDialogComponent } from '../helper-components/schedule-dialog/schedule-dialog.component';
@@ -47,7 +47,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   viewDate = new Date();
   locale: string = 'bg-BG';
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-  events$!: Observable<CalendarEvent<{ event: ScheduleData }>[]>;
+  events$!: Observable<CalendarEvent<MetaInfo>[]>;
   CalendarView = CalendarView;
   cabinet: Cabinet = { id: 2, name: CabinetName.Плевен };
   cabinetScheduleId?: string;
@@ -65,17 +65,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private loadingService: LoadingService,
     private userDataService: UserDataService,
     private scheduleDataService: ScheduleDataService
-  ) {
-    // could be cached
-    this.scheduleService
-      .getEventData()
-      .subscribe((data) => (this.eventData = data));
+  ) {}
+
+  ngOnInit(): void {
+    this.getEventData();
 
     this.getAppointmentCauses();
     this.getUser();
-  }
 
-  ngOnInit(): void {
     this.onLoad();
     this.getCabinet(this.cabinet.id);
 
@@ -117,7 +114,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   isDoctor() {
-    return this.userDataService.isDoctor();
+    return this.userDataService.isDoctor() && this.isLoggedIn();
   }
 
   ngOnDestroy(): void {
@@ -161,6 +158,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     return title;
   }
 
+  private getEventData() {
+    this.scheduleService
+      .getEventData()
+      .subscribe((data) => (this.eventData = data));
+  }
+
   getUser() {
     return this.userDataService.getUser();
   }
@@ -181,7 +184,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   generateDayEvents(event: any) {
-    if (!this.isLoggedIn() || !this.isDoctor()) {
+    if (!this.isDoctor()) {
       return;
     }
 
@@ -220,7 +223,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     );
   }
 
-  private mapEvent(ev: ScheduleData) {        
+  private mapEvent(ev: ScheduleData): CalendarEvent<MetaInfo> {        
     let startDate = parse(ev.startDate, this.dateTimePattern, new Date());
     let endDate = parse(ev.endDate, this.dateTimePattern, new Date());
 
@@ -233,15 +236,22 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       end: endDate,
       id: ev?.id,
       color: isAppointment ? colors.yellow : colors.blue,
+      meta: {
+        isAppointment,
+      }
     };
   }
 
-  eventClicked({ event }: { event: CalendarEvent }) {
+  eventClicked({ event }: { event: CalendarEvent<MetaInfo> }) {
+    if ((event?.meta?.isAppointment || isPast(event.start)) && !this.isDoctor()) {
+      return;
+    }
+
     const startTime = format(event.start, this.dateTimePattern);
     const endTime = format(event.end!, this.dateTimePattern);
     const dateTimeArgs = startTime.split(' ');
 
-    if (this.isLoggedIn() && this.isDoctor()) {
+    if (this.isDoctor()) {
       this.dialog
         .open(DoctorSchedulingDialogComponent, {
           data: {
@@ -259,7 +269,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
             this.refetchEvents();
           }
         });
-    } else if (this.isLoggedIn() && !this.isDoctor) {
+    } else if (this.isLoggedIn() && !this.isDoctor()) {
       this.dialog
         .open(RegisteredUserSchedulingDialogComponent, {
           data: {

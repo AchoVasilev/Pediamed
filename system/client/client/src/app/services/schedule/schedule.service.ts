@@ -1,21 +1,27 @@
 import { CabinetSchedule, ScheduleData } from './../../models/events/schedule';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EventData, EventDataCreate } from 'src/app/models/events/schedule';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ScheduleService {
-  
   private apiUrl: string = environment.apiUrl + '/schedule';
+  private eventData$?: Observable<EventData[]>;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getEventData(): Observable<EventData[]> {
-    return this.http.get<EventData[]>(this.apiUrl + '/event-data');
+    if (!this.eventData$) {
+      this.eventData$ = this.http
+        .get<EventData[]>(this.apiUrl + '/event-data')
+        .pipe(shareReplay(1));
+    }
+
+    return this.eventData$;
   }
 
   postEventData(data: EventDataCreate): Observable<ScheduleData[]> {

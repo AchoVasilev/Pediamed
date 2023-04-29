@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { shouldShowErrorForControl, parseErrorMessage } from 'src/app/utils/formValidator';
+import { HttpStatusCode } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -52,7 +53,7 @@ export class LoginComponent {
           this.router.navigateByUrl('');
         },
         error: (err) => {
-          if (err.status === 400) {
+          if (err.status === HttpStatusCode.BadRequest) {
             this.emailControl.setErrors({invalidCredentials: true});
             this.loading = false;
           }

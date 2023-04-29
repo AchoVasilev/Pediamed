@@ -9,7 +9,6 @@ import { HomeComponent } from './shared/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { PrivacyComponent } from './shared/privacy/privacy.component';
 import { AuthInterceptorProviders } from './services/auth/auth.interceptor';
 import { registerLocaleData } from '@angular/common';
 import localeBg from '@angular/common/locales/bg';
@@ -22,7 +21,6 @@ registerLocaleData(localeBg);
     HeaderComponent,
     FooterComponent,
     HomeComponent,
-    PrivacyComponent,
     LoadingComponent,
   ],
   imports: [

@@ -1,4 +1,4 @@
-import { ScheduleData } from './../../models/events/schedule';
+import { EventData, ScheduleData } from './../../models/events/schedule';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
