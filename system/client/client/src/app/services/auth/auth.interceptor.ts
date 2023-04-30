@@ -26,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
       const clonedReq = request.clone({
         headers: request.headers.set(
           'Authorization',
-          'Bearer ' + localStorage.getItem('token')
+          'Bearer ' + this.authService.getToken()
         ),
         withCredentials: true,
       });
@@ -36,7 +36,7 @@ export class AuthInterceptor implements HttpInterceptor {
           next: () => {},
           error: (err) => {
             if (err.status == 401) {
-              localStorage.removeItem('token');
+              this.authService.removeToken();
 
               setTimeout(() => {
                 this.router.navigateByUrl('/auth/login');

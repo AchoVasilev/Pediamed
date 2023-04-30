@@ -65,6 +65,10 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  removeToken() {
+    localStorage.clear();
+  }
+
   getUser(): Observable<UserModel>{
     return this.httpClient.get<UserModel>(this.apiUrl + '/user').pipe(
       tap(user => {

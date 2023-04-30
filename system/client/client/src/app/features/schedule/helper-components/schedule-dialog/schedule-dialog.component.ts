@@ -10,7 +10,6 @@ import {
   parseErrorMessage,
   shouldShowErrorForControl,
 } from 'src/app/utils/formValidator';
-import { ScheduleService } from 'src/app/services/schedule/schedule.service';
 import {
   validateEndDate,
   validateStartDate,
@@ -19,6 +18,7 @@ import {
   EventDataCreate,
   EventDataInput,
 } from 'src/app/models/events/schedule';
+import { CalendarService } from 'src/app/services/calendar/calendar.service';
 
 @Component({
   selector: 'app-schedule-dialog',
@@ -33,7 +33,7 @@ export class ScheduleDialogComponent {
     @Inject(MAT_DIALOG_DATA) data: EventDataInput,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<ScheduleDialogComponent>,
-    private scheduleService: ScheduleService
+    private calendarService: CalendarService
   ) {
     this.data = data;
 
@@ -57,7 +57,7 @@ export class ScheduleDialogComponent {
   close() {
     const date = this.data.date;
     const { hoursGroup, intervals } = this.form.value;
-    
+
     const eventData: EventDataCreate = {
       startDateTime: `${date} ${hoursGroup.hours}`,
       endDateTime: `${date} ${hoursGroup.endHour}`,
@@ -65,9 +65,9 @@ export class ScheduleDialogComponent {
       cabinetName: this.data.cabinetName,
     };
 
-    this.scheduleService
-      .postEventData(eventData)
-      .subscribe((events) => this.dialogRef.close({ events }));
+    this.calendarService.postEventData(eventData).subscribe((events) => {      
+      this.dialogRef.close({ events });
+    });
   }
 
   get hoursGroup() {

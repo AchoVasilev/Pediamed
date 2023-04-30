@@ -1,35 +1,28 @@
 package server.presentation.schedule;
 
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.PathVariable;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.MediaType;
+import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
+import org.reactivestreams.Publisher;
 import server.application.services.schedule.ScheduleService;
-import server.application.services.schedule.models.AppointmentInput;
-import server.application.services.schedule.models.CabinetSchedule;
-import server.application.services.schedule.models.EventDataInputRequest;
-import server.application.services.schedule.models.EventDataResponse;
-import server.application.services.schedule.models.RegisteredUserAppointmentInput;
-import server.application.services.schedule.models.ScheduleEvent;
+import server.application.services.schedule.models.*;
+import server.application.services.sse.ServerSentEventService;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
-import static server.common.Constants.ROLE_ADMINISTRATOR;
-import static server.common.Constants.ROLE_DOCTOR;
-import static server.common.Constants.ROLE_PATIENT;
+import static server.common.Constants.*;
 
 @Controller("/schedule")
 public class ScheduleController {
     private final ScheduleService scheduleService;
-
-    public ScheduleController(ScheduleService scheduleService) {
+    private final ServerSentEventService serverSentEventService;
+    public ScheduleController(ScheduleService scheduleService, ServerSentEventService serverSentEventService) {
         this.scheduleService = scheduleService;
+        this.serverSentEventService = serverSentEventService;
     }
 
     @Post("/{id}/full")
@@ -45,21 +38,16 @@ public class ScheduleController {
                 .scheduleAppointment(scheduleId, registeredUserAppointmentInput));
     }
 
-    @Get("/event-data")
+    @Get("/{id}/stream")
     @Secured(SecurityRule.IS_ANONYMOUS)
-    public HttpResponse<List<EventDataResponse>> getEventData() {
-        return HttpResponse.ok(this.scheduleService.getEventData());
-    }
-
-    @Post("/event-data")
-    @Secured(value = {SecurityRule.IS_AUTHENTICATED, ROLE_DOCTOR, ROLE_ADMINISTRATOR})
-    public HttpResponse<List<ScheduleEvent>> createEvents(@Body @Valid EventDataInputRequest data) {
-        return HttpResponse.ok(this.scheduleService.generateEvents(data));
+    @Produces(MediaType.TEXT_EVENT_STREAM)
+    public Publisher<?> getSchedule(@PathVariable("id") UUID scheduleId) {
+        return serverSentEventService.send(this.scheduleService.findById(scheduleId));
     }
 
     @Get("/{id}")
     @Secured(SecurityRule.IS_ANONYMOUS)
-    public HttpResponse<CabinetSchedule> getCabinetSchedule(@PathVariable("id") UUID scheduleId) {
+    public HttpResponse<CabinetSchedule> getScheduleById(@PathVariable("id") UUID scheduleId) {
         return HttpResponse.ok(this.scheduleService.findById(scheduleId));
     }
 }
