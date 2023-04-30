@@ -1,5 +1,6 @@
 package server.application.services.calendar;
 
+import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import server.application.services.schedule.models.ScheduleEvent;
 import server.common.util.CalendarEventsUtility;
 import server.domain.entities.CalendarEvent;
 import server.domain.repositories.EventDataRepository;
+import server.events.AppointmentScheduled;
 import server.infrastructure.config.exceptions.models.CalendarEventException;
 import server.infrastructure.utils.DateTimeUtility;
 
@@ -26,9 +28,12 @@ import static server.common.ErrorMessages.EVENTS_NOT_GENERATED;
 public class CalendarService {
     private final EventDataRepository eventDataRepository;
     private final CabinetService cabinetService;
-    public CalendarService(EventDataRepository eventDataRepository, CabinetService cabinetService) {
+    private final ApplicationEventPublisher<AppointmentScheduled> eventPublisher;
+
+    public CalendarService(EventDataRepository eventDataRepository, CabinetService cabinetService, ApplicationEventPublisher<AppointmentScheduled> eventPublisher) {
         this.eventDataRepository = eventDataRepository;
         this.cabinetService = cabinetService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -69,6 +74,7 @@ public class CalendarService {
         this.cabinetService.updateCabinet(cabinet);
         log.info("Successfully generated events. [eventsCount={}] [startDate={}, endDate={}, intervals={}, cabinetId={}, scheduleId={}]",
                 events.size(), data.startDateTime(), data.endDateTime(), data.intervals(), cabinet.getId(), cabinet.getSchedule().getId());
+        this.eventPublisher.publishEvent(new AppointmentScheduled(cabinet.getSchedule()));
         return CalendarEventsUtility.mapEvents(events);
     }
 }

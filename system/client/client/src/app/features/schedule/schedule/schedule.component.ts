@@ -35,6 +35,7 @@ import { ScheduleDialogComponent } from '../helper-components/schedule-dialog/sc
 import { Constants } from 'src/app/utils/constants';
 import { EventSourceService } from 'src/app/services/event-source/event-source.service';
 import { CalendarService } from 'src/app/services/calendar/calendar.service';
+import { WebSocketService } from 'src/app/services/web-socket/web-socket.service';
 
 @Component({
   selector: 'app-schedule',
@@ -80,7 +81,8 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
     private userDataService: UserDataService,
     private scheduleDataService: ScheduleDataService,
     private eventSourceService: EventSourceService,
-    private calendarService: CalendarService
+    private calendarService: CalendarService,
+    private webSocketService: WebSocketService
   ) {}
 
   ngAfterViewInit(): void {}
@@ -146,50 +148,74 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getCabinet(id: number) {
-    this.events$ = this.cabinetService
-      .getCabinet(id)
-      .pipe(
-        map((result) => {
-          this.scheduleDataService.setSchedule([
-            ...result.cabinetSchedule.scheduleAppointments,
-            ...result.cabinetSchedule.scheduleEvents,
-          ]);
+    this.events$ = this.webSocketService.connect('6bba2627-3f52-43f4-9c28-5ab3d7ce6151').pipe(
+      map((schedule: CabinetSchedule) => {
+        this.cabinetScheduleId = schedule.id;
+        const merged = [...schedule.scheduleAppointments, ...schedule.scheduleEvents];
+        this.scheduleDataService.setSchedule(merged);
+        return [...merged].map((ev) => {
+          return this.mapEvent(ev);
+        });
+      })
+    )
+    // this.events$ = this.cabinetService
+    //   .getCabinet(id)
+    //   .pipe(
+    //     map((result) => {
+    //       this.scheduleDataService.setSchedule([
+    //         ...result.cabinetSchedule.scheduleAppointments,
+    //         ...result.cabinetSchedule.scheduleEvents,
+    //       ]);
 
-          const merged: ScheduleData[] = [
-            ...this.scheduleDataService.getSchedule(),
-          ];
+    //       const merged: ScheduleData[] = [
+    //         ...this.scheduleDataService.getSchedule(),
+    //       ];
 
-          this.cabinetScheduleId = result.cabinetSchedule.id;
+    //       this.cabinetScheduleId = result.cabinetSchedule.id;
 
-          this.calculateExcludedDays(result.workDays);
+    //       this.calculateExcludedDays(result.workDays);
 
-          return [...merged].map((ev) => {
-            return this.mapEvent(ev);
-          });
-        })
-      )
-      .pipe(
-        tap(() => {
-          this.events$ = this.eventSourceService
-            .getCalendarSource$(this.cabinetScheduleId!)
-            .pipe(
-              map((events) => {
-                const parsed: CabinetSchedule = JSON.parse(events);
-                console.log(parsed);
+    //       return [...merged].map((ev) => {
+    //         return this.mapEvent(ev);
+    //       });
+    //     })
+    //   ).pipe(
+    //     tap(() => {
+    //       this.events$ = this.webSocketService.connect('6bba2627-3f52-43f4-9c28-5ab3d7ce6151').pipe(
+    //         takeUntil(this.destroy$),
+    //         map((schedule: CabinetSchedule) => {
+    //           console.log(schedule);
+              
+    //           const merged = [...schedule.scheduleAppointments, ...schedule.scheduleEvents];
+    //           this.scheduleDataService.setSchedule(merged);
+    //           return [...merged].map((ev) => {
+    //             return this.mapEvent(ev);
+    //           });
+    //         })
+    //       )
+    //     })
+    //   )
+      // .pipe(
+      //   tap(() => {
+      //     this.events$ = this.eventSourceService
+      //       .getCalendarSource$(this.cabinetScheduleId!)
+      //       .pipe(
+      //         map((events) => {
+      //           const parsed: CabinetSchedule = JSON.parse(events);
                 
-                const merged = [
-                  ...parsed.scheduleAppointments,
-                  ...parsed.scheduleEvents,
-                ];
+      //           const merged = [
+      //             ...parsed.scheduleAppointments,
+      //             ...parsed.scheduleEvents,
+      //           ];
 
-                this.scheduleDataService.setSchedule(merged);
-                return [...merged].map((ev) => {
-                  return this.mapEvent(ev);
-                });
-              })
-            );
-        })
-      );
+      //           this.scheduleDataService.setSchedule(merged);
+      //           return [...merged].map((ev) => {
+      //             return this.mapEvent(ev);
+      //           });
+      //         })
+      //       );
+      //   })
+      // );
   }
 
   // private getTitle(ev: ScheduleData) {
@@ -209,6 +235,10 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
     this.calendarService
       .getEventData()
       .subscribe((data) => (this.eventData = data));
+  }
+
+  refetch(payload: string) {
+    this.webSocketService.send(payload);
   }
 
   getUser() {
@@ -255,7 +285,8 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.scheduleDataService.addMultiple(res.events);
-          this.refetchEvents();
+          // this.refetchEvents();
+          this.refetch(JSON.stringify(this.cabinetScheduleId));
         }
       });
   }
@@ -315,7 +346,6 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
         .afterClosed()
         .subscribe((res) => {
           if (res) {
-            this.refetchEvents();
           }
         });
     } else if (this.isLoggedIn() && !this.isDoctor()) {
@@ -334,7 +364,6 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
         .afterClosed()
         .subscribe((res) => {
           if (res) {
-            this.refetchEvents();
           }
         });
     } else {
@@ -352,9 +381,6 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
         .afterClosed()
         .subscribe((res) => {
           if (res) {
-            this.scheduleDataService.removeItem(event!.id!.toString());
-            this.scheduleDataService.addItem(res.appointment);
-            this.refetchEvents();
           }
         });
     }
