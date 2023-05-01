@@ -1,3 +1,4 @@
+import { PatientService } from './../../../../services/patient/patient.service';
 import { CalendarEvent } from 'angular-calendar';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
@@ -11,6 +12,7 @@ import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appoi
 import { ScheduleService } from 'src/app/services/schedule/schedule.service';
 import { Constants } from 'src/app/utils/constants';
 import { UserModel } from 'src/app/services/auth/authResult';
+import { PatientView } from 'src/app/models/user/patient';
 
 @Component({
   selector: 'app-scheduling-dialog',
@@ -24,6 +26,7 @@ export class SchedulingDialogComponent implements OnInit {
   appointmentCauses: AppointmentCauseResponse[] = [];
   scheduleId: string;
   currentUser?: UserModel
+  patients?: PatientView[];
 
   form: FormGroup = this.fb.group({
     start: new FormControl({value: null, disabled: true}, [Validators.required]),
@@ -68,7 +71,8 @@ export class SchedulingDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) data: any,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<SchedulingDialogComponent>,
-    private scheduleService: ScheduleService
+    private scheduleService: ScheduleService,
+    private patientService: PatientService
   ) {
     this.event = data.event;
     this.startTime = data.startTime;
@@ -84,6 +88,8 @@ export class SchedulingDialogComponent implements OnInit {
       start: this.startTime,
       end: this.endTime,
     });
+
+    this.populateWithUserData();
   }
 
   getControl(name: string): FormControl {
@@ -115,6 +121,21 @@ export class SchedulingDialogComponent implements OnInit {
       return;
     }
 
-    
+    this.form.patchValue({
+      email: this.currentUser.email,
+      parentFirstName: this.currentUser.firstName,
+      parentLastName: this.currentUser.lastName,
+      phoneNumber: this.currentUser.phoneNumber
+    });
+
+    this.patientService.getPatientByParentId(this.currentUser.id)
+      .subscribe(res => this.patients = res);
+
+    if (this.patients && this.patients.length === 1) {
+      this.form.patchValue({
+        childFirstName: this.patients[0].firstName,
+        childLastName: this.patients[0].lastName
+      });
+    }
   }
 }

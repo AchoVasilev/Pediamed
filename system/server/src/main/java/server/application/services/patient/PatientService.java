@@ -2,6 +2,7 @@ package server.application.services.patient;
 
 import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
+import server.application.services.user.UserService;
 import server.common.util.StringUtility;
 import server.domain.repositories.PatientRepository;
 
@@ -12,9 +13,11 @@ import java.util.UUID;
 @Singleton
 public class PatientService {
     private final PatientRepository patientRepository;
+    private final UserService userService;
 
-    public PatientService(PatientRepository patientRepository) {
+    public PatientService(PatientRepository patientRepository, UserService userService) {
         this.patientRepository = patientRepository;
+        this.userService = userService;
     }
 
     public List<String> findBy(String query) {
@@ -24,8 +27,10 @@ public class PatientService {
 
     @Transactional
     @ReadOnly
-    public List<PatientView> findAllByParentId(UUID parentId) {
-        return this.patientRepository.findAllByParentId(parentId)
+    public List<PatientView> findAllByParentId(UUID userId) {
+        return this.userService.getUser(userId)
+                .getParent()
+                .getPatients()
                 .stream()
                 .map(p -> new PatientView(p.getId(), p.getFirstName(), p.getLastName()))
                 .toList();

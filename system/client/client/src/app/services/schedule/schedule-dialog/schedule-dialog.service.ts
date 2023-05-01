@@ -24,6 +24,8 @@ export class ScheduleDialogService {
     const endTime = format(event.end!, Constants.dateTimePattern);
     const dateTimeArgs = startTime.split(' ');
 
+    console.log(this.isDoctor());
+    
     if (this.isDoctor()) {
       return this.dialog
         .open(DoctorSchedulingDialogComponent, {
