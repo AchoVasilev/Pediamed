@@ -7,14 +7,14 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import org.reactivestreams.Publisher;
 import server.application.services.schedule.ScheduleService;
-import server.application.services.schedule.models.*;
+import server.application.services.schedule.models.AppointmentInput;
+import server.application.services.schedule.models.CabinetSchedule;
+import server.application.services.schedule.models.RegisteredUserAppointmentInput;
 import server.application.services.sse.ServerSentEventService;
 
-import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 
-import static server.common.Constants.*;
+import static server.common.Constants.ROLE_PATIENT;
 
 @Controller("/schedule")
 public class ScheduleController {

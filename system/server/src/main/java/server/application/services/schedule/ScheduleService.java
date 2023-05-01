@@ -1,6 +1,5 @@
 package server.application.services.schedule;
 
-import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.security.utils.SecurityService;
 import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
@@ -18,7 +17,6 @@ import server.domain.entities.Patient;
 import server.domain.entities.Schedule;
 import server.domain.entities.enums.RoleEnum;
 import server.domain.repositories.ScheduleRepository;
-import server.events.AppointmentScheduled;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 import server.infrastructure.utils.DateTimeUtility;
 
@@ -35,7 +33,6 @@ public class ScheduleService {
     private final UserService userService;
     private final AppointmentCauseService appointmentCauseService;
     private final SecurityService securityService;
-    private final ApplicationEventPublisher<AppointmentScheduled> eventPublisher;
 
     @Transactional
     @ReadOnly
@@ -95,7 +92,6 @@ public class ScheduleService {
         this.scheduleRepository.update(schedule);
 
         var createdAppointment = schedule.getAppointmentBy(appointment.getCalendarEventId());
-        this.eventPublisher.publishEvent(new AppointmentScheduled(schedule));
         return new ScheduleAppointment(createdAppointment.getId(), DateTimeUtility.parseToString(createdAppointment.getStartDate()),
                 DateTimeUtility.parseToString(createdAppointment.getEndDate()), createdAppointment.getTitle());
     }

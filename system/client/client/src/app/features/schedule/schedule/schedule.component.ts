@@ -1,25 +1,11 @@
-import { SchedulingDialogComponent } from '../helper-components/scheduling-dialog/scheduling-dialog.component';
-import { CabinetService } from './../../../services/cabinet/cabinet.service';
-import {
-  CabinetSchedule,
-  MetaInfo,
-  ScheduleData,
-} from './../../../models/events/schedule';
+import { MetaInfo, ScheduleData } from './../../../models/events/schedule';
 import { EventData, EventDataInput } from '../../../models/events/schedule';
-import { ScheduleService } from '../../../services/schedule/schedule.service';
-import { MatDialog } from '@angular/material/dialog';
 import { DateFormatter } from './../../../utils/dateFormatter';
 import { CalendarDateFormatter } from 'angular-calendar';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
-import { map, Observable, Subject, Subscription, takeUntil, tap } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { CabinetName } from 'src/app/models/enums/cabinetNameEnum';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
 import { AppointmentCauseService } from 'src/app/services/appointment-cause/appointment-cause.service';
@@ -29,13 +15,10 @@ import { colors } from '../colors/colors';
 import { UserDataService } from 'src/app/services/data/user-data.service';
 import { ScheduleDataService } from 'src/app/services/data/schedule-data.service';
 import { format, isPast, parse } from 'date-fns';
-import { DoctorSchedulingDialogComponent } from '../helper-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
-import { RegisteredUserSchedulingDialogComponent } from '../helper-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
-import { ScheduleDialogComponent } from '../helper-components/schedule-dialog/schedule-dialog.component';
 import { Constants } from 'src/app/utils/constants';
-import { EventSourceService } from 'src/app/services/event-source/event-source.service';
 import { CalendarService } from 'src/app/services/calendar/calendar.service';
 import { WebSocketService } from 'src/app/services/web-socket/web-socket.service';
+import { ScheduleDialogService } from 'src/app/services/schedule/schedule-dialog/schedule-dialog.service';
 
 @Component({
   selector: 'app-schedule',
@@ -48,13 +31,11 @@ import { WebSocketService } from 'src/app/services/web-socket/web-socket.service
     },
   ],
 })
-export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ScheduleComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private dateTimePattern = Constants.dateTimePattern;
   private datePattern = Constants.datePattern;
-  private subs$?: Subscription;
 
-  refresh: Subject<void> = new Subject<void>();
   view: CalendarView = CalendarView.Week;
   daysInWeek = 7;
   dayStartHour = 7;
@@ -73,27 +54,20 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private cd: ChangeDetectorRef,
-    private scheduleService: ScheduleService,
-    private cabinetService: CabinetService,
     private appointmentCauseService: AppointmentCauseService,
-    private dialog: MatDialog,
     private loadingService: LoadingService,
     private userDataService: UserDataService,
     private scheduleDataService: ScheduleDataService,
-    private eventSourceService: EventSourceService,
     private calendarService: CalendarService,
-    private webSocketService: WebSocketService
+    private webSocketService: WebSocketService,
+    private scheduleDialogService: ScheduleDialogService,
   ) {}
-
-  ngAfterViewInit(): void {}
 
   ngOnInit(): void {
     this.getEventData();
 
     this.getAppointmentCauses();
-    this.getUser();
 
-    this.onLoad();
     this.getCabinet(this.cabinet.id);
 
     const CALENDAR_RESPONSIVE = {
@@ -129,6 +103,11 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   isLoggedIn() {
     return this.userDataService.getLogin();
   }
@@ -137,99 +116,45 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.userDataService.isDoctor() && this.isLoggedIn();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.subs$;
-    this.subs$?.unsubscribe();
-  }
-
   setLoading(value: boolean) {
     this.loadingService.setLoading(value);
   }
 
   getCabinet(id: number) {
-    this.events$ = this.webSocketService.connect('6bba2627-3f52-43f4-9c28-5ab3d7ce6151').pipe(
-      map((schedule: CabinetSchedule) => {
-        this.cabinetScheduleId = schedule.id;
-        const merged = [...schedule.scheduleAppointments, ...schedule.scheduleEvents];
-        this.scheduleDataService.setSchedule(merged);
+    this.events$ = this.webSocketService.connect(id.toString()).pipe(
+      map((result) => {
+        this.scheduleDataService.setSchedule([
+          ...result.cabinetSchedule.scheduleAppointments,
+          ...result.cabinetSchedule.scheduleEvents,
+        ]);
+
+        const merged: ScheduleData[] = [
+          ...this.scheduleDataService.getSchedule(),
+        ];
+
+        this.cabinetScheduleId = result.cabinetSchedule.id;
+
+        this.calculateExcludedDays(result.workDays);
+
         return [...merged].map((ev) => {
           return this.mapEvent(ev);
         });
       })
-    )
-    // this.events$ = this.cabinetService
-    //   .getCabinet(id)
-    //   .pipe(
-    //     map((result) => {
-    //       this.scheduleDataService.setSchedule([
-    //         ...result.cabinetSchedule.scheduleAppointments,
-    //         ...result.cabinetSchedule.scheduleEvents,
-    //       ]);
-
-    //       const merged: ScheduleData[] = [
-    //         ...this.scheduleDataService.getSchedule(),
-    //       ];
-
-    //       this.cabinetScheduleId = result.cabinetSchedule.id;
-
-    //       this.calculateExcludedDays(result.workDays);
-
-    //       return [...merged].map((ev) => {
-    //         return this.mapEvent(ev);
-    //       });
-    //     })
-    //   ).pipe(
-    //     tap(() => {
-    //       this.events$ = this.webSocketService.connect('6bba2627-3f52-43f4-9c28-5ab3d7ce6151').pipe(
-    //         takeUntil(this.destroy$),
-    //         map((schedule: CabinetSchedule) => {
-    //           console.log(schedule);
-              
-    //           const merged = [...schedule.scheduleAppointments, ...schedule.scheduleEvents];
-    //           this.scheduleDataService.setSchedule(merged);
-    //           return [...merged].map((ev) => {
-    //             return this.mapEvent(ev);
-    //           });
-    //         })
-    //       )
-    //     })
-    //   )
-      // .pipe(
-      //   tap(() => {
-      //     this.events$ = this.eventSourceService
-      //       .getCalendarSource$(this.cabinetScheduleId!)
-      //       .pipe(
-      //         map((events) => {
-      //           const parsed: CabinetSchedule = JSON.parse(events);
-                
-      //           const merged = [
-      //             ...parsed.scheduleAppointments,
-      //             ...parsed.scheduleEvents,
-      //           ];
-
-      //           this.scheduleDataService.setSchedule(merged);
-      //           return [...merged].map((ev) => {
-      //             return this.mapEvent(ev);
-      //           });
-      //         })
-      //       );
-      //   })
-      // );
+    );
   }
 
-  // private getTitle(ev: ScheduleData) {
-  //   let title = '';
-  //   if (!this.isLoggedIn() || !this.isDoctor()) {
-  //     title = ev?.title?.includes('Запазен час')
-  //       ? 'Запазен час'
-  //       : 'Свободен час';
-  //   } else {
-  //     title = ev?.title;
-  //   }
+  private getTitle(ev: ScheduleData) {
+    let title = '';
+    if (!this.isLoggedIn() || !this.isDoctor()) {
+      title = ev?.title?.includes('Запазен час')
+        ? 'Запазен час'
+        : 'Свободен час';
+    } else {
+      title = ev?.title;
+    }
 
-  //   return title;
-  // }
+    return title;
+  }
 
   private getEventData() {
     this.calendarService
@@ -237,12 +162,8 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((data) => (this.eventData = data));
   }
 
-  refetch(payload: string) {
+  refetchEvents(payload: string) {
     this.webSocketService.send(payload);
-  }
-
-  getUser() {
-    return this.userDataService.getUser();
   }
 
   getAppointmentCauses() {
@@ -260,7 +181,7 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
     this.excludedDays = this.excludedDays.filter((d) => !workDays.includes(d));
   }
 
-  generateDayEvents(event: any) {
+  generateEmptySlots(event: any) {
     if (!this.isDoctor()) {
       return;
     }
@@ -277,28 +198,13 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
       cabinetName: this.cabinet.name,
     };
 
-    this.dialog
-      .open(ScheduleDialogComponent, {
-        data: eventDataInput,
-      })
-      .afterClosed()
+    this.scheduleDialogService
+      .openEventDataDialog(eventDataInput)
       .subscribe((res) => {
         if (res) {
-          this.scheduleDataService.addMultiple(res.events);
-          // this.refetchEvents();
-          this.refetch(JSON.stringify(this.cabinetScheduleId));
+          this.refetchEvents(this.cabinet.id.toString());
         }
       });
-  }
-
-  refetchEvents() {
-    this.events$ = this.scheduleDataService.getSchedule$().pipe(
-      map((result) => {
-        return [...result].map((ev) => {
-          return this.mapEvent(ev);
-        });
-      })
-    );
   }
 
   private mapEvent(ev: ScheduleData): CalendarEvent<MetaInfo> {
@@ -309,7 +215,7 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
 
     return {
       start: startDate,
-      title: ev.title,
+      title: this.getTitle(ev),
       end: endDate,
       id: ev?.id,
       color: isAppointment ? colors.yellow : colors.blue,
@@ -327,70 +233,16 @@ export class ScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    const startTime = format(event.start, this.dateTimePattern);
-    const endTime = format(event.end!, this.dateTimePattern);
-    const dateTimeArgs = startTime.split(' ');
-
-    if (this.isDoctor()) {
-      this.dialog
-        .open(DoctorSchedulingDialogComponent, {
-          data: {
-            event: event,
-            appointmentCauses: this.appointmentCauses,
-            startTime,
-            endTime,
-            dateTimeArgs,
-            scheduleId: this.cabinetScheduleId,
-          },
-        })
-        .afterClosed()
-        .subscribe((res) => {
-          if (res) {
-          }
-        });
-    } else if (this.isLoggedIn() && !this.isDoctor()) {
-      this.dialog
-        .open(RegisteredUserSchedulingDialogComponent, {
-          data: {
-            event: event,
-            user: this.getUser(),
-            appointmentCauses: this.appointmentCauses,
-            startTime,
-            endTime,
-            dateTimeArgs,
-            scheduleId: this.cabinetScheduleId,
-          },
-        })
-        .afterClosed()
-        .subscribe((res) => {
-          if (res) {
-          }
-        });
-    } else {
-      this.dialog
-        .open(SchedulingDialogComponent, {
-          data: {
-            event: event,
-            appointmentCauses: this.appointmentCauses,
-            startTime,
-            endTime,
-            dateTimeArgs,
-            scheduleId: this.cabinetScheduleId,
-          },
-        })
-        .afterClosed()
-        .subscribe((res) => {
-          if (res) {
-          }
-        });
-    }
-  }
-
-  onLoad() {
-    document
-      .querySelectorAll('a.nav-item.nav-link.active')
-      .forEach((el) => el.classList.remove('active'));
-    const calendarLink = document.getElementById('calendar');
-    calendarLink?.classList.add('active');
+    this.scheduleDialogService
+      .openSchedulingDialog(
+        event,
+        this.cabinetScheduleId!,
+        this.appointmentCauses
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.refetchEvents(this.cabinet.id.toString());
+        }
+      });
   }
 }

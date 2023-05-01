@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
@@ -8,19 +8,12 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 })
 
 export class HeaderComponent{
-  @ViewChild('#menu')
-  menu: ElementRef | undefined;
 
   constructor(private authService: AuthService) {
   }
 
   get isLoggedIn():boolean {
     return this.authService.isLoggedIn();
-  }
-
-  onClick(event: any) {
-    document.querySelectorAll('a.nav-item.nav-link.active').forEach(el => el.classList.remove('active'));
-    event.target.classList.add('active');
   }
 
   onLogOut() {

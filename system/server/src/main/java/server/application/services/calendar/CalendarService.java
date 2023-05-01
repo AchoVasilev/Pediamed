@@ -7,18 +7,15 @@ import lombok.extern.slf4j.Slf4j;
 import server.application.services.cabinet.CabinetService;
 import server.application.services.schedule.models.EventDataInputRequest;
 import server.application.services.schedule.models.EventDataResponse;
-import server.application.services.schedule.models.ScheduleEvent;
-import server.common.util.CalendarEventsUtility;
 import server.domain.entities.CalendarEvent;
 import server.domain.repositories.EventDataRepository;
-import server.events.AppointmentScheduled;
+import server.events.ScheduleReload;
 import server.infrastructure.config.exceptions.models.CalendarEventException;
 import server.infrastructure.utils.DateTimeUtility;
 
 import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 
 import static server.common.ErrorMessages.EVENTS_NOT_GENERATED;
@@ -28,9 +25,9 @@ import static server.common.ErrorMessages.EVENTS_NOT_GENERATED;
 public class CalendarService {
     private final EventDataRepository eventDataRepository;
     private final CabinetService cabinetService;
-    private final ApplicationEventPublisher<AppointmentScheduled> eventPublisher;
+    private final ApplicationEventPublisher<ScheduleReload> eventPublisher;
 
-    public CalendarService(EventDataRepository eventDataRepository, CabinetService cabinetService, ApplicationEventPublisher<AppointmentScheduled> eventPublisher) {
+    public CalendarService(EventDataRepository eventDataRepository, CabinetService cabinetService, ApplicationEventPublisher<ScheduleReload> eventPublisher) {
         this.eventDataRepository = eventDataRepository;
         this.cabinetService = cabinetService;
         this.eventPublisher = eventPublisher;
@@ -48,7 +45,7 @@ public class CalendarService {
 
 
     @Transactional
-    public List<ScheduleEvent> generateEvents(EventDataInputRequest data) {
+    public void generateEvents(EventDataInputRequest data) {
         var cabinet = this.cabinetService.getCabinetByCity(data.cabinetName());
         var zoneId = ZoneId.of(cabinet.getTimeZone());
         var startDate = DateTimeUtility.parseDateTime(data.startDateTime(), zoneId);
@@ -56,25 +53,24 @@ public class CalendarService {
 
         DateTimeUtility.validateWorkDays(cabinet.getWorkDays(), DayOfWeek.from(startDate).name(), DayOfWeek.from(endDate).name());
         String EVENT_TITLE = "Свободен час";
-        var events = new ArrayList<CalendarEvent>();
+        var eventsCount = 0;
         for (var slotStart = startDate; slotStart.isBefore(endDate); slotStart = slotStart.plusMinutes(data.intervals())) {
             var slotEnd = slotStart.plusMinutes(data.intervals());
             var event = new CalendarEvent(slotStart, slotEnd, EVENT_TITLE, cabinet.getSchedule().getId());
 
             if (cabinet.getSchedule().addCalendarEvent(event))
-                events.add(event);
+                eventsCount++;
             else
                 log.info("Skipping duplicate. [eventStartDate={}], [eventEndDate={}]", event.getStartDate(), event.getEndDate());
         }
 
-        if (events.isEmpty()) {
+        if (eventsCount == 0) {
             throw new CalendarEventException(EVENTS_NOT_GENERATED);
         }
 
         this.cabinetService.updateCabinet(cabinet);
         log.info("Successfully generated events. [eventsCount={}] [startDate={}, endDate={}, intervals={}, cabinetId={}, scheduleId={}]",
-                events.size(), data.startDateTime(), data.endDateTime(), data.intervals(), cabinet.getId(), cabinet.getSchedule().getId());
-        this.eventPublisher.publishEvent(new AppointmentScheduled(cabinet.getSchedule()));
-        return CalendarEventsUtility.mapEvents(events);
+                eventsCount, data.startDateTime(), data.endDateTime(), data.intervals(), cabinet.getId(), cabinet.getSchedule().getId());
+        this.eventPublisher.publishEvent(new ScheduleReload(cabinet.getSchedule()));
     }
 }

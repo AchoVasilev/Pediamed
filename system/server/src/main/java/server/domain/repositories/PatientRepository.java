@@ -11,4 +11,6 @@ public interface PatientRepository extends BaseRepository<Patient, UUID> {
     @Query("SELECT *, p. ")
     @Join(value = "parent", alias = "p")
     List<Patient> findBy(String query);
+
+    List<Patient> findAllByParentId(UUID parentId);
 }

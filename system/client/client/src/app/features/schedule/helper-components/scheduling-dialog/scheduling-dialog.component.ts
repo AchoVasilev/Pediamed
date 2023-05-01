@@ -8,9 +8,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
-import { UserModel } from 'src/app/services/auth/authResult';
 import { ScheduleService } from 'src/app/services/schedule/schedule.service';
 import { Constants } from 'src/app/utils/constants';
+import { UserModel } from 'src/app/services/auth/authResult';
 
 @Component({
   selector: 'app-scheduling-dialog',
@@ -23,6 +23,7 @@ export class SchedulingDialogComponent implements OnInit {
   dateTimeArgs: string[] = [];
   appointmentCauses: AppointmentCauseResponse[] = [];
   scheduleId: string;
+  currentUser?: UserModel
 
   form: FormGroup = this.fb.group({
     start: new FormControl({value: null, disabled: true}, [Validators.required]),
@@ -60,10 +61,7 @@ export class SchedulingDialogComponent implements OnInit {
     ]
   });
 
-  isLoggedIn: boolean = false;
   event: CalendarEvent;
-  currentUser?: UserModel;
-
   fieldMinLength = Constants.fieldMinLength;
 
   constructor(
@@ -78,9 +76,10 @@ export class SchedulingDialogComponent implements OnInit {
     this.dateTimeArgs = data.dateTimeArgs;
     this.appointmentCauses = data.appointmentCauses;
     this.scheduleId = data.scheduleId;
+    this.currentUser = data.currentUser;
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.form.patchValue({
       start: this.startTime,
       end: this.endTime,
@@ -109,5 +108,13 @@ export class SchedulingDialogComponent implements OnInit {
       .subscribe(appointment => {        
         this.dialogRef.close({appointment});
       });
+  }
+
+  populateWithUserData() {
+    if (!this.currentUser) {
+      return;
+    }
+
+    
   }
 }

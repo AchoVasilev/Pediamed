@@ -1,7 +1,5 @@
 package server.presentation.live;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.websocket.WebSocketBroadcaster;
@@ -12,99 +10,37 @@ import io.micronaut.websocket.annotation.OnOpen;
 import io.micronaut.websocket.annotation.ServerWebSocket;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
-import server.application.services.schedule.ScheduleService;
-import server.application.services.schedule.models.CabinetSchedule;
-import server.application.services.schedule.models.ScheduleAppointment;
-import server.common.util.CalendarEventsUtility;
-import server.domain.entities.Schedule;
-import server.events.AppointmentScheduled;
-import server.infrastructure.utils.DateTimeUtility;
+import server.application.services.cabinet.CabinetService;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
-
-@ServerWebSocket("/ws/schedule/{topic}/{scheduleId}")
+@ServerWebSocket("/ws/{topic}/{cabinetId}")
 @Secured(SecurityRule.IS_ANONYMOUS)
 @Slf4j
-public class ScheduleWebSocketController implements ApplicationEventListener<AppointmentScheduled> {
+public class ScheduleWebSocketController {
     private final WebSocketBroadcaster webSocketBroadcaster;
-    private final ScheduleService scheduleService;
-    private final ObjectMapper objectMapper;
-    private final Map<String, WebSocketSession> sessions;
+    private final CabinetService cabinetService;
 
-    public ScheduleWebSocketController(WebSocketBroadcaster webSocketBroadcaster, ScheduleService scheduleService, ObjectMapper objectMapper) {
+    public ScheduleWebSocketController(WebSocketBroadcaster webSocketBroadcaster, CabinetService cabinetService) {
         this.webSocketBroadcaster = webSocketBroadcaster;
-        this.scheduleService = scheduleService;
-        this.objectMapper = objectMapper;
-        this.sessions = new ConcurrentHashMap<>();
+        this.cabinetService = cabinetService;
     }
 
     @OnOpen
-    public Publisher<String> onOpen(String topic, String scheduleId, WebSocketSession webSocketSession) {
-        log.info(topic + ' ' + scheduleId);
-        this.sessions.put(webSocketSession.getId(), webSocketSession);
-        String scheduleStr = getScheduleJson(scheduleId);
-
-        return this.publishMessage(scheduleStr, webSocketSession);
-    }
-
-    private String getScheduleJson(String scheduleId) {
-        var schedule = this.scheduleService.findById(UUID.fromString(scheduleId));
-        var scheduleStr = "";
-        try {
-            scheduleStr = this.objectMapper.writeValueAsString(schedule);
-        } catch (Exception ex) {
-            log.info(ex.getMessage(), ex);
-        }
-        return scheduleStr;
+    public Publisher<?> onOpen(String cabinetId, WebSocketSession session) {
+        return this.publishMessage(cabinetId);
     }
 
     @OnMessage
-    public Publisher<String> onMessage(String topic, String scheduleId, String message, WebSocketSession webSocketSession) {
-        this.sessions.put(webSocketSession.getId(), webSocketSession);
-        var msg = this.getScheduleJson(scheduleId);
-
-        return this.publishMessage(msg, webSocketSession);
+    public Publisher<?> onMessage(String cabinetId, String message) {
+        return this.publishMessage(cabinetId);
     }
 
     @OnClose
     public void onClose(WebSocketSession webSocketSession) {
-        this.sessions.remove(webSocketSession.getId(), webSocketSession);
+        webSocketSession.close();
     }
 
-    private Predicate<WebSocketSession> isSchedule(String topic) {
-        return s -> topic.equals("schedule")
-                || "schedule".equals(s.getUriVariables().get("topic", String.class, null))
-                || topic.equalsIgnoreCase(s.getUriVariables().get("topic", String.class, null));
-    }
-
-    @Override
-    public void onApplicationEvent(AppointmentScheduled event) {
-        var scheduleStr = "";
-        try {
-            var schedule = (Schedule) event.getSource();
-            var result = new CabinetSchedule(schedule.getId(),
-                    schedule.getAppointments()
-                            .stream()
-                            .filter(ap -> !ap.getDeleted())
-                            .map(ap -> new ScheduleAppointment(ap.getId(), DateTimeUtility.parseToString(ap.getStartDate()),
-                                    DateTimeUtility.parseToString(ap.getEndDate()), ap.getTitle()))
-                            .toList(),
-                    CalendarEventsUtility.mapEvents(schedule.getCalendarEvents()));
-
-            scheduleStr = this.objectMapper.writeValueAsString(result);
-        } catch (Exception e) {
-            log.info(e.getMessage(), e);
-        }
-
-        for (String sessionId : this.sessions.keySet()) {
-            publishMessage(scheduleStr, sessions.get(sessionId));
-        }
-    }
-
-    public Publisher<String> publishMessage(String message, WebSocketSession session) {
-        return this.webSocketBroadcaster.broadcast(message);
+    public Publisher<?> publishMessage(String cabinetId) {
+        var cabinet = this.cabinetService.getCabinetById(Integer.parseInt(cabinetId));
+        return this.webSocketBroadcaster.broadcast(cabinet);
     }
 }

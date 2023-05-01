@@ -11,6 +11,7 @@ import { RegisteredUserSchedulingDialogComponent } from './helper-components/reg
 import { DateTimeEventDataComponent } from './helper-components/date-time-event-data/date-time-event-data.component';
 import { MaterialModule } from 'src/app/material/material/material.module';
 import { ReusableComponentsModule } from 'src/app/reusable-components/reusable-components.module';
+import { ScheduleDialogService } from 'src/app/services/schedule/schedule-dialog/schedule-dialog.service';
 
 @NgModule({
   declarations: [
@@ -30,5 +31,8 @@ import { ReusableComponentsModule } from 'src/app/reusable-components/reusable-c
       useFactory: adapterFactory,
     }),
   ],
+  providers: [
+    ScheduleDialogService
+  ]
 })
 export class ScheduleModule {}
