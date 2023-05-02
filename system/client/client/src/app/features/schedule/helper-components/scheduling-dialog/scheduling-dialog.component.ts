@@ -25,12 +25,16 @@ export class SchedulingDialogComponent implements OnInit {
   dateTimeArgs: string[] = [];
   appointmentCauses: AppointmentCauseResponse[] = [];
   scheduleId: string;
-  currentUser?: UserModel
+  currentUser?: UserModel;
   patients?: PatientView[];
 
   form: FormGroup = this.fb.group({
-    start: new FormControl({value: null, disabled: true}, [Validators.required]),
-    end: new FormControl({value: null, disabled: true}, [Validators.required]),
+    start: this.fb.control({ value: null, disabled: true }, [
+      Validators.required,
+    ]),
+    end: this.fb.control({ value: null, disabled: true }, [
+      Validators.required,
+    ]),
     email: [null, [Validators.required, Validators.email]],
     parentFirstName: [
       null,
@@ -49,19 +53,7 @@ export class SchedulingDialogComponent implements OnInit {
         Validators.pattern(Constants.phoneRegExp),
       ],
     ],
-
-    patientFirstName: [
-      null,
-      [Validators.required, Validators.minLength(Constants.fieldMinLength)]
-    ],
-    patientLastName: [
-      null,
-      [Validators.required, Validators.minLength(Constants.fieldMinLength)]
-    ],
-    appointmentCauseId: [
-      null,
-      [Validators.required]
-    ]
+    appointmentCauseId: [null, [Validators.required]],
   });
 
   event: CalendarEvent;
@@ -97,7 +89,15 @@ export class SchedulingDialogComponent implements OnInit {
   }
 
   close() {
-    let {email, parentFirstName, parentLastName, phoneNumber, patientFirstName, patientLastName, appointmentCauseId} = this.form.value;
+    let {
+      email,
+      parentFirstName,
+      parentLastName,
+      phoneNumber,
+      patientFirstName,
+      patientLastName,
+      appointmentCauseId,
+    } = this.form.value;
 
     const data = {
       email,
@@ -107,13 +107,25 @@ export class SchedulingDialogComponent implements OnInit {
       patientFirstName,
       patientLastName,
       appointmentCauseId,
-      eventId: this.event.id
+      eventId: this.event.id,
     };
 
-    this.scheduleService.scheduleAppointment(this.scheduleId, data)
-      .subscribe(appointment => {        
-        this.dialogRef.close({appointment});
+    this.scheduleService
+      .scheduleAppointment(this.scheduleId, data)
+      .subscribe((appointment) => {
+        this.dialogRef.close({ appointment });
       });
+  }
+
+  buildForm() {
+    if (this.patients && this.patients?.length > 1) {
+      this.form.addControl(
+        'patientId', this.fb.control([null, [Validators.required]])
+      );
+    } else {
+      this.form.addControl('patientFirstName', this.fb.control(null, [Validators.required, Validators.minLength(Constants.fieldMinLength)]));
+      this.form.addControl('patientLastName', this.fb.control(null, [Validators.required, Validators.minLength(Constants.fieldMinLength)]));
+    }
   }
 
   populateWithUserData() {
@@ -122,19 +134,20 @@ export class SchedulingDialogComponent implements OnInit {
     }
 
     this.form.patchValue({
-      email: this.currentUser.email,
+      email: { value: this.currentUser.email, disabled: true },
       parentFirstName: this.currentUser.firstName,
       parentLastName: this.currentUser.lastName,
-      phoneNumber: this.currentUser.phoneNumber
+      phoneNumber: this.currentUser.phoneNumber,
     });
 
-    this.patientService.getPatientByParentId(this.currentUser.id)
-      .subscribe(res => this.patients = res);
+    this.patientService
+      .getPatientByParentId(this.currentUser.id)
+      .subscribe((res) => (this.patients = res));
 
     if (this.patients && this.patients.length === 1) {
       this.form.patchValue({
         childFirstName: this.patients[0].firstName,
-        childLastName: this.patients[0].lastName
+        childLastName: this.patients[0].lastName,
       });
     }
   }

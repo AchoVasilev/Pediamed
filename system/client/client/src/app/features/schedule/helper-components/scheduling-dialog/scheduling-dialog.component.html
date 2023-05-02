@@ -28,7 +28,9 @@
         <app-email [emailControl]="getControl('email')"></app-email>
       </div>
       <div class="form-outline col">
-        <app-phone-input [phoneNumberControl]="getControl('phoneNumber')"></app-phone-input>
+        <app-phone-input
+          [phoneNumberControl]="getControl('phoneNumber')"
+        ></app-phone-input>
       </div>
     </div>
     <div class="row mb-3">
@@ -50,25 +52,18 @@
         ></app-form-field>
       </div>
     </div>
-    <div class="row mb-3">
-      <div class="form-outline col">
-        <app-form-field
-          [control]="getControl('patientFirstName')"
-          label="Име на дете"
-          placeholder="Име на дете"
-          materialSuffix="account_circle"
-        ></app-form-field>
+    <ng-container *ngIf="currentUser && patients && patients.length > 0; else child">
+      <div class="form-outline mb-2">
+        <mat-form-field appearance="fill">
+          <mat-label>Изберете пациент</mat-label>
+          <mat-select formControlName="patientId'">
+            <mat-option *ngFor="let patient of patients" [value]="patient.id">
+              {{ patient.firstName }} {{ patient.lastName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
-
-      <div class="form-outline col">
-        <app-form-field
-          [control]="getControl('patientLastName')"
-          label="Фамилия на дете"
-          placeholder="Фамилия на дете"
-          materialSuffix="account_circle"
-        ></app-form-field>
-      </div>
-    </div>
+    </ng-container>
     <div class="form-outline mb-2">
       <app-appointment-cause-select
         [appointmentCauses]="appointmentCauses"
@@ -79,5 +74,32 @@
 </div>
 <div mat-dialog-actions align="end">
   <app-button color="warn" name="Затвори" mat-dialog-close></app-button>
-  <app-button color="primary" name="Запазване" (click)="close()" [disabled]="!this.form.valid"></app-button>
+  <app-button
+    color="primary"
+    name="Запазване"
+    (click)="close()"
+    [disabled]="!this.form.valid"
+  ></app-button>
 </div>
+
+<ng-template #child>
+  <div class="row mb-3">
+    <div class="form-outline col">
+      <app-form-field
+        [control]="getControl('patientFirstName')"
+        label="Име на дете"
+        placeholder="Име на дете"
+        materialSuffix="account_circle"
+      ></app-form-field>
+    </div>
+
+    <div class="form-outline col">
+      <app-form-field
+        [control]="getControl('patientLastName')"
+        label="Фамилия на дете"
+        placeholder="Фамилия на дете"
+        materialSuffix="account_circle"
+      ></app-form-field>
+    </div>
+  </div>
+</ng-template>
