@@ -19,4 +19,8 @@ export class ScheduleService {
   scheduleAppointment(scheduleId: string, data: any) {
     return this.http.post<any>(`${this.apiUrl}/${scheduleId}/full`, data);
   }
+
+  scheduleUserAppointment(scheduleId: string, userId: string, data: any) {
+    return this.http.post<any>(`${this.apiUrl}/${scheduleId}/user/${userId}`, data);
+  }
 }

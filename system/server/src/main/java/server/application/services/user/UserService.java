@@ -53,9 +53,9 @@ public class UserService {
             return user.get();
         }
 
-        var patientRole = this.roleService.findByName(RoleEnum.ROLE_PARENT);
+        var parentRole = this.roleService.findByName(RoleEnum.ROLE_PARENT);
         var newUser = new ApplicationUser(new Email(email), firstName, lastName, new PhoneNumber(phoneNumber));
-        newUser.getRoles().add(patientRole);
+        newUser.getRoles().add(parentRole);
         newUser.addParent();
         newUser.addPatientToParent(patientFirstName, patientLastName);
 

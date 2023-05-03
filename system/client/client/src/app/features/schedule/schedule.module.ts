@@ -7,7 +7,6 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { ScheduleDialogComponent } from './helper-components/schedule-dialog/schedule-dialog.component';
 import { SchedulingDialogComponent } from './helper-components/scheduling-dialog/scheduling-dialog.component';
 import { DoctorSchedulingDialogComponent } from './helper-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
-import { RegisteredUserSchedulingDialogComponent } from './helper-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
 import { DateTimeEventDataComponent } from './helper-components/date-time-event-data/date-time-event-data.component';
 import { MaterialModule } from 'src/app/material/material/material.module';
 import { ReusableComponentsModule } from 'src/app/reusable-components/reusable-components.module';
@@ -19,7 +18,6 @@ import { ScheduleDialogService } from 'src/app/services/schedule/schedule-dialog
     ScheduleDialogComponent,
     SchedulingDialogComponent,
     DoctorSchedulingDialogComponent,
-    RegisteredUserSchedulingDialogComponent,
     DateTimeEventDataComponent,
   ],
   imports: [

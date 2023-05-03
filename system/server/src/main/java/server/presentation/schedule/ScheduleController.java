@@ -2,7 +2,12 @@ package server.presentation.schedule;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
-import io.micronaut.http.annotation.*;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.PathVariable;
+import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Produces;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import org.reactivestreams.Publisher;
@@ -31,11 +36,11 @@ public class ScheduleController {
         return HttpResponse.ok(this.scheduleService.scheduleAppointment(scheduleId, appointmentInput));
     }
 
-    @Post("/{id}/registered")
+    @Post("/{id}/user/{userId}")
     @Secured(value = {SecurityRule.IS_AUTHENTICATED, ROLE_PATIENT})
-    public HttpResponse<?> schedule(@PathVariable("id") UUID scheduleId, @Body RegisteredUserAppointmentInput registeredUserAppointmentInput) {
+    public HttpResponse<?> schedule(@PathVariable("id") UUID scheduleId, @PathVariable("userId") UUID userId, @Body RegisteredUserAppointmentInput registeredUserAppointmentInput) {
         return HttpResponse.ok(this.scheduleService
-                .scheduleAppointment(scheduleId, registeredUserAppointmentInput));
+                .scheduleAppointment(scheduleId, userId, registeredUserAppointmentInput));
     }
 
     @Get("/{id}/stream")

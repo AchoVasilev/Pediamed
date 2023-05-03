@@ -65,8 +65,8 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleAppointment scheduleAppointment(UUID scheduleId, RegisteredUserAppointmentInput registeredUserAppointmentInput) {
-        var user = this.userService.getUser(registeredUserAppointmentInput.userId());
+    public ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID userId, RegisteredUserAppointmentInput registeredUserAppointmentInput) {
+        var user = this.userService.getUser(userId);
         var patient = user.getParent().getPatientBy(registeredUserAppointmentInput.patientId());
 
         return this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), user.getParent().getId(), patient);

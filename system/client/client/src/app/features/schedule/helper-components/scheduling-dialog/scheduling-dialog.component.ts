@@ -76,12 +76,8 @@ export class SchedulingDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.form.patchValue({
-      start: this.startTime,
-      end: this.endTime,
-    });
-
-    this.populateWithUserData();
+    this.buildForm();
+    this.patchValues();
   }
 
   getControl(name: string): FormControl {
@@ -89,56 +85,85 @@ export class SchedulingDialogComponent implements OnInit {
   }
 
   close() {
-    let {
-      email,
-      parentFirstName,
-      parentLastName,
-      phoneNumber,
-      patientFirstName,
-      patientLastName,
-      appointmentCauseId,
-    } = this.form.value;
+    if (this.patients && this.patients.length > 1) {
+      const { appointmentCauseId, patientId } = this.form.value;
+      const data = { appointmentCauseId, patientId, eventId: this.event.id };
 
-    const data = {
-      email,
-      parentFirstName,
-      parentLastName,
-      phoneNumber,
-      patientFirstName,
-      patientLastName,
-      appointmentCauseId,
-      eventId: this.event.id,
-    };
+      this.scheduleService
+        .scheduleUserAppointment(this.scheduleId, this.currentUser!.id, data)
+        .subscribe((app) => this.dialogRef.close({ app }));
+    } else {
+      let {
+        email,
+        parentFirstName,
+        parentLastName,
+        phoneNumber,
+        patientFirstName,
+        patientLastName,
+        appointmentCauseId,
+      } = this.form.value;
 
-    this.scheduleService
-      .scheduleAppointment(this.scheduleId, data)
-      .subscribe((appointment) => {
-        this.dialogRef.close({ appointment });
-      });
+      const data = {
+        email,
+        parentFirstName,
+        parentLastName,
+        phoneNumber,
+        patientFirstName,
+        patientLastName,
+        appointmentCauseId,
+        eventId: this.event.id,
+      };
+
+      this.scheduleService
+        .scheduleAppointment(this.scheduleId, data)
+        .subscribe((appointment) => {
+          this.dialogRef.close({ appointment });
+        });
+    }
   }
 
   buildForm() {
     if (this.patients && this.patients?.length > 1) {
       this.form.addControl(
-        'patientId', this.fb.control([null, [Validators.required]])
+        'patientId',
+        this.fb.control([null, [Validators.required]])
       );
     } else {
-      this.form.addControl('patientFirstName', this.fb.control(null, [Validators.required, Validators.minLength(Constants.fieldMinLength)]));
-      this.form.addControl('patientLastName', this.fb.control(null, [Validators.required, Validators.minLength(Constants.fieldMinLength)]));
+      this.form.addControl(
+        'patientFirstName',
+        this.fb.control(null, [
+          Validators.required,
+          Validators.minLength(Constants.fieldMinLength),
+        ])
+      );
+      this.form.addControl(
+        'patientLastName',
+        this.fb.control(null, [
+          Validators.required,
+          Validators.minLength(Constants.fieldMinLength),
+        ])
+      );
     }
   }
 
-  populateWithUserData() {
+  patchValues() {
+    this.form.patchValue({
+      start: this.startTime,
+      end: this.endTime,
+    });
+
     if (!this.currentUser) {
       return;
     }
 
     this.form.patchValue({
-      email: { value: this.currentUser.email, disabled: true },
+      email: this.currentUser.email,
       parentFirstName: this.currentUser.firstName,
       parentLastName: this.currentUser.lastName,
       phoneNumber: this.currentUser.phoneNumber,
     });
+    
+    this.getControl('email').disable();
 
     this.patientService
       .getPatientByParentId(this.currentUser.id)

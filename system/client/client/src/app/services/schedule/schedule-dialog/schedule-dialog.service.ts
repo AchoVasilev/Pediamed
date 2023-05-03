@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CalendarEvent } from 'angular-calendar';
 import { format } from 'date-fns';
-import { scheduled } from 'rxjs';
 import { DoctorSchedulingDialogComponent } from 'src/app/features/schedule/helper-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
-import { RegisteredUserSchedulingDialogComponent } from 'src/app/features/schedule/helper-components/registered-user-scheduling-dialog/registered-user-scheduling-dialog.component';
 import { SchedulingDialogComponent } from 'src/app/features/schedule/helper-components/scheduling-dialog/scheduling-dialog.component';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
 import { EventDataInput, MetaInfo } from 'src/app/models/events/schedule';
@@ -23,8 +21,6 @@ export class ScheduleDialogService {
     const startTime = format(event.start, Constants.dateTimePattern);
     const endTime = format(event.end!, Constants.dateTimePattern);
     const dateTimeArgs = startTime.split(' ');
-
-    console.log(this.isDoctor());
     
     if (this.isDoctor()) {
       return this.dialog

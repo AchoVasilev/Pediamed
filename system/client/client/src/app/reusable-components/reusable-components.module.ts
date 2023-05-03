@@ -10,6 +10,8 @@ import { AppointmentCauseSelectComponent } from './appointment-cause-select/appo
 import { MaterialModule } from '../material/material/material.module';
 import { ButtonComponent } from './button/button.component';
 import { AutocompleteComponent } from './autocomplete/autocomplete.component';
+import { ParentFormComponent } from './parent-form/parent-form.component';
+import { FlatButtonComponent } from './flat-button/flat-button.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { AutocompleteComponent } from './autocomplete/autocomplete.component';
     AppointmentCauseSelectComponent,
     ButtonComponent,
     AutocompleteComponent,
+    ParentFormComponent,
+    FlatButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -36,7 +40,9 @@ import { AutocompleteComponent } from './autocomplete/autocomplete.component';
     PasswordComponent,
     PasswordsComponent,
     AppointmentCauseSelectComponent,
-    ButtonComponent
+    ButtonComponent,
+    ParentFormComponent,
+    FlatButtonComponent
   ],
 })
 export class ReusableComponentsModule {}

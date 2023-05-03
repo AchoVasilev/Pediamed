@@ -62,8 +62,10 @@ public class ApplicationUser extends BaseEntity<UUID> {
     }
 
     public void addPatientToParent(String patientFirstName, String patientLastName) {
-        this.getParent()
-                .getPatients()
-                .add(new Patient(patientFirstName, patientLastName, this.getParent()));
+        if (this.getParent().getPatientByNames(patientFirstName, patientLastName).isEmpty()) {
+            this.getParent()
+                    .getPatients()
+                    .add(new Patient(patientFirstName, patientLastName, this.getParent()));
+        }
     }
 }

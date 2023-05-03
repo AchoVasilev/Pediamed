@@ -23,36 +23,15 @@
         ></app-form-field>
       </div>
     </div>
-    <div class="row mb-3">
-      <div class="form-outline col">
-        <app-email [emailControl]="getControl('email')"></app-email>
-      </div>
-      <div class="form-outline col">
-        <app-phone-input
-          [phoneNumberControl]="getControl('phoneNumber')"
-        ></app-phone-input>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="form-outline col">
-        <app-form-field
-          [control]="getControl('parentFirstName')"
-          label="Име на родител"
-          placeholder="Име на родител"
-          materialSuffix="account_circle"
-        ></app-form-field>
-      </div>
-
-      <div class="form-outline col">
-        <app-form-field
-          [control]="getControl('parentLastName')"
-          label="Фамилия на родител"
-          placeholder="Фамилия на родител"
-          materialSuffix="account_circle"
-        ></app-form-field>
-      </div>
-    </div>
-    <ng-container *ngIf="currentUser && patients && patients.length > 0; else child">
+    <app-parent-form
+      [email]="getControl('email')"
+      [phoneNumber]="getControl('phoneNumber')"
+      [firstName]="getControl('parentFirstName')"
+      [lastName]="getControl('parentLastName')"
+    ></app-parent-form>
+    <ng-container
+      *ngIf="currentUser && patients && patients.length > 0; else child"
+    >
       <div class="form-outline mb-2">
         <mat-form-field appearance="fill">
           <mat-label>Изберете пациент</mat-label>
