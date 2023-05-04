@@ -85,13 +85,27 @@ export class SchedulingDialogComponent implements OnInit {
   }
 
   close() {
-    if (this.patients && this.patients.length > 1) {
+    if (this.currentUser && this.patients && this.patients.length > 1) {
       const { appointmentCauseId, patientId } = this.form.value;
       const data = { appointmentCauseId, patientId, eventId: this.event.id };
 
       this.scheduleService
         .scheduleUserAppointment(this.scheduleId, this.currentUser!.id, data)
         .subscribe((app) => this.dialogRef.close({ app }));
+
+    } else if (this.currentUser || this.patients && this.patients.length === 1) {
+      const { patientFirstName, patientLastName, appointmentCauseId } = this.form.value;
+      const data = {
+        patientFirstName,
+        patientLastName,
+        appointmentCauseId,
+        patientId: this.patients ? this.patients[0].id : null,
+        eventId: this.event.id
+      };
+
+      this.scheduleService
+      .scheduleUserAppointment(this.scheduleId, this.currentUser!.id, data)
+      .subscribe((app) => this.dialogRef.close({ app }));
     } else {
       let {
         email,
@@ -162,7 +176,7 @@ export class SchedulingDialogComponent implements OnInit {
       parentLastName: this.currentUser.lastName,
       phoneNumber: this.currentUser.phoneNumber,
     });
-    
+
     this.getControl('email').disable();
 
     this.patientService

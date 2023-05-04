@@ -12,6 +12,7 @@ import server.application.services.schedule.models.RegisteredUserAppointmentInpu
 import server.application.services.schedule.models.ScheduleAppointment;
 import server.application.services.user.UserService;
 import server.common.util.CalendarEventsUtility;
+import server.domain.entities.ApplicationUser;
 import server.domain.entities.Appointment;
 import server.domain.entities.Patient;
 import server.domain.entities.Schedule;
@@ -59,20 +60,17 @@ public class ScheduleService {
                 appointmentInput.patientFirstName(),
                 appointmentInput.patientLastName());
 
-        var patient = user.getParent().getPatientBy(appointmentInput.patientFirstName(), appointmentInput.patientLastName());
-
-        return this.scheduleAppointment(scheduleId, appointmentInput.eventId(), appointmentInput.appointmentCauseId(), user.getParent().getId(), patient);
+        return this.scheduleAppointment(scheduleId, appointmentInput.eventId(), appointmentInput.appointmentCauseId(), user);
     }
 
     @Transactional
     public ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID userId, RegisteredUserAppointmentInput registeredUserAppointmentInput) {
         var user = this.userService.getUser(userId);
-        var patient = user.getParent().getPatientBy(registeredUserAppointmentInput.patientId());
 
-        return this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), user.getParent().getId(), patient);
+        return this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), user);
     }
 
-    private ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID eventId, Integer appointmentCauseId, UUID parentId, Patient patient) {
+    private ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID eventId, Integer appointmentCauseId, ApplicationUser user) {
         var title = this.createAppointmentTitle(patient.getFirstName(), patient.getLastName());
         var schedule = this.getScheduleById(scheduleId);
 

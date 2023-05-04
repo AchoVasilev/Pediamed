@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { UserAppointment } from 'src/app/models/scheduling/scheduling';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class ScheduleService {
     return this.http.post<any>(`${this.apiUrl}/${scheduleId}/full`, data);
   }
 
-  scheduleUserAppointment(scheduleId: string, userId: string, data: any) {
+  scheduleUserAppointment(scheduleId: string, userId: string, data: UserAppointment) {
     return this.http.post<any>(`${this.apiUrl}/${scheduleId}/user/${userId}`, data);
   }
 }
