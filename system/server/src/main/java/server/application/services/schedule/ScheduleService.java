@@ -12,7 +12,6 @@ import server.application.services.schedule.models.RegisteredUserAppointmentInpu
 import server.application.services.schedule.models.ScheduleAppointment;
 import server.application.services.user.UserService;
 import server.common.util.CalendarEventsUtility;
-import server.domain.entities.ApplicationUser;
 import server.domain.entities.Appointment;
 import server.domain.entities.Patient;
 import server.domain.entities.Schedule;
@@ -60,17 +59,22 @@ public class ScheduleService {
                 appointmentInput.patientFirstName(),
                 appointmentInput.patientLastName());
 
-        return this.scheduleAppointment(scheduleId, appointmentInput.eventId(), appointmentInput.appointmentCauseId(), user);
+        var patient = user.getPatientBy(appointmentInput.patientFirstName(), appointmentInput.patientLastName());
+
+        log.info("Scheduling appointment for unregistered user. [userId={}, patientId={}]", user.getId(), patient.getId());
+        return this.scheduleAppointment(scheduleId, appointmentInput.eventId(), appointmentInput.appointmentCauseId(), patient, user.getParent().getId());
     }
 
     @Transactional
     public ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID userId, RegisteredUserAppointmentInput registeredUserAppointmentInput) {
         var user = this.userService.getUser(userId);
+        var patient = user.getPatientBy(registeredUserAppointmentInput.patientId(), registeredUserAppointmentInput.patientFirstName(), registeredUserAppointmentInput.patientLastName());
 
-        return this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), user);
+        log.info("Scheduling appointment for registered user. [userId={}, patientId={}]", user.getId(), patient.getId());
+        return this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), patient, user.getParent().getId());
     }
 
-    private ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID eventId, Integer appointmentCauseId, ApplicationUser user) {
+    private ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID eventId, Integer appointmentCauseId, Patient patient, UUID parentId) {
         var title = this.createAppointmentTitle(patient.getFirstName(), patient.getLastName());
         var schedule = this.getScheduleById(scheduleId);
 
@@ -89,9 +93,9 @@ public class ScheduleService {
         schedule.getAppointments().add(appointment);
         this.scheduleRepository.update(schedule);
 
-        var createdAppointment = schedule.getAppointmentBy(appointment.getCalendarEventId());
-        return new ScheduleAppointment(createdAppointment.getId(), DateTimeUtility.parseToString(createdAppointment.getStartDate()),
-                DateTimeUtility.parseToString(createdAppointment.getEndDate()), createdAppointment.getTitle());
+        log.info("Created appointment. [appointmentId={}, scheduleId={}]", appointment.getId(), schedule.getId());
+        return new ScheduleAppointment(appointment.getId(), DateTimeUtility.parseToString(appointment.getStartDate()),
+                DateTimeUtility.parseToString(appointment.getEndDate()), appointment.getTitle());
     }
 
     private String createAppointmentTitle(String childFirstName, String childLastName) {

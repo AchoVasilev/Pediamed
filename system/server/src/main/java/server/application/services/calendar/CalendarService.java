@@ -58,10 +58,12 @@ public class CalendarService {
             var slotEnd = slotStart.plusMinutes(data.intervals());
             var event = new CalendarEvent(slotStart, slotEnd, EVENT_TITLE, cabinet.getSchedule().getId());
 
-            if (cabinet.getSchedule().addCalendarEvent(event))
+            if (cabinet.getSchedule().addCalendarEvent(event)) {
                 eventsCount++;
+                log.info("Creating event. [eventId={}]", event.getId());
+            }
             else
-                log.info("Skipping duplicate. [eventStartDate={}], [eventEndDate={}]", event.getStartDate(), event.getEndDate());
+                log.info("Skipping duplicate. [eventId={}, eventStartDate={}], [eventEndDate={}]", event.getId(), event.getStartDate(), event.getEndDate());
         }
 
         if (eventsCount == 0) {

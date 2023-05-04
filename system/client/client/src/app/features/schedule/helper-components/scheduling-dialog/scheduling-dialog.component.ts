@@ -99,7 +99,7 @@ export class SchedulingDialogComponent implements OnInit {
         patientFirstName,
         patientLastName,
         appointmentCauseId,
-        patientId: this.patients ? this.patients[0].id : null,
+        patientId: this.patients && this.patients.length === 1 ? this.patients[0].id : null,
         eventId: this.event.id
       };
 

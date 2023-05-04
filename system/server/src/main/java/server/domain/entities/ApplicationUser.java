@@ -90,7 +90,23 @@ public class ApplicationUser extends BaseEntity<UUID> {
     }
 
     public Patient getPatientBy(UUID patientId, String firstName, String lastName) {
+        var patientOpt = this.getPatientBy(patientId);
+        if (patientOpt.isEmpty()) {
+            var patient = new Patient(firstName, lastName, this.parent);
+            this.parent.getPatients().add(patient);
+            return patient;
+        }
 
+        var patient = patientOpt.get();
+        if (!patient.getFirstName().equals(firstName)) {
+            patient.changeFirstName(firstName);
+        }
+
+        if (!patient.getLastName().equals(lastName)) {
+            patient.changeLastName(lastName);
+        }
+
+        return patient;
     }
 
     private Optional<Patient> getPatientBy(UUID patientId) {

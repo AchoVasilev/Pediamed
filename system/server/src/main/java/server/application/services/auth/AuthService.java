@@ -80,6 +80,7 @@ public class AuthService {
 
                         return HttpResponse.ok(loginResponse);
                     } else {
+                        log.info("Invalid user credentials.");
                         return HttpResponse.badRequest(INVALID_CREDENTIALS);
                     }
                 }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));

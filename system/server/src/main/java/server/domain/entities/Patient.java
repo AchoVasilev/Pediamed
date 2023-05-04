@@ -47,4 +47,12 @@ public class Patient extends BaseEntity<UUID> {
 
         return age;
     }
+
+    public void changeFirstName(String firstName) {
+        this.firstName = Guard.Against.EmptyOrBlank(firstName);
+    }
+
+    public void changeLastName(String lastName) {
+        this.lastName = Guard.Against.EmptyOrBlank(lastName);
+    }
 }

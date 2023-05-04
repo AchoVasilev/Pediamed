@@ -226,10 +226,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   eventClicked({ event }: { event: CalendarEvent<MetaInfo> }) {
-    if (
-      (event?.meta?.isAppointment || isPast(event.start)) &&
-      !this.isDoctor()
-    ) {
+    if ((event?.meta?.isAppointment || isPast(event.start)) && !this.isDoctor()) {
       return;
     }
 

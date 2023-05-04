@@ -59,7 +59,8 @@ public class UserService {
         newUser.addParent();
         newUser.addPatientToParent(patientFirstName, patientLastName);
 
-        return this.userRepository.save(newUser);
+        log.info("Created unregistered user. [userId={}, parentId={}]", newUser.getId(), newUser.getParent().getId());
+        return this.save(newUser);
     }
 
     @Transactional

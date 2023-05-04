@@ -34,7 +34,14 @@ public class Schedule extends BaseEntity<UUID> {
     }
 
     public CalendarEvent getEventBy(UUID id) {
-        return this.calendarEvents.stream().filter(e -> e.getId() != id && !e.getDeleted()).findFirst()
+        var event = this.calendarEvents.stream().filter(e -> e.getId() == id && !e.getDeleted()).findFirst();
+        for (var ev : this.calendarEvents) {
+            if (ev.id == id && !ev.deleted) {
+                return ev;
+            }
+        }
+
+        return this.calendarEvents.stream().filter(e -> e.getId() == id && !e.getDeleted()).findFirst()
                 .orElseThrow(() -> new EntityNotFoundException(MISSING_EVENT));
     }
 
