@@ -79,7 +79,6 @@ public class ScheduleService {
         var schedule = this.getScheduleById(scheduleId);
 
         var appointmentCause = this.appointmentCauseService.findById(appointmentCauseId);
-
         var event = schedule.getEventBy(eventId);
         var appointment = new Appointment(event.getStartDate(),
                 event.getEndDate(),

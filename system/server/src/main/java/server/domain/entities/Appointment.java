@@ -30,6 +30,7 @@ public class Appointment extends BaseEntity<UUID> {
     @Column(name = "schedule_id")
     private UUID scheduleId;
     private UUID parentId;
+    @Column(name = "patient_id")
     private UUID patientId;
     private UUID calendarEventId;
 

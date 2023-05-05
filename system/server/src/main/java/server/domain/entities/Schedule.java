@@ -28,20 +28,8 @@ public class Schedule extends BaseEntity<UUID> {
     @JoinColumn(name = "schedule_id", referencedColumnName = "id")
     private List<CalendarEvent> calendarEvents = new ArrayList<>();
 
-    public Schedule(Cabinet cabinet) {
-        this.id = UUID.randomUUID();
-        this.cabinet = cabinet;
-    }
-
     public CalendarEvent getEventBy(UUID id) {
-        var event = this.calendarEvents.stream().filter(e -> e.getId() == id && !e.getDeleted()).findFirst();
-        for (var ev : this.calendarEvents) {
-            if (ev.id == id && !ev.deleted) {
-                return ev;
-            }
-        }
-
-        return this.calendarEvents.stream().filter(e -> e.getId() == id && !e.getDeleted()).findFirst()
+        return this.calendarEvents.stream().filter(e -> e.getId().equals(id) && !e.getDeleted()).findFirst()
                 .orElseThrow(() -> new EntityNotFoundException(MISSING_EVENT));
     }
 
