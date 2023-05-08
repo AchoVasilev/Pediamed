@@ -1,12 +1,16 @@
 package server.domain.entities.base;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import server.infrastructure.utils.guards.Guard;
 
 import javax.persistence.MappedSuperclass;
 import java.util.UUID;
 
 @MappedSuperclass
-public class Image extends BaseEntity<UUID> {
+@Getter
+@NoArgsConstructor
+public abstract class Image extends BaseEntity<UUID> implements File {
     protected String url;
     protected String extension;
     protected String name;

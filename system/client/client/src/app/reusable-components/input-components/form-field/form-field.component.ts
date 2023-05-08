@@ -1,8 +1,7 @@
-import { AbstractControl, Validators } from '@angular/forms';
 import { FormControl } from '@angular/forms';
-import { Constants } from './../../utils/constants';
 import { Component, Input } from '@angular/core';
 import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
+import { Constants } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-form-field',

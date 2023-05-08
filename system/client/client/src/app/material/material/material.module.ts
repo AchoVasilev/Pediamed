@@ -10,6 +10,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatOptionModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [],
@@ -25,6 +27,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSelectModule,
     MatOptionModule,
     MatAutocompleteModule,
+    MatCardModule,
+    MatPaginatorModule,
   ],
   exports: [
     MatIconModule,
@@ -38,6 +42,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSelectModule,
     MatOptionModule,
     MatAutocompleteModule,
+    MatCardModule,
+    MatPaginatorModule
   ],
 })
 export class MaterialModule {}

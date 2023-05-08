@@ -54,3 +54,8 @@ flyway:
   datasources:
     default:
       locations: [ classpath:db/migration, classpath:db/seed ]
+
+cloudinary:
+  name: 'dpo3vbxnl'
+  apiKey: '713733769727835'
+  secret: 'AxitLgW4XE_LhDgvwBWGRSsSjv0'

@@ -1,0 +1,5 @@
+<div class="container gallery-container mt-5 mb-5" *ngIf="images$ | async; let images">
+  <div class="card" *ngFor="let image of images.content">
+    <app-card [imgSrc]="image.url"></app-card>
+  </div>
+</div>
