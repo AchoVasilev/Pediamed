@@ -14,14 +14,13 @@ import { ScheduleDialogComponent } from 'src/app/features/schedule/helper-compon
   providedIn: 'root'
 })
 export class ScheduleDialogService {
-
   constructor(private dialog: MatDialog, private userDataService: UserDataService) { }
 
   openSchedulingDialog(event: CalendarEvent<MetaInfo>, scheduleId: string, appointmentCauses: AppointmentCauseResponse[]) {
     const startTime = format(event.start, Constants.dateTimePattern);
     const endTime = format(event.end!, Constants.dateTimePattern);
     const dateTimeArgs = startTime.split(' ');
-    
+
     if (this.isDoctor()) {
       return this.dialog
         .open(DoctorSchedulingDialogComponent, {
@@ -45,7 +44,6 @@ export class ScheduleDialogService {
             endTime,
             dateTimeArgs,
             scheduleId: scheduleId,
-            currentUser: this.getUser()
           },
         })
         .afterClosed();
@@ -66,9 +64,5 @@ export class ScheduleDialogService {
 
   private isDoctor() {
     return this.userDataService.isDoctor() && this.isLoggedIn();
-  }
-
-  private getUser() {
-    return this.userDataService.getUser();
   }
 }

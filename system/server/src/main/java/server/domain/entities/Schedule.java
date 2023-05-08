@@ -3,6 +3,7 @@ package server.domain.entities;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.domain.entities.base.BaseEntity;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
 
 import javax.persistence.*;

@@ -1,4 +1,4 @@
-package server.domain.entities;
+package server.domain.entities.base;
 
 import io.micronaut.data.annotation.DateCreated;
 import io.micronaut.data.annotation.DateUpdated;

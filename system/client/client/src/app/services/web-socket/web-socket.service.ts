@@ -1,4 +1,3 @@
-import { AuthService } from 'src/app/services/auth/auth.service';
 import { Injectable } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Observable, retry, share } from 'rxjs';
@@ -11,7 +10,7 @@ export class WebSocketService {
   private id?: string;
   private baseUrl: string = "ws://localhost:8080/ws/schedule";
 
-  constructor(private authService: AuthService) {}
+  constructor() {}
 
   connect(id: string): Observable<any> {
     this.id = id;
@@ -27,25 +26,21 @@ export class WebSocketService {
     if (this.connection$) {
       this.connection$.next({
         cabinetId: payload,
-        token: this.authService.getToken(),
       });
     } else {
       this.connection$ = this.createConnection();
       this.connection$.next({
         cabinetId: payload,
-        token: this.authService.getToken()
       });
     }
   }
 
   createConnection() {
-    const url = this.authService.isLoggedIn() 
-      ? `${this.baseUrl}/${this.id}`
-      : `${this.baseUrl}/${this.id}`;
+    const url = `${this.baseUrl}/${this.id}`;
 
     return webSocket({
       url: url,
-      protocol: ['websocket'],
+      protocol: ['websocket', 'xhr-polling'],
     });
   }
 }

@@ -1,4 +1,3 @@
-import { PatientService } from './../../../../services/patient/patient.service';
 import { CalendarEvent } from 'angular-calendar';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
@@ -13,6 +12,7 @@ import { ScheduleService } from 'src/app/services/schedule/schedule.service';
 import { Constants } from 'src/app/utils/constants';
 import { UserModel } from 'src/app/services/auth/authResult';
 import { PatientView } from 'src/app/models/user/patient';
+import { UserDataService } from 'src/app/services/data/user-data.service';
 
 @Component({
   selector: 'app-scheduling-dialog',
@@ -26,7 +26,7 @@ export class SchedulingDialogComponent implements OnInit {
   appointmentCauses: AppointmentCauseResponse[] = [];
   scheduleId: string;
   currentUser?: UserModel;
-  patients?: PatientView[];
+  patients: PatientView[] = [];
 
   form: FormGroup = this.fb.group({
     start: this.fb.control({ value: null, disabled: true }, [
@@ -58,24 +58,24 @@ export class SchedulingDialogComponent implements OnInit {
 
   event: CalendarEvent;
   fieldMinLength = Constants.fieldMinLength;
+  loading: boolean = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) data: any,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<SchedulingDialogComponent>,
     private scheduleService: ScheduleService,
-    private patientService: PatientService
-  ) {
+    private userDataService: UserDataService) {
     this.event = data.event;
     this.startTime = data.startTime;
     this.endTime = data.endTime;
     this.dateTimeArgs = data.dateTimeArgs;
     this.appointmentCauses = data.appointmentCauses;
     this.scheduleId = data.scheduleId;
-    this.currentUser = data.currentUser;
   }
 
   ngOnInit(): void {
+    this.getUserData();
     this.buildForm();
     this.patchValues();
   }
@@ -84,7 +84,13 @@ export class SchedulingDialogComponent implements OnInit {
     return this.form.get(name) as FormControl;
   }
 
+  getUserData() {
+    this.patients = this.userDataService.getPatients();
+    this.currentUser = this.userDataService.getUser();
+  }
+
   close() {
+    this.loading = true;
     if (this.currentUser && this.patients && this.patients.length > 1) {
       const { appointmentCauseId, patientId } = this.form.value;
       const data = { appointmentCauseId, patientId, eventId: this.event.id };
@@ -131,13 +137,14 @@ export class SchedulingDialogComponent implements OnInit {
       this.scheduleService
         .scheduleAppointment(this.scheduleId, data)
         .subscribe((appointment) => {
+          this.loading = false;
           this.dialogRef.close({ appointment });
         });
     }
   }
 
   buildForm() {
-    if (this.patients && this.patients?.length > 1) {
+    if (this.patients?.length > 1) {
       this.form.addControl(
         'patientId',
         this.fb.control([null, [Validators.required]])
@@ -178,10 +185,6 @@ export class SchedulingDialogComponent implements OnInit {
     });
 
     this.getControl('email').disable();
-
-    this.patientService
-      .getPatientByParentId(this.currentUser.id)
-      .subscribe((res) => (this.patients = res));
 
     if (this.patients && this.patients.length === 1) {
       this.form.patchValue({

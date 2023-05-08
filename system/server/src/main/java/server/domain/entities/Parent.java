@@ -3,7 +3,7 @@ package server.domain.entities;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import server.infrastructure.config.exceptions.models.EntityNotFoundException;
+import server.domain.entities.base.BaseEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,10 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
-import static server.common.ErrorMessages.PATIENT_NOT_FOUND;
 
 @Entity
 @Getter

@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import server.domain.entities.base.BaseEntity;
 import server.domain.entities.enums.RoleEnum;
 import server.infrastructure.utils.guards.Guard;
 

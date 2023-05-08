@@ -30,12 +30,12 @@
       [lastName]="getControl('parentLastName')"
     ></app-parent-form>
     <ng-container
-      *ngIf="currentUser && patients && patients.length > 0; else child"
+      *ngIf="currentUser && patients.length > 1; else child"
     >
       <div class="form-outline mb-2">
         <mat-form-field appearance="fill">
           <mat-label>Изберете пациент</mat-label>
-          <mat-select formControlName="patientId'">
+          <mat-select [formControl]="getControl('patientId')">
             <mat-option *ngFor="let patient of patients" [value]="patient.id">
               {{ patient.firstName }} {{ patient.lastName }}
             </mat-option>
@@ -53,12 +53,13 @@
 </div>
 <div mat-dialog-actions align="end">
   <app-button color="warn" name="Затвори" mat-dialog-close></app-button>
-  <app-button
+  <app-flat-button
     color="primary"
-    name="Запазване"
+    text="Запазване"
     (click)="close()"
     [disabled]="!this.form.valid"
-  ></app-button>
+    [loading]="loading"
+  ></app-flat-button>
 </div>
 
 <ng-template #child>

@@ -3,6 +3,7 @@ package server.domain.entities;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.domain.entities.base.BaseEntity;
 import server.infrastructure.utils.guards.Guard;
 
 import javax.persistence.CascadeType;
@@ -27,8 +28,7 @@ public class Patient extends BaseEntity<UUID> {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Parent parent;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "patient_id", referencedColumnName = "id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     private List<Appointment> appointments;
 
     public Patient (String firstName, String lastName, Parent parent) {

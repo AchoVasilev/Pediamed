@@ -143,3 +143,13 @@ CREATE TABLE appointments (
     date_modified TIMESTAMPTZ,
     deleted BOOLEAN DEFAULT FALSE
 );
+
+CREATE TABLE gallery_images (
+    id UUID PRIMARY KEY,
+    url VARCHAR NOT NULL,
+    extension VARCHAR,
+    name VARCHAR,
+    date_created TIMESTAMPTZ NOT NULL DEFAULT (now() at time zone 'utc'),
+    date_modified TIMESTAMPTZ,
+    deleted BOOLEAN DEFAULT FALSE
+);

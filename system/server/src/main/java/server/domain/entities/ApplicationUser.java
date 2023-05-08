@@ -3,6 +3,7 @@ package server.domain.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import server.domain.entities.base.BaseEntity;
 import server.domain.valueObjects.Email;
 import server.domain.valueObjects.PhoneNumber;
 import server.infrastructure.config.exceptions.models.EntityNotFoundException;
@@ -89,29 +90,27 @@ public class ApplicationUser extends BaseEntity<UUID> {
                 .findFirst();
     }
 
-    public Patient getPatientBy(UUID patientId, String firstName, String lastName) {
-        var patientOpt = this.getPatientBy(patientId);
-        if (patientOpt.isEmpty()) {
-            var patient = new Patient(firstName, lastName, this.parent);
-            this.parent.getPatients().add(patient);
-            return patient;
-        }
-
-        var patient = patientOpt.get();
-        if (!patient.getFirstName().equals(firstName)) {
+    public Patient checkPatientNames(Patient patient, String firstName, String lastName) {
+        if (firstName != null && !patient.getFirstName().equals(firstName)) {
             patient.changeFirstName(firstName);
         }
 
-        if (!patient.getLastName().equals(lastName)) {
+        if (lastName != null && !patient.getLastName().equals(lastName)) {
             patient.changeLastName(lastName);
         }
 
         return patient;
     }
 
-    private Optional<Patient> getPatientBy(UUID patientId) {
+    public Patient addPatient(String firstName, String lastName) {
+        var patient = new Patient(firstName, lastName, this.parent);
+        this.parent.getPatients().add(patient);
+        return patient;
+    }
+
+    public Optional<Patient> getPatientBy(UUID patientId) {
         return this.parent.getPatients().stream()
-                .filter(p -> p.getId() == patientId)
+                .filter(p -> p.getId().equals(patientId))
                 .findFirst();
     }
 }

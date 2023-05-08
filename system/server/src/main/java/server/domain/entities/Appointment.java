@@ -4,12 +4,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import server.domain.entities.base.BaseEntity;
 import server.infrastructure.utils.DateTimeUtility;
 import server.infrastructure.utils.guards.Guard;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.ZonedDateTime;
@@ -29,9 +31,8 @@ public class Appointment extends BaseEntity<UUID> {
     private AppointmentCause appointmentCause;
     @Column(name = "schedule_id")
     private UUID scheduleId;
-    private UUID parentId;
-    @Column(name = "patient_id")
-    private UUID patientId;
+    @ManyToOne
+    private Patient patient;
     private UUID calendarEventId;
 
     public Appointment(ZonedDateTime startDate,
@@ -40,8 +41,7 @@ public class Appointment extends BaseEntity<UUID> {
                        UUID calendarEventId,
                        AppointmentCause appointmentCause,
                        UUID scheduleId,
-                       UUID parentId,
-                       UUID patientId) {
+                       Patient patient) {
         this.id = UUID.randomUUID();
         this.startDate = DateTimeUtility.validateStartDate(startDate, endDate);
         this.endDate = DateTimeUtility.validateEndDate(startDate, endDate);
@@ -49,7 +49,6 @@ public class Appointment extends BaseEntity<UUID> {
         this.calendarEventId = Guard.Against.NullOrEmpty(calendarEventId);
         this.appointmentCause = Guard.Against.Null(appointmentCause);
         this.scheduleId = Guard.Against.NullOrEmpty(scheduleId);
-        this.parentId = Guard.Against.NullOrEmpty(parentId);
-        this.patientId = Guard.Against.NullOrEmpty(patientId);
+        this.patient = Guard.Against.Null(patient);
     }
 }

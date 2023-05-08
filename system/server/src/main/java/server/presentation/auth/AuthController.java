@@ -45,6 +45,7 @@ public class AuthController {
     }
 
     @Post("/logout")
+    @Secured(SecurityRule.IS_AUTHENTICATED)
     public HttpResponse<?> logout(Authentication authentication) {
         this.authService.logOut(authentication);
         return HttpResponse.ok();

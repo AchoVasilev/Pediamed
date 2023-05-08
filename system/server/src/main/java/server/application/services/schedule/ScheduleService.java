@@ -62,19 +62,30 @@ public class ScheduleService {
         var patient = user.getPatientBy(appointmentInput.patientFirstName(), appointmentInput.patientLastName());
 
         log.info("Scheduling appointment for unregistered user. [userId={}, patientId={}]", user.getId(), patient.getId());
-        return this.scheduleAppointment(scheduleId, appointmentInput.eventId(), appointmentInput.appointmentCauseId(), patient, user.getParent().getId());
+        return this.scheduleAppointment(scheduleId, appointmentInput.eventId(), appointmentInput.appointmentCauseId(), patient);
     }
 
     @Transactional
     public ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID userId, RegisteredUserAppointmentInput registeredUserAppointmentInput) {
         var user = this.userService.getUser(userId);
-        var patient = user.getPatientBy(registeredUserAppointmentInput.patientId(), registeredUserAppointmentInput.patientFirstName(), registeredUserAppointmentInput.patientLastName());
+        var patientOpt = user.getPatientBy(registeredUserAppointmentInput.patientId()).isEmpty()
+                ? user.getPatientByNames(registeredUserAppointmentInput.patientFirstName(), registeredUserAppointmentInput.patientLastName())
+                : user.getPatientBy(registeredUserAppointmentInput.patientId());
+
+        Patient patient;
+        if (patientOpt.isEmpty()) {
+            patient = user.addPatient(registeredUserAppointmentInput.patientFirstName(), registeredUserAppointmentInput.patientLastName());
+            this.userService.save(user);
+        } else {
+            patient = user.checkPatientNames(patientOpt.get(), registeredUserAppointmentInput.patientFirstName(), registeredUserAppointmentInput.patientLastName());
+            this.userService.save(user);
+        }
 
         log.info("Scheduling appointment for registered user. [userId={}, patientId={}]", user.getId(), patient.getId());
-        return this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), patient, user.getParent().getId());
+        return this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), patient);
     }
 
-    private ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID eventId, Integer appointmentCauseId, Patient patient, UUID parentId) {
+    private ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID eventId, Integer appointmentCauseId, Patient patient) {
         var title = this.createAppointmentTitle(patient.getFirstName(), patient.getLastName());
         var schedule = this.getScheduleById(scheduleId);
 
@@ -85,8 +96,7 @@ public class ScheduleService {
                 title, event.getId(),
                 appointmentCause,
                 schedule.getId(),
-                parentId,
-                patient.getId());
+                patient);
 
         event.markDeleted(true);
         schedule.getAppointments().add(appointment);
