@@ -38,5 +38,9 @@ export interface ScheduleData {
     id: string,
     startDate: string,
     endDate: string,
-    title: string
+    title: string,
+}
+
+export interface MetaInfo {
+    isAppointment: boolean
 }

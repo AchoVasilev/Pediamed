@@ -1,17 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './shared/home/home.component';
-import { PrivacyComponent } from './shared/privacy/privacy.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    pathMatch: 'full'
-  },
-  {
-    path: 'privacy',
-    component: PrivacyComponent,
     pathMatch: 'full'
   },
   {
@@ -22,6 +16,9 @@ const routes: Routes = [
   },
   {
     path: 'schedule', loadChildren: () => import('./features/schedule/schedule.module').then(m => m.ScheduleModule)
+  },
+  {
+    path: 'privacy', loadChildren: () => import('./features/privacy/privacy.module').then(m => m.PrivacyModule)
   }
 ];
 

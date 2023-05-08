@@ -1,0 +1,10 @@
+<button
+  class="px-5"
+  mat-flat-button
+  color="{{color}}"
+  [disabled]="disabled"
+>
+  <mat-icon *ngIf="loading"
+    ><mat-spinner color="accent" diameter="20"> </mat-spinner></mat-icon
+  >{{text}}
+</button>

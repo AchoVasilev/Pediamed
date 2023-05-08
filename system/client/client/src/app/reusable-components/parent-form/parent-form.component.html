@@ -1,0 +1,29 @@
+<div class="row mb-3">
+  <div class="form-outline col">
+    <app-email [emailControl]="email"></app-email>
+  </div>
+  <div class="form-outline col">
+    <app-phone-input
+      [phoneNumberControl]="phoneNumber"
+    ></app-phone-input>
+  </div>
+</div>
+<div class="row mb-3">
+  <div class="form-outline col">
+    <app-form-field
+      [control]="firstName"
+      label="Име на родител"
+      placeholder="Име на родител"
+      materialSuffix="account_circle"
+    ></app-form-field>
+  </div>
+
+  <div class="form-outline col">
+    <app-form-field
+      [control]="lastName"
+      label="Фамилия на родител"
+      placeholder="Фамилия на родител"
+      materialSuffix="account_circle"
+    ></app-form-field>
+  </div>
+</div>

@@ -19,7 +19,6 @@ import server.application.services.auth.models.response.LoginResponse;
 import server.application.services.role.RoleService;
 import server.application.services.user.UserService;
 import server.domain.entities.ApplicationUser;
-import server.domain.entities.Parent;
 import server.domain.entities.enums.RoleEnum;
 import server.domain.valueObjects.Email;
 import server.domain.valueObjects.PhoneNumber;
@@ -64,9 +63,7 @@ public class AuthService {
         );
 
         newUser.getRoles().add(role);
-
-        var parent = new Parent();
-        newUser.setParent(parent);
+        newUser.addParent();
 
         this.userService.save(newUser);
 
@@ -83,6 +80,7 @@ public class AuthService {
 
                         return HttpResponse.ok(loginResponse);
                     } else {
+                        log.info("Invalid user credentials.");
                         return HttpResponse.badRequest(INVALID_CREDENTIALS);
                     }
                 }).switchIfEmpty(Mono.defer(() -> Mono.just(HttpResponse.status(HttpStatus.UNAUTHORIZED))));

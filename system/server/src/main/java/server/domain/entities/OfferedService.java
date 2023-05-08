@@ -1,7 +1,9 @@
 package server.domain.entities;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.domain.entities.base.BaseEntity;
 import server.infrastructure.utils.guards.Guard;
 
 import javax.persistence.Entity;
@@ -10,8 +12,8 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "offered_services")
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class OfferedService extends BaseEntity<Integer> {
     private String name;
     private BigDecimal price;

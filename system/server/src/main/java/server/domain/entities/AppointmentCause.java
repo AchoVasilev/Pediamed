@@ -1,7 +1,9 @@
 package server.domain.entities;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.domain.entities.base.BaseEntity;
 import server.infrastructure.utils.guards.Guard;
 
 import javax.persistence.Entity;
@@ -9,8 +11,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "appointment_causes")
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class AppointmentCause extends BaseEntity<Integer> {
     private String name;
 

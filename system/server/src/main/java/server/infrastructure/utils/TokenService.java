@@ -40,7 +40,7 @@ public class TokenService implements TokenGenerator {
 
     public TokenModel generateToken(Authentication authentication) {
         var expiration = (int)authentication.getAttributes().getOrDefault("expiration", 86400);
-        var claims = pediamedJwtClaimsSetGenerator.generateClaims(authentication, expiration);
+        var claims = this.pediamedJwtClaimsSetGenerator.generateClaims(authentication, expiration);
         var encodedToken = this.generateToken(claims).orElseThrow();
 
         return new TokenModel(encodedToken, Instant.now().plusSeconds(expiration).toString());
@@ -48,7 +48,7 @@ public class TokenService implements TokenGenerator {
 
     @Override
     public Optional<String> generateToken(Authentication authentication, Integer expiration) {
-        Map<String, Object> claims = pediamedJwtClaimsSetGenerator.generateClaims(authentication, expiration);
+        Map<String, Object> claims = this.pediamedJwtClaimsSetGenerator.generateClaims(authentication, expiration);
         return this.generateToken(claims);
     }
 

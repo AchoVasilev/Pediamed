@@ -7,7 +7,7 @@
     <div class="row mb-3 mt-2">
       <div class="form-outline col">
         <app-form-field
-          [control]="startTimeControl"
+          [control]="getControl('start')"
           label="Начало"
           placeholder="Начална дата и час"
           materialSuffix="calendar_month"
@@ -16,74 +16,70 @@
 
       <div class="form-outline col">
         <app-form-field
-          [control]="endTimeControl"
+          [control]="getControl('end')"
           label="Край"
           placeholder="Крайна дата и час"
           materialSuffix="calendar_month"
         ></app-form-field>
       </div>
     </div>
-    <div class="row mb-3">
-      <div class="form-outline col">
-        <app-email [emailControl]="emailControl"></app-email>
+    <app-parent-form
+      [email]="getControl('email')"
+      [phoneNumber]="getControl('phoneNumber')"
+      [firstName]="getControl('parentFirstName')"
+      [lastName]="getControl('parentLastName')"
+    ></app-parent-form>
+    <ng-container
+      *ngIf="currentUser && patients.length > 1; else child"
+    >
+      <div class="form-outline mb-2">
+        <mat-form-field appearance="fill">
+          <mat-label>Изберете пациент</mat-label>
+          <mat-select [formControl]="getControl('patientId')">
+            <mat-option *ngFor="let patient of patients" [value]="patient.id">
+              {{ patient.firstName }} {{ patient.lastName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
-      <div class="form-outline col">
-        <app-phone-input [phoneNumberControl]="phoneNumber"></app-phone-input>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="form-outline col">
-        <app-form-field
-          [control]="firstName"
-          label="Име на родител"
-          placeholder="Име на родител"
-          materialSuffix="account_circle"
-        ></app-form-field>
-      </div>
-
-      <div class="form-outline col">
-        <app-form-field
-          [control]="lastName"
-          label="Фамилия на родител"
-          placeholder="Фамилия на родител"
-          materialSuffix="account_circle"
-        ></app-form-field>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="form-outline col">
-        <app-form-field
-          [control]="patientFirstName"
-          label="Име на дете"
-          placeholder="Име на дете"
-          materialSuffix="account_circle"
-        ></app-form-field>
-      </div>
-
-      <div class="form-outline col">
-        <app-form-field
-          [control]="patientLastName"
-          label="Фамилия на дете"
-          placeholder="Фамилия на дете"
-          materialSuffix="account_circle"
-        ></app-form-field>
-      </div>
-    </div>
+    </ng-container>
     <div class="form-outline mb-2">
       <app-appointment-cause-select
         [appointmentCauses]="appointmentCauses"
-        [control]="appointmentCause"
+        [control]="getControl('appointmentCauseId')"
       ></app-appointment-cause-select>
     </div>
   </form>
 </div>
-<div mat-dialog-actions>
-  <button mat-button mat-dialog-close>Затвори</button>
-  <button
-    mat-button
+<div mat-dialog-actions align="end">
+  <app-button color="warn" name="Затвори" mat-dialog-close></app-button>
+  <app-flat-button
+    color="primary"
+    text="Запазване"
     (click)="close()"
-    cdkFocusInitial
-  >
-    Запазване
-  </button>
+    [disabled]="!this.form.valid"
+    [loading]="loading"
+  ></app-flat-button>
 </div>
+
+<ng-template #child>
+  <div class="row mb-3">
+    <div class="form-outline col">
+      <app-form-field
+        [control]="getControl('patientFirstName')"
+        label="Име на дете"
+        placeholder="Име на дете"
+        materialSuffix="account_circle"
+      ></app-form-field>
+    </div>
+
+    <div class="form-outline col">
+      <app-form-field
+        [control]="getControl('patientLastName')"
+        label="Фамилия на дете"
+        placeholder="Фамилия на дете"
+        materialSuffix="account_circle"
+      ></app-form-field>
+    </div>
+  </div>
+</ng-template>

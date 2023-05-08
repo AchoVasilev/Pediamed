@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, shareReplay, tap } from 'rxjs';
+import { EMPTY, Observable, mergeMap, shareReplay, tap } from 'rxjs';
 import { RegisterParent } from 'src/app/models/user/registerParent';
 import { environment } from 'src/environments/environment';
 import { AuthResult, UserModel } from './authResult';
 import { UserDataService } from '../data/user-data.service';
 import { isAfter, parseJSON, toDate } from 'date-fns';
 import { Router } from '@angular/router';
+import { PatientService } from '../patient/patient.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +21,13 @@ export class AuthService {
     })
   };
   
-  constructor(private httpClient: HttpClient, private userDataService: UserDataService, private router: Router) { }
+  constructor(
+    private httpClient: HttpClient, 
+    private userDataService: UserDataService, 
+    private router: Router,
+    private patientService: PatientService) { }
 
-  login(email: string, password: string, persist: boolean): Observable<AuthResult> {
+  login(email: string, password: string, persist: boolean): Observable<any> {
     return this.httpClient.post<AuthResult>(this.apiUrlWithPrefix + '/login', {
       email,
       password,
@@ -34,6 +39,7 @@ export class AuthService {
           this.userDataService.setLogin(true);
           this.userDataService.setUser(data.user);
         }),
+        mergeMap((res) => this.userDataService.isDoctor() ? EMPTY : this.patientService.getPatientByParentId(res.user.id)),
         shareReplay());
   }
 
@@ -42,11 +48,13 @@ export class AuthService {
   }
 
   logout() {
+    this.userDataService.setLogin(false);
     this.httpClient.post(this.apiUrlWithPrefix + '/logout', this.httpOptions)
-      .subscribe(r => {
-        localStorage.removeItem('token');
+    .subscribe(r => {
         localStorage.removeItem('expiresAt');
-        this.userDataService.setLogin(false);
+        localStorage.removeItem('token');
+        localStorage.removeItem('patients');
+        localStorage.removeItem('user');
         this.router.navigateByUrl('');
       })
   }
@@ -58,11 +66,19 @@ export class AuthService {
       this.userDataService.setUser(JSON.parse(localStorage.getItem('user')!));
     }
 
+    if (this.userDataService.getUser() && !this.userDataService.isDoctor()) {
+      this.userDataService.setPatients(JSON.parse(localStorage.getItem('patients')!));
+    }
+
     return isLogged;
   }
 
   getToken() {
     return localStorage.getItem('token');
+  }
+
+  removeToken() {
+    localStorage.clear();
   }
 
   getUser(): Observable<UserModel>{

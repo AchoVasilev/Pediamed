@@ -1,12 +1,10 @@
-package server.domain.entities;
+package server.domain.entities.base;
 
 import io.micronaut.data.annotation.DateCreated;
 import io.micronaut.data.annotation.DateUpdated;
 import lombok.Data;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
@@ -18,8 +16,7 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class BaseEntity<TKey> implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    TKey id;
+    protected TKey id;
     @Column(name = "date_created", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @DateCreated

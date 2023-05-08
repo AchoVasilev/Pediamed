@@ -3,11 +3,17 @@ package server.domain.entities;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.domain.entities.base.BaseEntity;
 import server.infrastructure.utils.guards.Guard;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -20,11 +26,17 @@ public class Patient extends BaseEntity<UUID> {
     private Integer age;
     private String birthDate;
     @ManyToOne
+    @JoinColumn(name = "parent_id")
     private Parent parent;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
+    private List<Appointment> appointments;
 
-    public Patient (String firstName, String lastName) {
+    public Patient (String firstName, String lastName, Parent parent) {
+        this.id = UUID.randomUUID();
         this.firstName = Guard.Against.EmptyOrBlank(firstName);
         this.lastName = Guard.Against.EmptyOrBlank(lastName);
+        this.parent = Guard.Against.Null(parent);
+        this.appointments = new ArrayList<>();
     }
 
     public void setAge(int age) {
@@ -42,5 +54,13 @@ public class Patient extends BaseEntity<UUID> {
         }
 
         return age;
+    }
+
+    public void changeFirstName(String firstName) {
+        this.firstName = Guard.Against.EmptyOrBlank(firstName);
+    }
+
+    public void changeLastName(String lastName) {
+        this.lastName = Guard.Against.EmptyOrBlank(lastName);
     }
 }

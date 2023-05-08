@@ -72,3 +72,20 @@ VALUES (1, 'Първичен преглед'),
        (2, 'Вторичен преглед'),
        (3, 'Детско здравеопазване'),
        (4, 'Свободен прием');
+
+INSERT INTO gallery_images(id, url, name, extension, deleted, date_created)
+VALUES ('bda52fb6-90bc-48cc-b26d-7bc2599546eb', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1640085027/pediamed/IMG-3d4d5a079b4f712fd53ce9ad097faf24-V.jpg.jpg', 'IMG-3d4d5a079b4f712fd53ce9ad097faf24-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('2c40b051-80b9-43a5-bc4e-47a6b9ee4a0e', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1640085028/pediamed/IMG-9add7b0ba788ced6c9f6186f01dce2ba-V.jpg.jpg', 'IMG-9add7b0ba788ced6c9f6186f01dce2ba-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('64f4b097-788d-4de0-b424-0a3e84e8c276', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1640085029/pediamed/IMG-73d4aaf2edbfbd86e3bc8b6b44c1dfa2-V.jpg.jpg', 'IMG-73d4aaf2edbfbd86e3bc8b6b44c1dfa2-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('dc5cd2d2-8f34-4649-80dd-608af8ca154a', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1640085029/pediamed/IMG-4817c65b81006eea5c2815837337f8ed-V.jpg.jpg', 'IMG-4817c65b81006eea5c2815837337f8ed-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('81612113-7cc2-49ae-8c15-9034536e42bf', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1640085030/pediamed/IMG-ab0a5b033ee8cf53def9e937f6d2baf6-V.jpg.jpg', 'IMG-ab0a5b033ee8cf53def9e937f6d2baf6-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('d1519a80-7e67-4406-900c-f179859ee655', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1640085030/pediamed/IMG-b93856f2c12b1dcaa36a80c8b886cd30-V.jpg.jpg', 'IMG-b93856f2c12b1dcaa36a80c8b886cd30-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('93b9c6be-44a1-4a20-8772-cb3a155f8994', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1640085031/pediamed/IMG-e415d77485530c8a65dd356e3fe820e9-V.jpg.jpg', 'IMG-e415d77485530c8a65dd356e3fe820e9-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('cd4c73b9-b4ea-4370-8f5f-648d3fcde3bd', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1640085031/pediamed/IMG-f1c897a19a277fb5f6b3adc1c1668e8e-V.jpg.jpg', 'IMG-f1c897a19a277fb5f6b3adc1c1668e8e-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('37c49701-72a7-4a56-8b5e-70192d53ca69', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1640085032/pediamed/IMG-fd628ff6ab68f73643fd7b0cf41868ab-V.jpg.jpg', 'IMG-fd628ff6ab68f73643fd7b0cf41868ab-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('52478e45-964a-4cd0-8018-28a3c8c41210', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1652256086/pediamed/IMG-7900005160bfe696291341f6a16c8bcf-V.jpg.jpg', 'IMG-7900005160bfe696291341f6a16c8bcf-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('6a5d5ca0-800c-4276-b7ff-b40fc133d811', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1652256087/pediamed/IMG-6f4e7e26c8e861664444ec1e77fbc4dd-V.jpg.jpg', 'IMG-6f4e7e26c8e861664444ec1e77fbc4dd-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('ef33cf02-1fcf-46f9-aae6-8b7bb63d1c44', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1652256119/pediamed/IMG-f0a1ad6ed98f243e7a18f7f9a3d82e03-V.jpg.jpg', 'IMG-f0a1ad6ed98f243e7a18f7f9a3d82e03-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('ad1af91c-4994-4673-af8e-4816c987456e', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1652256120/pediamed/IMG-dae969e9dfe108ed8e3a36c8c9fab0b8-V.jpg.jpg', 'IMG-dae969e9dfe108ed8e3a36c8c9fab0b8-V.jpg', 'jpg', false, (now() at time zone 'utc')),
+       ('92e65b9a-985f-4260-9f3e-4238a2f9ec21', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1652561163/pediamed/received_1521085174955640.jpeg.jpg', 'received_1521085174955640.jpeg', 'jpg', false, (now() at time zone 'utc')),
+       ('553ad13f-7749-4ba4-be21-608d385762cf', 'https://res.cloudinary.com/dpo3vbxnl/image/upload/v1652561215/pediamed/received_1072524383362935.jpeg.jpg', 'received_1072524383362935.jpeg', 'jpg', false, (now() at time zone 'utc'));

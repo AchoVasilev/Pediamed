@@ -2,12 +2,11 @@
   <div class="container jumbotron-opacity pb-4 pt-4 mb-4 mt-4">
     <div class="pb-4 mb-4">
       <h1 class="text-center">Предлагани услуги</h1>
-
       <hr />
 
-      <ng-container *ngIf="services && services.length === 0">
+      <ng-template #loading>
         <h3 style="margin-top: 2%">Все още няма записани услуги</h3>
-      </ng-container>
+      </ng-template>
 
       <div class="mb-4 pb-4">
         <table class="table table-bordered table-striped pb-4 mb-4">
@@ -19,11 +18,13 @@
             </tr>
           </thead>
           <tbody class="pb-4 mb-4">
-            <tr *ngFor="let service of services; let i = index">
-              <td>{{ i }}</td>
-              <td>{{ service.name }}</td>
-              <td>{{ service.price }}</td>
-            </tr>
+            <ng-container *ngIf="services$ | async; else loading; let services">
+              <tr *ngFor="let service of services; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ service.name }}</td>
+                <td>{{ service.price }}</td>
+              </tr>
+            </ng-container>
           </tbody>
         </table>
       </div>

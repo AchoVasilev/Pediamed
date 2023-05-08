@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OfferedServiceView } from '../../../models/offeredServiceView';
 import { OfferedServiceService } from '../../../services/offered-service/offered-service.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-offered-services',
@@ -9,14 +10,11 @@ import { OfferedServiceService } from '../../../services/offered-service/offered
 })
 export class OfferedServicesComponent implements OnInit {
 
-  services: OfferedServiceView[] = [];
+  services$?: Observable<OfferedServiceView[]>;
   
   constructor(private offeredServiceService: OfferedServiceService) { }
 
   ngOnInit(): void {
-    this.offeredServiceService.getOfferedServices()
-      .subscribe(data => {
-        this.services = data;
-      });
+    this.services$ = this.offeredServiceService.getOfferedServices();
   }
 }

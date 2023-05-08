@@ -3,6 +3,7 @@ package server.domain.entities;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.domain.entities.base.BaseEntity;
 import server.domain.valueObjects.PhoneNumber;
 import server.infrastructure.utils.guards.Guard;
 
@@ -20,9 +21,9 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @Getter
 @Table(name = "cabinets")
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class Cabinet extends BaseEntity<Integer> {
     private String name;
     private String city;

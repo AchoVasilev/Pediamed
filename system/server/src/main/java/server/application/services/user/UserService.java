@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import server.application.services.auth.models.response.UserResponse;
 import server.application.services.role.RoleService;
 import server.domain.entities.ApplicationUser;
-import server.domain.entities.Parent;
-import server.domain.entities.Patient;
 import server.domain.entities.enums.RoleEnum;
 import server.domain.repositories.UserRepository;
 import server.domain.valueObjects.Email;
@@ -55,16 +53,14 @@ public class UserService {
             return user.get();
         }
 
-        var patientRole = this.roleService.findByName(RoleEnum.ROLE_PARENT);
+        var parentRole = this.roleService.findByName(RoleEnum.ROLE_PARENT);
         var newUser = new ApplicationUser(new Email(email), firstName, lastName, new PhoneNumber(phoneNumber));
-        newUser.getRoles().add(patientRole);
+        newUser.addUserToRole(parentRole);
+        newUser.addParent();
+        newUser.addPatientToParent(patientFirstName, patientLastName);
 
-        var parent = new Parent();
-        var patient = new Patient(patientFirstName, patientLastName);
-        parent.getPatients().add(patient);
-        newUser.setParent(parent);
-
-        return this.userRepository.save(newUser);
+        log.info("Created unregistered user. [userId={}, parentId={}]", newUser.getId(), newUser.getParent().getId());
+        return this.save(newUser);
     }
 
     @Transactional
