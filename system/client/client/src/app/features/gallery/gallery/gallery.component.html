@@ -2,4 +2,8 @@
   <div class="card" *ngFor="let image of images.content">
     <app-card [imgSrc]="image.url"></app-card>
   </div>
+
+  <app-pagination [pageIndex]="images.offset"
+  [pageSize]="images.size"
+  [length]="images.totalPages"></app-pagination>
 </div>

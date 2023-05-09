@@ -22,7 +22,8 @@ import { PaginationComponent } from './pagination/pagination.component';
   exports: [
     AutocompleteComponent,
     ButtonComponent,
-    FlatButtonComponent
+    FlatButtonComponent,
+    PaginationComponent
   ]
 })
 export class ElementsModule { }

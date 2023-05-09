@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-pagination',
@@ -7,4 +8,21 @@ import { Component } from '@angular/core';
 })
 export class PaginationComponent {
 
+  @Input()
+  length: number = 1;
+
+  @Input()
+  pageSize: number = 15;
+
+  @Input()
+  pageIndex: number = 0;
+
+  pageEvent?: PageEvent;
+
+  handlePageEvent(pageEvent: PageEvent) {
+    this.pageEvent = pageEvent;
+    this.length = pageEvent.length;
+    this.pageSize = pageEvent.pageSize;
+    this.pageIndex = pageEvent.pageIndex;
+  }
 }
