@@ -9,7 +9,7 @@ import server.domain.repositories.GalleryImageRepository;
 
 @Singleton
 public class GalleryImageService {
-    private final int PAGE_SIZE = 16;
+    private final int PAGE_SIZE = 15;
     private final GalleryImageRepository galleryImageRepository;
 
     public GalleryImageService(GalleryImageRepository galleryImageRepository) {

@@ -8,6 +8,7 @@ import { PasswordsComponent } from './passwords/passwords.component';
 import { PhoneInputComponent } from './phone-input/phone-input.component';
 import { EmailComponent } from './email/email.component';
 import { ParentFormComponent } from './parent-form/parent-form.component';
+import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 
 
 
@@ -18,7 +19,8 @@ import { ParentFormComponent } from './parent-form/parent-form.component';
     PasswordsComponent,
     PhoneInputComponent,
     EmailComponent,
-    ParentFormComponent
+    ParentFormComponent,
+    AutocompleteComponent
   ],
   imports: [
     CommonModule,
@@ -33,7 +35,8 @@ import { ParentFormComponent } from './parent-form/parent-form.component';
     PasswordsComponent,
     PhoneInputComponent,
     EmailComponent,
-    ParentFormComponent
+    ParentFormComponent,
+    AutocompleteComponent
   ]
 })
 export class InputComponentsModule { }
