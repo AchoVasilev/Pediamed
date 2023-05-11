@@ -4,6 +4,7 @@ import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
 import server.application.services.user.UserService;
 import server.common.util.StringUtility;
+import server.domain.entities.Patient;
 import server.domain.repositories.PatientRepository;
 
 import javax.transaction.Transactional;
@@ -20,9 +21,9 @@ public class PatientService {
         this.userService = userService;
     }
 
-    public List<String> findBy(String query) {
+    public List<Patient> findBy(String query) {
         var sanitized = StringUtility.sanitize(query);
-        return List.of(sanitized);
+        return this.patientRepository.findBy(query);
     }
 
     @Transactional

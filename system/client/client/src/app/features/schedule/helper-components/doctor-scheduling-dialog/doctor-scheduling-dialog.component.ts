@@ -3,8 +3,6 @@ import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CalendarEvent } from 'angular-calendar';
 import { AppointmentCauseResponse } from 'src/app/models/appointment-cause/appointmentCauseResponse';
-import { PatientView } from 'src/app/models/user/patient';
-import { UserModel } from 'src/app/services/auth/authResult';
 import { UserDataService } from 'src/app/services/data/user-data.service';
 import { ScheduleService } from 'src/app/services/schedule/schedule.service';
 import { Constants } from 'src/app/utils/constants';

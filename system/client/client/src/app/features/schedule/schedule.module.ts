@@ -13,7 +13,6 @@ import { MaterialModule } from 'src/app/material/material/material.module';
 import { ScheduleDialogService } from 'src/app/services/schedule/schedule-dialog/schedule-dialog.service';
 import { InputComponentsModule } from 'src/app/reusable-components/input-components/input-components.module';
 import { ElementsModule } from 'src/app/reusable-components/elements/elements.module';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [

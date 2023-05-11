@@ -19,6 +19,7 @@ public class PatientController {
         this.patientService = patientService;
     }
 
+    @Get("/search")
     public HttpResponse<?> findBy(@QueryValue String query) {
         return HttpResponse.ok();
     }
