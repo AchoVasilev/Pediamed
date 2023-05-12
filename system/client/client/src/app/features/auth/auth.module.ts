@@ -5,7 +5,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { InputComponentsModule } from 'src/app/reusable-components/input-components/input-components.module';
 import { ElementsModule } from 'src/app/reusable-components/elements/elements.module';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MaterialModule } from 'src/app/material/material/material.module';
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -15,7 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     AuthRoutingModule,
     InputComponentsModule,
     ElementsModule,
-    MatFormFieldModule
+    MaterialModule
   ]
 })
 export class AuthModule { }

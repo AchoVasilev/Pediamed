@@ -21,7 +21,8 @@ public class PatientController {
 
     @Get("/search")
     public HttpResponse<?> findBy(@QueryValue String query) {
-        return HttpResponse.ok();
+        var patients = this.patientService.findBy(query);
+        return HttpResponse.ok(patients);
     }
 
     @Get("/parent/{id}")

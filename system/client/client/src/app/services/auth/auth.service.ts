@@ -48,7 +48,7 @@ export class AuthService {
   }
 
   logout() {
-    this.userDataService.setLogin(false);
+    this.userDataService.onLogOut();
     this.httpClient.post(this.apiUrlWithPrefix + '/logout', this.httpOptions)
     .subscribe(r => {
         localStorage.removeItem('expiresAt');
@@ -56,7 +56,7 @@ export class AuthService {
         localStorage.removeItem('patients');
         localStorage.removeItem('user');
         this.router.navigateByUrl('');
-      })
+      });
   }
 
   isLoggedIn(): boolean {
