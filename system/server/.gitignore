@@ -41,3 +41,4 @@ out/
 /src/main/resources/application.yml
 /src/main/resources/certs/public.pem
 /src/main/resources/certs/private.pem
+system/server/src/main/resources/application.yml

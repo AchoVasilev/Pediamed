@@ -136,7 +136,6 @@ CREATE TABLE appointments (
     title VARCHAR NOT NULL,
     appointment_cause_id INT REFERENCES appointment_causes(id),
     schedule_id UUID REFERENCES schedules(id),
-    parent_id UUID REFERENCES parents(id),
     patient_id UUID REFERENCES patients(id),
     calendar_event_id UUID REFERENCES calendar_events(id),
     date_created TIMESTAMPTZ NOT NULL DEFAULT (now() at time zone 'utc'),

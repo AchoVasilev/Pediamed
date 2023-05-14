@@ -1,0 +1,19 @@
+<div
+  class="container gallery-container mt-5 mb-5"
+  *ngIf="images$ | async; else loading; let images"
+>
+  {{ setLoading(false) }}
+  <div class="card" *ngFor="let image of images.content">
+    <app-card [imgSrc]="image.url"></app-card>
+  </div>
+
+  <app-pagination
+    [pageIndex]="images.offset"
+    [pageSize]="images.size"
+    [length]="images.totalPages"
+  ></app-pagination>
+</div>
+
+<ng-template #loading>
+  {{ setLoading(true) }}
+</ng-template>

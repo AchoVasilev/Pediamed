@@ -19,6 +19,9 @@ const routes: Routes = [
   },
   {
     path: 'privacy', loadChildren: () => import('./features/privacy/privacy.module').then(m => m.PrivacyModule)
+  },
+  {
+    path: 'gallery', loadChildren: () => import('./features/gallery/gallery.module').then(m => m.GalleryModule)
   }
 ];
 

@@ -1,4 +1,4 @@
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Component, Input } from '@angular/core';
 import { parseErrorMessage, shouldShowErrorForControl } from 'src/app/utils/formValidator';
 

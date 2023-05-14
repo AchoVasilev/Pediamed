@@ -1,3 +1,4 @@
+import { VisualizationComponentsModule } from './../../reusable-components/visualization/visualization-components.module';
 import { NgModule } from '@angular/core';
 
 import { ScheduleRoutingModule } from './schedule-routing.module';
@@ -9,8 +10,9 @@ import { SchedulingDialogComponent } from './helper-components/scheduling-dialog
 import { DoctorSchedulingDialogComponent } from './helper-components/doctor-scheduling-dialog/doctor-scheduling-dialog.component';
 import { DateTimeEventDataComponent } from './helper-components/date-time-event-data/date-time-event-data.component';
 import { MaterialModule } from 'src/app/material/material/material.module';
-import { ReusableComponentsModule } from 'src/app/reusable-components/reusable-components.module';
 import { ScheduleDialogService } from 'src/app/services/schedule/schedule-dialog/schedule-dialog.service';
+import { InputComponentsModule } from 'src/app/reusable-components/input-components/input-components.module';
+import { ElementsModule } from 'src/app/reusable-components/elements/elements.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { ScheduleDialogService } from 'src/app/services/schedule/schedule-dialog
   imports: [
     ScheduleRoutingModule,
     MaterialModule,
-    ReusableComponentsModule,
+    VisualizationComponentsModule,
+    InputComponentsModule,
+    ElementsModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,

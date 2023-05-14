@@ -46,4 +46,11 @@ export class UserDataService {
   getPatients() {
     return this.patientsSubject.value;
   }
+
+  onLogOut() {
+    this.userSubject.next(null!);
+    this.loggedInSubject.next(false);
+    this.patientsSubject.next([]);
+    this.isDoctorSubject.next(false);
+  }
 }

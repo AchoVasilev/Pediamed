@@ -3,7 +3,7 @@ package server.common.util;
 import java.util.List;
 
 public class StringUtility {
-    private static final List<String> characters = List.of("<", ">", "!", "%", "-", "/", "\\", "?", "$", ",", ".", "|");
+    private static final List<String> characters = List.of("<", ">", "!", "%", "-", "/", "\\", "?", "$", ",", ".", "|", "[", "]");
 
     public static String sanitize(String string) {
         var result = "";

@@ -1,1 +1,65 @@
-<p>doctor-scheduling-dialog works!</p>
+<h1 mat-dialog-title>
+    Запазване на час за {{ this.dateTimeArgs[0] }} год. от
+    {{ this.dateTimeArgs[1] }} часа
+  </h1>
+  <div mat-dialog-content>
+    <form method="post" [formGroup]="form">
+      <div class="row mb-3 mt-2">
+        <div class="form-outline col">
+          <app-form-field
+            [control]="getControl('start')"
+            label="Начало"
+            placeholder="Начална дата и час"
+            materialSuffix="calendar_month"
+          ></app-form-field>
+        </div>
+  
+        <div class="form-outline col">
+          <app-form-field
+            [control]="getControl('end')"
+            label="Край"
+            placeholder="Крайна дата и час"
+            materialSuffix="calendar_month"
+          ></app-form-field>
+        </div>
+      </div>
+      <div class="form-outline mb-2">
+        <app-autocomplete (patientSelectedEvent)="onPatientSelected($event)"></app-autocomplete>
+      </div>
+      <div class="row mb-3">
+        <div class="form-outline col">
+          <app-form-field
+            [control]="getControl('patientFirstName')"
+            label="Име на дете"
+            placeholder="Име на дете"
+            materialSuffix="account_circle"
+          ></app-form-field>
+        </div>
+    
+        <div class="form-outline col">
+          <app-form-field
+            [control]="getControl('patientLastName')"
+            label="Фамилия на дете"
+            placeholder="Фамилия на дете"
+            materialSuffix="account_circle"
+          ></app-form-field>
+        </div>
+      </div>
+      <div class="form-outline mb-2">
+        <app-appointment-cause-select
+          [appointmentCauses]="appointmentCauses"
+          [control]="getControl('appointmentCauseId')"
+        ></app-appointment-cause-select>
+      </div>
+    </form>
+  </div>
+  <div mat-dialog-actions align="end">
+    <app-button color="warn" name="Затвори" mat-dialog-close></app-button>
+    <app-flat-button
+      color="primary"
+      text="Запазване"
+      (click)="close()"
+      [disabled]="!this.form.valid"
+      [loading]="loading"
+    ></app-flat-button>
+  </div>

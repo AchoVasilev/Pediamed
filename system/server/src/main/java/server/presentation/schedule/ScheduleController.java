@@ -14,11 +14,13 @@ import org.reactivestreams.Publisher;
 import server.application.services.schedule.ScheduleService;
 import server.application.services.schedule.models.AppointmentInput;
 import server.application.services.schedule.models.CabinetSchedule;
+import server.application.services.schedule.models.DoctorAppointmentInput;
 import server.application.services.schedule.models.RegisteredUserAppointmentInput;
 import server.application.services.sse.ServerSentEventService;
 
 import java.util.UUID;
 
+import static server.common.Constants.ROLE_DOCTOR;
 import static server.common.Constants.ROLE_PATIENT;
 
 @Controller("/schedule")
@@ -41,6 +43,13 @@ public class ScheduleController {
     public HttpResponse<?> schedule(@PathVariable("id") UUID scheduleId, @PathVariable("userId") UUID userId, @Body RegisteredUserAppointmentInput registeredUserAppointmentInput) {
         return HttpResponse.ok(this.scheduleService
                 .scheduleAppointment(scheduleId, userId, registeredUserAppointmentInput));
+    }
+
+    @Post("/{id}/doctor")
+    @Secured(value = {SecurityRule.IS_AUTHENTICATED, ROLE_DOCTOR})
+    public HttpResponse<?> schedule(@PathVariable("id") UUID scheduleId, @Body DoctorAppointmentInput doctorInput) {
+        return HttpResponse.ok(this.scheduleService
+                .scheduleAppointment(scheduleId, doctorInput));
     }
 
     @Get("/{id}/stream")

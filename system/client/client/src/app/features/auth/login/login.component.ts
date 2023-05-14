@@ -63,9 +63,14 @@ export class LoginComponent {
       error: (err) => {
         if (err.status === HttpStatusCode.BadRequest) {
           this.emailControl.setErrors({ invalidCredentials: true });
-          this.loading = false;
         }
+        
+        this.loading = false;
       },
+      complete: () => {
+        this.loading = false;
+        this.router.navigateByUrl('');
+      }
     });
   }
 

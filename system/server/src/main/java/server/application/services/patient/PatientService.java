@@ -4,10 +4,12 @@ import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
 import server.application.services.user.UserService;
 import server.common.util.StringUtility;
+import server.domain.entities.Patient;
 import server.domain.repositories.PatientRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Singleton
@@ -20,9 +22,9 @@ public class PatientService {
         this.userService = userService;
     }
 
-    public List<String> findBy(String query) {
+    public List<PatientView> findBy(String query) {
         var sanitized = StringUtility.sanitize(query);
-        return List.of(sanitized);
+        return this.patientRepository.findBy(sanitized);
     }
 
     @Transactional
@@ -32,7 +34,13 @@ public class PatientService {
                 .getParent()
                 .getPatients()
                 .stream()
-                .map(p -> new PatientView(p.getId(), p.getFirstName(), p.getLastName()))
+                .map(p -> new PatientView(p.getId().toString(), p.getFirstName(), p.getLastName()))
                 .toList();
+    }
+
+    @Transactional
+    @ReadOnly
+    public Optional<Patient> findById(UUID id) {
+        return this.patientRepository.findById(id);
     }
 }
