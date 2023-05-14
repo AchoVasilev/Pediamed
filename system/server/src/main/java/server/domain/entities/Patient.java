@@ -32,10 +32,14 @@ public class Patient extends BaseEntity<UUID> {
     private List<Appointment> appointments;
 
     public Patient (String firstName, String lastName, Parent parent) {
+        this(firstName,lastName);
+        this.parent = Guard.Against.Null(parent);
+    }
+
+    public Patient(String firstName, String lastName) {
         this.id = UUID.randomUUID();
         this.firstName = Guard.Against.EmptyOrBlank(firstName);
         this.lastName = Guard.Against.EmptyOrBlank(lastName);
-        this.parent = Guard.Against.Null(parent);
         this.appointments = new ArrayList<>();
     }
 

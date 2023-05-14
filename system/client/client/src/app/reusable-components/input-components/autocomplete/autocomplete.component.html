@@ -1,5 +1,5 @@
-<!-- <mat-form-field class="example-full-width" appearance="fill">
-  <mat-label>Assignee</mat-label>
+<mat-form-field class="example-full-width" appearance="fill">
+  <mat-label>Търсене на пациент</mat-label>
   <input
     type="text"
     matInput
@@ -7,8 +7,8 @@
     [matAutocomplete]="auto"
   />
   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-      {{ option.name }}
+    <mat-option *ngFor="let patient of patients$ | async" [value]="patient" (onSelectionChange)="onSelected(patient)">
+      {{ patient.firstName }} {{ patient.lastName }}
     </mat-option>
   </mat-autocomplete>
-</mat-form-field> -->
+</mat-form-field>

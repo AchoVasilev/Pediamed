@@ -8,6 +8,7 @@ import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import server.application.services.patient.PatientService;
+import server.common.Constants;
 
 import java.util.UUID;
 
@@ -20,7 +21,8 @@ public class PatientController {
     }
 
     @Get("/search")
-    public HttpResponse<?> findBy(@QueryValue String query) {
+    @Secured({SecurityRule.IS_AUTHENTICATED, Constants.ROLE_DOCTOR})
+    public HttpResponse<?> findBy(@QueryValue(value = "name") String query) {
         var patients = this.patientService.findBy(query);
         return HttpResponse.ok(patients);
     }

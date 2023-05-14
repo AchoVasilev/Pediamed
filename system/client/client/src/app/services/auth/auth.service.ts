@@ -51,10 +51,7 @@ export class AuthService {
     this.userDataService.onLogOut();
     this.httpClient.post(this.apiUrlWithPrefix + '/logout', this.httpOptions)
     .subscribe(r => {
-        localStorage.removeItem('expiresAt');
-        localStorage.removeItem('token');
-        localStorage.removeItem('patients');
-        localStorage.removeItem('user');
+        this.clearSession();
         this.router.navigateByUrl('');
       });
   }
@@ -94,6 +91,13 @@ export class AuthService {
     const expiresAt = JSON.parse(expiration!);
     
     return toDate(expiresAt);
+  }
+
+  private clearSession() {
+    localStorage.removeItem('expiresAt');
+    localStorage.removeItem('token');
+    localStorage.removeItem('patients');
+    localStorage.removeItem('user');
   }
 
   private setSession(authResult: AuthResult) {

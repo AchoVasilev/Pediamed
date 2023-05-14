@@ -6,10 +6,8 @@ import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import server.application.services.appointmentCause.AppointmentCauseService;
-import server.application.services.schedule.models.AppointmentInput;
-import server.application.services.schedule.models.CabinetSchedule;
-import server.application.services.schedule.models.RegisteredUserAppointmentInput;
-import server.application.services.schedule.models.ScheduleAppointment;
+import server.application.services.patient.PatientService;
+import server.application.services.schedule.models.*;
 import server.application.services.user.UserService;
 import server.common.util.CalendarEventsUtility;
 import server.domain.entities.Appointment;
@@ -33,6 +31,7 @@ public class ScheduleService {
     private final UserService userService;
     private final AppointmentCauseService appointmentCauseService;
     private final SecurityService securityService;
+    private final PatientService patientService;
 
     @Transactional
     @ReadOnly
@@ -83,6 +82,21 @@ public class ScheduleService {
 
         log.info("Scheduling appointment for registered user. [userId={}, patientId={}]", user.getId(), patient.getId());
         return this.scheduleAppointment(scheduleId, registeredUserAppointmentInput.eventId(), registeredUserAppointmentInput.appointmentCauseId(), patient);
+    }
+
+    @Transactional
+    public ScheduleAppointment scheduleAppointment(UUID scheduleId, DoctorAppointmentInput doctorInput) {
+        var patientOpt = this.patientService.findById(doctorInput.patientId());
+        Patient patient;
+        if (patientOpt.isEmpty()) {
+            patient = new Patient(doctorInput.patientFirstName(), doctorInput.patientLastName());
+            log.info("Creating an appointment for a new patient. [patientId={}, firstName={}, lastName={}]", patient.getId(), doctorInput.patientFirstName(), doctorInput.patientLastName());
+        } else {
+            patient = patientOpt.get();
+            log.info("Creating an appointment for an existing patient. [patientId={}, firstName={}, lastName={}]", patient.getId(), doctorInput.patientFirstName(), doctorInput.patientLastName());
+        }
+
+        return this.scheduleAppointment(scheduleId, doctorInput.eventId(), doctorInput.appointmentCauseId(), patient);
     }
 
     private ScheduleAppointment scheduleAppointment(UUID scheduleId, UUID eventId, Integer appointmentCauseId, Patient patient) {

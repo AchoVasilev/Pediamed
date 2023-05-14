@@ -1,6 +1,7 @@
 package server.application.services.patient;
 
-import java.util.UUID;
+import io.micronaut.core.annotation.Introspected;
 
-public record PatientView(UUID id, String firstName, String lastName) {
+@Introspected
+public record PatientView(String id, String firstName, String lastName) {
 }
