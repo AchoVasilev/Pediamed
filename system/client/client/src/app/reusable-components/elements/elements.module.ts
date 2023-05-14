@@ -4,6 +4,8 @@ import { MaterialModule } from 'src/app/material/material/material.module';
 import { ButtonComponent } from './button/button.component';
 import { FlatButtonComponent } from './flat-button/flat-button.component';
 import { PaginationComponent } from './pagination/pagination.component';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { PaginatorIntl } from './pagination/internationalization/paginator-intl';
 
 
 
@@ -21,6 +23,9 @@ import { PaginationComponent } from './pagination/pagination.component';
     ButtonComponent,
     FlatButtonComponent,
     PaginationComponent
+  ],
+  providers:[
+    {provide: MatPaginatorIntl, useClass: PaginatorIntl}
   ]
 })
 export class ElementsModule { }

@@ -1,10 +1,8 @@
 <mat-paginator #paginator
-               class="demo-paginator"
                (page)="handlePageEvent($event)"
                [length]="length"
                [pageSize]="pageSize"
                [showFirstLastButtons]="true"
-               [pageSizeOptions]="[]"
                [hidePageSize]="true"
                [pageIndex]="pageIndex"
                aria-label="Избери страница">
